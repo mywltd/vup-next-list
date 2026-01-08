@@ -243,8 +243,8 @@ cp data/database.db data/database.db.backup
 1. 在 GitHub 仓库设置中添加 **Repository Secrets**：
    - 进入 `Settings` → `Secrets and variables` → `Actions`
    - 点击 `New repository secret` 添加以下 Secrets：
-     - `DOCKERHUB_USERNAME`: 你的 Docker Hub 用户名
-     - `DOCKERHUB_TOKEN`: Docker Hub 访问令牌（在 Docker Hub 生成）
+     - `DOCKER_USERNAME`: 你的 Docker Hub 用户名
+     - `DOCKER_PASSWORD`: Docker Hub 访问令牌（在 Docker Hub 生成）
 
 2. 推送代码到 `main` 或 `master` 分支，自动触发构建：
 

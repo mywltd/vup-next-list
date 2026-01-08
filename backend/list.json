@@ -1,0 +1,3754 @@
+[
+  {
+    "songName": "迷迭香",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行R&B",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "给我一首歌的时间",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": true,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "给我一个吻",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "经典怀旧流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "枉凝眉",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "传统古风",
+    "special": true,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "最浪漫的事",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "成都",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "民谣流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "灯火里的中国",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "主旋律",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "有点甜",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "甜系流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "宝贝",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "萱草花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "治愈系",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "苏幕遮",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "传统古风",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "隐形的翅膀",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "励志治愈流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "牵丝戏",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "传统古风",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "欧若拉好久不见",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "清平调",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "传统古风",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "梦里花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小情歌",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "南海姑娘",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "经典怀旧抒情",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "小尘埃",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "芒种",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "国风电子",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "只要平凡",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "下一秒",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "你笑起来真好看",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "甜系流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "你给我听好",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "东西",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "甜系流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "讲真的",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我要你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "不要忘记我爱你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "星语心愿因为爱情",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "这世界有那么多人",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "有点甜",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "甜系流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "夏天的风",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "说散就散",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我的悲伤是水做的的",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "时间煮雨",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "路过人间",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "梦的光点",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "说爱你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "体面",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "永远的微笑",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "锦鲤抄",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "长安忆",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "风吹麦浪",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "浪人琵琶",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我和你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "化身孤岛的鲸",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "凉凉",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "影视相关古风",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "一次机会",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "#"
+  },
+  {
+    "songName": "初恋的地方",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "虫儿飞",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱的供养",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "童话镇",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "城里的月光",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "藏",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "客官不可以",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "绿色",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "夜来香",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "学猫叫",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "新年快乐",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "海芋恋",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "东西",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "甜系流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "突然好想你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱人错过",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "套马杆",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "火红的萨日朗",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "少年游",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "岁月神偷",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小白船",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "月亮船",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "伤不起",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "需要人陪",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "你不知道的事",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "大城小爱",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "笑忘书",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "但愿人长久",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "匆匆那年",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "传奇",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "有点甜",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "甜系流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "一笑倾城",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "#"
+  },
+  {
+    "songName": "万有引力",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "外婆桥",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "寂寞寂寞就好",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "遇见",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我怀念的",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "开始懂了",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "鸭子",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "无与伦比的美丽",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我好想你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "又唱浏阳河",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "下山",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "大海",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "女儿情",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "烟雨行舟",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "胭脂妆",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "求佛",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱河",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "不要怕",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "万物生",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "不染",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "霞光",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "梨花又开放",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "蝴蝶泉边",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "桃花朵朵开",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "那片海",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱情买卖",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "可能否",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "外面的世界",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "他不爱我",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "明天会更好",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "主旋律/励志",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "南山南",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "咖喱咖喱",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "达尔文",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "赤伶",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "兔子先生",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "雪落下的声音",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "姐姐妹妹站起来",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "蝇",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "像风一样",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "琴师",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小城谣",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "大海啊故乡",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "画心",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "你的眼睛像星星",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "梦里花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我很快乐",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "马马嘟嘟骑",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "走在冷风中",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "青柠",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "原来你也在这里",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "环游星空",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "蝴蝶",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "后来",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "超级敏感",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "漂洋过海来看你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "修炼爱情",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "再见！我的爱人",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "大喜",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "下雨天",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "得意的笑",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "至少有你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱我你就抱抱我",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "飞云之下",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "勇气",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "暖暖",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "宁夏",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "可惜不是你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "被驯服的象",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "慢慢喜欢你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "说好不哭",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "雨花石",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "童年",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "你笑起来真好看",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "甜系流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "最浪漫的事",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "天竺少女",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "睫毛弯弯",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "宝贝宝贝",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "贝加尔湖畔",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "无法原谅",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小小",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "乡恋",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "同桌的你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "校园民谣",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "星月神话",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "痒",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "等待",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "多谢了",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "易燃易爆炸",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "香水有毒",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "九儿",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "红尘情歌",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "相思赋予谁",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "绒花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "青藏高原",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "粉红色的回忆",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "水星记",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "摇篮曲",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "遇见你的时候所有星星都落到我头上",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "如愿",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "荷塘月色",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我是真的爱上你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱的魔法",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "刚好遇见你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "一剪梅",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "#"
+  },
+  {
+    "songName": "云烟成雨",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "最初的梦想",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "一个像夏天一个像秋天",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "#"
+  },
+  {
+    "songName": "你就不要想起我",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "泥娃娃",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "在水一方",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "Good bye my love",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "G"
+  },
+  {
+    "songName": "又见炊烟",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "夜来香",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小城故事",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我只在乎你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我没有骗你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "甜蜜蜜",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "经典怀旧流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "恰似你的温柔",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "你怎么说",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "路边的野花不要采",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "何日君再来",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "偿还",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "永不失联的爱",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "好男人都死哪去了",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "晴天",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "你走",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "没那么简单",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "因为爱情",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "你的酒馆对我打了烊",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "爱你在心口难开",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "走马",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "民谣流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小半",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "桥豆麻袋",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "奇妙能力歌",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "民谣流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "春天的芭蕾",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "讲真的",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "失恋阵线联盟",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "倒带",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "红色高跟鞋",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "达尔文",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "别找我麻烦",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "夜航星",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "布谷鸟",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "伯虎说",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "晚安喵",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "银河与星斗",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "樱花草",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "七月上",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "环游星空",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "泡沫",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "一直很安静",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "#"
+  },
+  {
+    "songName": "后会无期",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "月牙湾",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "溯",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "想你的365天",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱就一个字",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱丫爱丫",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "好运来",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "孤儿乐园",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "常回家看看",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "好想你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "回娘家",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "天涯歌女",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "四季歌",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "大鱼",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "梦的光点",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "Lemon Tree",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "L"
+  },
+  {
+    "songName": "恭喜发财",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "财神来到我家门",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "恰好",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "欧若拉",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "那些年",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "时间都去哪了",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "霜雪千年",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "倒带",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "听我说谢谢你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "快点告诉你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "三月雨",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "红尘客栈",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "像我这样的人",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "为你我受冷风吹",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "白月光与朱砂痣",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我不难过",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "北国之春",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "姐就是女王",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "下雨天",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "冬季到台北来看雨",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "分手快乐",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "外婆的澎湖湾",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "原来你也在这里",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "这世界那么多人",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我和草原有个约定",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "一路向北",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "#"
+  },
+  {
+    "songName": "刚刚好",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "知足",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小宇",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我是一只鱼",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "但愿人长久",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "老鼠爱大米",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "黑桃A",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "演员",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "画心",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "下一个天亮",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "牵丝戏",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "传统古风",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "阳光彩虹小白马",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "第一天",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱如潮水",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "天黑黑",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "去年夏天",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "兜风",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "如果有来生",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "雨蝶",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "有何不可",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "不为谁而作的歌",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "彩虹的微笑",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "安和桥",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "民谣流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "得意的笑",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "以后的以后",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "左手指月",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "探窗",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "月亮代表我的心",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "经典怀旧抒情",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "故梦",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "身骑白马",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "约会在星期天晚上",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "Letting go",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "L"
+  },
+  {
+    "songName": "若把你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "寂寞沙洲冷",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "旅行的意义",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "失落沙洲",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "醉清风",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "往事只能回味",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "光年之外",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "其实你不懂我的心",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "春风十里",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "民谣流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我记得",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "月半弯",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "青柠",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "红玫瑰",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "卡门",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "大地飞歌",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "兔子先生",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "鸿音",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "热爱105°的你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "孤单北半球",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "门外",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "在你的婚礼我多喝了两杯",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我所有的夜有所梦里",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "不可思议",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "心墙",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "问花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "听海",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "快乐星猫",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "挪威的森林",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "浪花一朵朵",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "夜上海",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我是女菩萨",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "等你下课",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "烟雨唱扬州",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "羞答答的玫瑰静悄悄地开",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我是一只鱼",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "下山",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "小幸运",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "斑马斑马",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "给他一电炮",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "恰似你的温柔",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我只在乎你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "往事只能回味",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "玫瑰玫瑰我爱你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "月亮鲸鱼",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "故梦",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "如愿",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "逆光",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我最亲爱的",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "棠梨煎雪",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "多远都要在一起",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "倒数",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "笼",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "美酒加咖啡",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "原来你什么都不要",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "红豆",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "不怕",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "当你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "酒醉的蝴蝶",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "轻轻地告诉你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "一个人",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "#"
+  },
+  {
+    "songName": "安和桥",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "民谣流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "鼓楼",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "莉莉安",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我好像在哪见过你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "宝藏男友",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "理想三旬",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "难忘今宵",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "在夜里跳舞",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "白天不懂夜的黑",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "月光",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "舞女泪",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "女儿情",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "雨爱",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "虚拟",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "卷珠帘",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "陷阱",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "太阳",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "亲密爱人",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "女人花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "火把节的欢乐",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "月光下的凤尾竹",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "军港之夜",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "我爱他",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "刻在我心底的名字",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "热带雨林",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "拜无忧",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我会等",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "美丽的神话",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "茉莉花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "传统民歌",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "执迷不悔",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "勇气大爆发",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "情非得已",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "普通朋友",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "广寒宫",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "偷心",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "想你时风起",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "味道",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "挥着翅膀的女孩",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "千言万语",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "空空如也",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "第三人称",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "陪你度过漫长岁月",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "这条小鱼在乎",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "猫咪森林",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "在树上唱歌",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "太聪明",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "还是会寂寞",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "当冬夜渐暖",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "梦里水乡",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "孤单心事",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "独家记忆",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "花心",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "闯码头",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "可惜没如果",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "她说",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "飞机场的10:30",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "蓝莲花",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "问",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "哈啰 寂寞",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "遗憾",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "默",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "汉阳门花园",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "迷宫",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "自娱自乐",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱我还是他",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "流沙",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我期待",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "好日子",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "Melody",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "M"
+  },
+  {
+    "songName": "最后一页",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "忽然之间",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "我很快乐",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "龙卷风",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "那么骄傲",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小美满",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "壁上观",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "亲爱的你啊",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "遗失的心跳",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "唯一",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "如果爱忘了",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "珠玉",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "风中有朵雨做的云",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "泪桥",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "当你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "此去半生",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱要坦荡荡",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "暖暖",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "学不会",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "星辰大海",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "轻轻的告诉你",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "相思河畔",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "你把我灌醉",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "香港的夜",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "百万个吻",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "爱错",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "九万字",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "心动",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "人间不值得",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "Q"
+  },
+  {
+    "songName": "呼吸决定",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "B"
+  },
+  {
+    "songName": "走过咖啡屋",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "小尘埃",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "抒情流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "恋人",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "苏州河",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  },
+  {
+    "songName": "归期",
+    "singer": "鹤祁",
+    "language": "中文",
+    "category": "流行",
+    "special": false,
+    "firstLetter": "A"
+  }
+]

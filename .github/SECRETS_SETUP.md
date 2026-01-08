@@ -12,8 +12,8 @@
 
 | Secret 名称 | 用途 | 获取方式 |
 |------------|------|---------|
-| `DOCKERHUB_USERNAME` | Docker Hub 用户名 | 你的 Docker Hub 账号用户名 |
-| `DOCKERHUB_TOKEN` | Docker Hub 访问令牌 | 在 Docker Hub 生成 |
+| `DOCKER_USERNAME` | Docker Hub 用户名 | 你的 Docker Hub 账号用户名 |
+| `DOCKER_PASSWORD` | Docker Hub 访问令牌 | 在 Docker Hub 生成 |
 
 **注意**: `GITHUB_TOKEN` 是 GitHub Actions 自动提供的，无需手动配置。
 
@@ -46,12 +46,12 @@
 4. 点击 **New repository secret** 按钮
 
 5. 添加第一个 Secret：
-   - **Name**: `DOCKERHUB_USERNAME`
+   - **Name**: `DOCKER_USERNAME`
    - **Secret**: 你的 Docker Hub 用户名（例如：`mywltd`）
    - 点击 **Add secret**
 
 6. 再次点击 **New repository secret** 添加第二个 Secret：
-   - **Name**: `DOCKERHUB_TOKEN`
+   - **Name**: `DOCKER_PASSWORD`
    - **Secret**: 粘贴刚才生成的 Docker Hub 访问令牌
    - 点击 **Add secret**
 
@@ -60,8 +60,8 @@
 配置完成后，你应该能在 Secrets 列表中看到：
 
 ```
-✅ DOCKERHUB_USERNAME
-✅ DOCKERHUB_TOKEN
+✅ DOCKER_USERNAME
+✅ DOCKER_PASSWORD
 ```
 
 **注意**: Secrets 的值一旦保存就无法查看，只能更新或删除。
@@ -107,7 +107,7 @@ git push origin v1.0.1
 
 ### 问题 1: "Error: Username and password required"
 
-**原因**: 未配置 DOCKERHUB_USERNAME 或 DOCKERHUB_TOKEN
+**原因**: 未配置 DOCKER_USERNAME 或 DOCKER_PASSWORD
 
 **解决方案**: 
 - 检查 Secrets 是否正确配置
@@ -119,14 +119,14 @@ git push origin v1.0.1
 
 **解决方案**:
 - 重新生成 Docker Hub 访问令牌
-- 更新仓库中的 DOCKERHUB_TOKEN Secret
+- 更新仓库中的 DOCKER_PASSWORD Secret
 
 ### 问题 3: "denied: requested access to the resource is denied"
 
 **原因**: Docker Hub 用户名错误或无权限
 
 **解决方案**:
-- 确认 DOCKERHUB_USERNAME 正确
+- 确认 DOCKER_USERNAME 正确
 - 确保令牌有 Read, Write, Delete 权限
 
 ### 问题 4: 构建成功但未创建 Release
@@ -142,7 +142,7 @@ git push origin v1.0.1
 根据配置，Docker 镜像将使用以下命名：
 
 ```
-<DOCKERHUB_USERNAME>/vup-music:<tag>
+<DOCKER_USERNAME>/vup-music:<tag>
 ```
 
 例如，如果你的用户名是 `mywltd`：

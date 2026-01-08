@@ -72,7 +72,7 @@ function convertXlsxToJson(xlsxPath, jsonPath) {
     const playlist = rawData.map((row, index) => {
       const songName = row['歌曲名'] || row['歌名'] || row['songName'] || '';
       const singer = row['歌手'] || row['singer'] || '';
-      const language = row['语种'] || row['language'] || '未知';
+      const language = row['语种'] || row['语言'] || row['language'] || '未知';
       const category = row['种类'] || row['分类'] || row['category'] || '其他';
       
       let special = false;

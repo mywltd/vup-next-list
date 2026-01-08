@@ -143,7 +143,12 @@ function App() {
           >
             <Route index element={<HomePage siteConfig={siteConfig} />} />
           </Route>
-          <Route path="/admin/login" element={<LoginPage />} />
+          <Route 
+            path="/admin/login" 
+            element={
+              <LoginPage mode={mode} />
+            } 
+          />
           <Route
             path="/admin"
             element={

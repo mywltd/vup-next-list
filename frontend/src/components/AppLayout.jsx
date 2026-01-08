@@ -164,7 +164,7 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
       >
         <Typography variant="body2" color="text.secondary">
           © 2026 {siteConfig?.siteName || 'VUP 音乐歌单'} • 
-          Powered by FallSakura All Rights Reserved.
+          Powered by FallSakura
         </Typography>
       </Box>
     </Box>

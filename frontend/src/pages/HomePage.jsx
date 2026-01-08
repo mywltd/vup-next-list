@@ -19,6 +19,11 @@ import {
   useTheme,
   Drawer,
   Button,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Paper,
 } from '@mui/material';
 import { Search, ContentCopy, MusicNote, FilterList } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
@@ -278,61 +283,78 @@ function HomePage({ siteConfig }) {
             </Card>
           </Grid>
 
-          {/* 右侧歌曲列表（PC端） - 铺满剩余空间 */}
+          {/* 右侧歌曲列表（PC端） - 列表形式 */}
           <Grid item xs={12} md={9}>
-            <Box sx={{ 
-              minHeight: '60vh',
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-            }}>
+            <Paper
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: 'fit-content',
+                maxHeight: 'calc(100vh - 180px)',
+                overflow: 'hidden',
+              }}
+            >
               {loading ? (
                 <Box sx={{ 
                   display: 'flex', 
                   justifyContent: 'center', 
                   alignItems: 'center',
-                  flex: 1,
-                  minHeight: '400px',
+                  py: 8,
+                  minHeight: '300px',
                 }}>
                   <CircularProgress size={60} />
                 </Box>
               ) : songs.length === 0 ? (
-                <Card sx={{ flex: 1 }}>
-                  <CardContent>
-                    <Box sx={{ 
-                      textAlign: 'center', 
-                      py: 8,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      minHeight: '400px',
-                    }}>
-                      <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
-                      <Typography variant="h6" color="text.secondary">
-                        暂无歌曲
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
+                <Box sx={{ 
+                  textAlign: 'center', 
+                  py: 8,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '300px',
+                }}>
+                  <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary">
+                    暂无歌曲
+                  </Typography>
+                </Box>
               ) : (
                 <>
-                  <Grid container spacing={2} sx={{ flex: 1 }}>
-                    {songs.map((song) => (
-                      <Grid item xs={12} sm={6} lg={4} xl={3} key={song.id}>
-                        <SongCard song={song} onCopy={handleCopy} />
-                      </Grid>
-                    ))}
-                  </Grid>
+                  <Box sx={{ 
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    flex: 1,
+                    maxHeight: totalPages > 1 ? 'calc(100vh - 260px)' : 'calc(100vh - 220px)',
+                  }}>
+                    <List sx={{ py: 0 }}>
+                      {songs.map((song, index) => (
+                        <SongListItem
+                          key={song.id}
+                          song={song}
+                          onCopy={handleCopy}
+                          isLast={index === songs.length - 1}
+                        />
+                      ))}
+                    </List>
+                  </Box>
 
                   {totalPages > 1 && (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 2 }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      justifyContent: 'center', 
+                      py: 2,
+                      px: 2,
+                      borderTop: 1,
+                      borderColor: 'divider',
+                      flexShrink: 0,
+                    }}>
                       <Pagination
                         count={totalPages}
                         page={page}
                         onChange={handlePageChange}
                         color="primary"
-                        size="large"
+                        size="medium"
                         showFirstButton
                         showLastButton
                       />
@@ -340,7 +362,7 @@ function HomePage({ siteConfig }) {
                   )}
                 </>
               )}
-            </Box>
+            </Paper>
           </Grid>
         </Grid>
       ) : (
@@ -404,48 +426,68 @@ function HomePage({ siteConfig }) {
             </Box>
           </Drawer>
 
-          {/* 筛选器（移动端废弃原有的Card） */}
-          {/* 歌曲列表 */}
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-              <CircularProgress />
-            </Box>
-          ) : songs.length === 0 ? (
-            <Card>
-              <CardContent>
-                <Box sx={{ textAlign: 'center', py: 8 }}>
-                  <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
-                  <Typography variant="h6" color="text.secondary">
-                    暂无歌曲
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              <Grid container spacing={2}>
-                {songs.map((song) => (
-                  <Grid item xs={12} sm={6} key={song.id}>
-                    <SongCard song={song} onCopy={handleCopy} />
-                  </Grid>
-                ))}
-              </Grid>
+          {/* 歌曲列表（移动端） - 列表形式 */}
+          <Paper>
+            {loading ? (
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center',
+                py: 8,
+                minHeight: '300px',
+              }}>
+                <CircularProgress size={50} />
+              </Box>
+            ) : songs.length === 0 ? (
+              <Box sx={{ 
+                textAlign: 'center', 
+                py: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '300px',
+              }}>
+                <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+                <Typography variant="h6" color="text.secondary">
+                  暂无歌曲
+                </Typography>
+              </Box>
+            ) : (
+              <>
+                <List sx={{ py: 0 }}>
+                  {songs.map((song, index) => (
+                    <SongListItem
+                      key={song.id}
+                      song={song}
+                      onCopy={handleCopy}
+                      isLast={index === songs.length - 1}
+                    />
+                  ))}
+                </List>
 
-              {totalPages > 1 && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                  <Pagination
-                    count={totalPages}
-                    page={page}
-                    onChange={handlePageChange}
-                    color="primary"
-                    size="large"
-                    showFirstButton
-                    showLastButton
-                  />
-                </Box>
-              )}
-            </>
-          )}
+                {totalPages > 1 && (
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    py: 2,
+                    borderTop: 1,
+                    borderColor: 'divider',
+                  }}>
+                    <Pagination
+                      count={totalPages}
+                      page={page}
+                      onChange={handlePageChange}
+                      color="primary"
+                      size="medium"
+                      showFirstButton
+                      showLastButton
+                    />
+                  </Box>
+                )}
+              </>
+            )}
+          </Paper>
         </>
       )}
 
@@ -464,97 +506,133 @@ function HomePage({ siteConfig }) {
   );
 }
 
-// 歌曲卡片组件
-function SongCard({ song, onCopy }) {
+// 歌曲列表项组件
+function SongListItem({ song, onCopy, isLast }) {
   return (
-    <Card
-      sx={{
-        height: '100%',
-        cursor: 'pointer',
-        position: 'relative',
-        overflow: 'visible',
-      }}
-    >
-      <CardContent>
-        {song.special && (
-          <Chip
-            label="特殊"
-            color="secondary"
-            size="small"
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-            }}
-          />
-        )}
-        
-        <Tooltip title="点击复制歌曲名">
-          <Box
-            onClick={() => onCopy(song.songName)}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              mb: 1,
-              '&:hover': {
-                '& .copy-icon': {
-                  opacity: 1,
-                },
-              },
-            }}
-          >
-            <Typography
-              variant="h6"
-              fontWeight={600}
-              sx={{
-                flexGrow: 1,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
+    <>
+      <ListItem
+        sx={{
+          py: 1.25,
+          px: { xs: 1.5, sm: 2 },
+          '&:hover': {
+            backgroundColor: 'action.hover',
+            '& .copy-icon': {
+              opacity: 1,
+            },
+          },
+          transition: 'background-color 0.2s',
+        }}
+      >
+        <ListItemText
+          primary={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.25 }}>
+              <Tooltip title="点击复制歌曲名">
+                <Typography
+                  variant="body1"
+                  fontWeight={600}
+                  onClick={() => onCopy(song.songName)}
+                  sx={{
+                    flexGrow: 1,
+                    cursor: 'pointer',
+                    fontSize: { xs: '0.95rem', sm: '1rem' },
+                    '&:hover': {
+                      color: 'primary.main',
+                    },
+                  }}
+                >
+                  {song.songName}
+                </Typography>
+              </Tooltip>
+              <IconButton
+                size="small"
+                className="copy-icon"
+                onClick={() => onCopy(song.songName)}
+                sx={{
+                  opacity: 0,
+                  transition: 'opacity 0.2s',
+                  width: 28,
+                  height: 28,
+                  ml: 0.5,
+                }}
+              >
+                <ContentCopy fontSize="small" />
+              </IconButton>
+              {song.special && (
+                <Chip
+                  label="特殊"
+                  color="secondary"
+                  size="small"
+                  sx={{ 
+                    height: 20, 
+                    fontSize: '0.65rem',
+                    '& .MuiChip-label': {
+                      px: 0.75,
+                    },
+                  }}
+                />
+              )}
+            </Box>
+          }
+          secondary={
+            <Stack 
+              direction="row" 
+              spacing={0.75} 
+              alignItems="center" 
+              flexWrap="wrap" 
+              useFlexGap
+              sx={{ mt: 0.25 }}
             >
-              {song.songName}
-            </Typography>
-            <IconButton
-              size="small"
-              className="copy-icon"
-              sx={{
-                opacity: 0,
-                transition: 'opacity 0.2s',
-                ml: 1,
-              }}
-            >
-              <ContentCopy fontSize="small" />
-            </IconButton>
-          </Box>
-        </Tooltip>
-
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {song.singer}
-        </Typography>
-
-        <Stack direction="row" spacing={1} sx={{ mt: 2 }} flexWrap="wrap" useFlexGap>
-          <Chip
-            label={song.language}
-            size="small"
-            variant="outlined"
-          />
-          <Chip
-            label={song.category}
-            size="small"
-            variant="outlined"
-          />
-          <Chip
-            label={song.firstLetter}
-            size="small"
-            sx={{
-              background: `linear-gradient(135deg, ${getLetterColor(song.firstLetter)} 0%, #7B68EE 100%)`,
-              color: 'white',
-            }}
-          />
-        </Stack>
-      </CardContent>
-    </Card>
+              <Typography 
+                variant="body2" 
+                color="text.secondary"
+                sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}
+              >
+                {song.singer}
+              </Typography>
+              <Chip
+                label={song.language}
+                size="small"
+                variant="outlined"
+                sx={{ 
+                  height: 20, 
+                  fontSize: '0.65rem',
+                  '& .MuiChip-label': {
+                    px: 0.75,
+                  },
+                }}
+              />
+              <Chip
+                label={song.category}
+                size="small"
+                variant="outlined"
+                sx={{ 
+                  height: 20, 
+                  fontSize: '0.65rem',
+                  '& .MuiChip-label': {
+                    px: 0.75,
+                  },
+                }}
+              />
+              <Chip
+                label={song.firstLetter}
+                size="small"
+                sx={{
+                  height: 20,
+                  fontSize: '0.65rem',
+                  background: `linear-gradient(135deg, ${getLetterColor(song.firstLetter)} 0%, #7B68EE 100%)`,
+                  color: 'white',
+                  fontWeight: 600,
+                  '& .MuiChip-label': {
+                    px: 0.75,
+                  },
+                }}
+              />
+            </Stack>
+          }
+        />
+      </ListItem>
+      {!isLast && <Divider />}
+    </>
   );
 }
 

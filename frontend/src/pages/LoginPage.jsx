@@ -10,11 +10,14 @@ import {
   Alert,
   InputAdornment,
   IconButton,
+  useTheme,
 } from '@mui/material';
 import { Visibility, VisibilityOff, AdminPanelSettings } from '@mui/icons-material';
 import { authAPI } from '../services/api';
 
-function LoginPage() {
+function LoginPage({ mode = 'light' }) {
+  const theme = useTheme();
+  const isDark = mode === 'dark' || theme.palette.mode === 'dark';
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -59,7 +62,9 @@ function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: isDark
+          ? 'linear-gradient(135deg, #0D0F1C 0%, #1A1F3D 100%)'
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: 2,
       }}
     >
@@ -67,14 +72,27 @@ function LoginPage() {
         sx={{
           maxWidth: 400,
           width: '100%',
-          backdropFilter: 'blur(20px)',
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          backgroundColor: isDark
+            ? 'rgba(20, 25, 45, 0.95)'
+            : 'rgba(255, 255, 255, 0.95)',
+          border: isDark
+            ? '1px solid rgba(255, 255, 255, 0.1)'
+            : 'none',
         }}
       >
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <AdminPanelSettings sx={{ fontSize: 60, color: 'primary.main' }} />
-            <Typography variant="h5" component="h1" fontWeight={700} sx={{ mt: 2 }}>
+            <Typography 
+              variant="h5" 
+              component="h1" 
+              fontWeight={700} 
+              sx={{ 
+                mt: 2,
+                color: isDark ? 'text.primary' : 'inherit',
+              }}
+            >
               管理员登录
             </Typography>
           </Box>
@@ -94,6 +112,18 @@ function LoginPage() {
               margin="normal"
               autoComplete="username"
               autoFocus
+              sx={{
+                '& .MuiInputBase-root': {
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+                  color: isDark ? 'text.primary' : 'inherit',
+                },
+                '& .MuiInputLabel-root': {
+                  color: isDark ? 'text.secondary' : 'inherit',
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: 'primary.main',
+                },
+              }}
             />
             <TextField
               fullWidth
@@ -103,12 +133,27 @@ function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               margin="normal"
               autoComplete="current-password"
+              sx={{
+                '& .MuiInputBase-root': {
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+                  color: isDark ? 'text.primary' : 'inherit',
+                },
+                '& .MuiInputLabel-root': {
+                  color: isDark ? 'text.secondary' : 'inherit',
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: 'primary.main',
+                },
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
+                      sx={{
+                        color: isDark ? 'text.secondary' : 'inherit',
+                      }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -131,7 +176,13 @@ function LoginPage() {
               fullWidth
               variant="text"
               onClick={() => navigate('/')}
-              sx={{ mt: 2 }}
+              sx={{ 
+                mt: 2,
+                color: isDark ? 'text.secondary' : 'inherit',
+                '&:hover': {
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+                },
+              }}
             >
               返回首页
             </Button>

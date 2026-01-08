@@ -90,9 +90,11 @@ function SiteConfigPanel({ onUpdate }) {
 
       try {
         const response = await siteAPI.uploadFile(file);
-        const url = response.data?.url || response.url;
+        // 注意：响应拦截器已经返回了response.data，所以这里直接使用response
+        const url = response?.url || response?.data?.url;
         
         if (!url) {
+          console.error('上传响应:', response);
           throw new Error('服务器未返回文件URL');
         }
 

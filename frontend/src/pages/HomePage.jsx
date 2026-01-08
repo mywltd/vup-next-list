@@ -252,7 +252,7 @@ function HomePage({ siteConfig }) {
 
       {/* PC端布局：左侧筛选器 + 右侧内容 */}
       {isDesktop ? (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
           {/* 左侧筛选器（PC端） */}
           <Grid item xs={12} md={3}>
             <Card sx={{ position: 'sticky', top: 88 }}>
@@ -278,48 +278,69 @@ function HomePage({ siteConfig }) {
             </Card>
           </Grid>
 
-          {/* 右侧歌曲列表（PC端） */}
+          {/* 右侧歌曲列表（PC端） - 铺满剩余空间 */}
           <Grid item xs={12} md={9}>
-            {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-                <CircularProgress />
-              </Box>
-            ) : songs.length === 0 ? (
-              <Card>
-                <CardContent>
-                  <Box sx={{ textAlign: 'center', py: 8 }}>
-                    <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
-                    <Typography variant="h6" color="text.secondary">
-                      暂无歌曲
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            ) : (
-              <>
-                <Grid container spacing={2}>
-                  {songs.map((song) => (
-                    <Grid item xs={12} sm={6} lg={4} xl={3} key={song.id}>
-                      <SongCard song={song} onCopy={handleCopy} />
-                    </Grid>
-                  ))}
-                </Grid>
+            <Box sx={{ 
+              minHeight: '60vh',
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+            }}>
+              {loading ? (
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  flex: 1,
+                  minHeight: '400px',
+                }}>
+                  <CircularProgress size={60} />
+                </Box>
+              ) : songs.length === 0 ? (
+                <Card sx={{ flex: 1 }}>
+                  <CardContent>
+                    <Box sx={{ 
+                      textAlign: 'center', 
+                      py: 8,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      minHeight: '400px',
+                    }}>
+                      <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+                      <Typography variant="h6" color="text.secondary">
+                        暂无歌曲
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ) : (
+                <>
+                  <Grid container spacing={2} sx={{ flex: 1 }}>
+                    {songs.map((song) => (
+                      <Grid item xs={12} sm={6} lg={4} xl={3} key={song.id}>
+                        <SongCard song={song} onCopy={handleCopy} />
+                      </Grid>
+                    ))}
+                  </Grid>
 
-                {totalPages > 1 && (
-                  <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                    <Pagination
-                      count={totalPages}
-                      page={page}
-                      onChange={handlePageChange}
-                      color="primary"
-                      size="large"
-                      showFirstButton
-                      showLastButton
-                    />
-                  </Box>
-                )}
-              </>
-            )}
+                  {totalPages > 1 && (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 2 }}>
+                      <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                        color="primary"
+                        size="large"
+                        showFirstButton
+                        showLastButton
+                      />
+                    </Box>
+                  )}
+                </>
+              )}
+            </Box>
           </Grid>
         </Grid>
       ) : (

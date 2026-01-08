@@ -34,8 +34,17 @@ function LoginPage() {
     setError('');
 
     try {
-      await authAPI.login(username, password);
-      navigate('/admin');
+      const result = await authAPI.login(username, password);
+      // 登录成功后，等待一下确保session设置完成，然后验证登录状态
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // 验证登录状态
+      const status = await authAPI.getStatus();
+      if (status.authenticated) {
+        navigate('/admin');
+      } else {
+        setError('登录失败，请重试');
+      }
     } catch (err) {
       setError(err.message || '登录失败');
     } finally {

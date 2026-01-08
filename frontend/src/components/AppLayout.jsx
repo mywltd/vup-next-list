@@ -9,6 +9,8 @@ import {
   Box,
   Container,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   Brightness4,
@@ -20,6 +22,8 @@ import ThemeCustomizer from './ThemeCustomizer';
 
 function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateUserTheme, isAdmin = false }) {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // < 768px
 
   const handleBilibiliClick = () => {
     if (siteConfig?.streamer?.bilibiliUrl) {
@@ -62,25 +66,43 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
             {siteConfig?.siteName || 'VUP 音乐歌单'}
           </Typography>
 
-          {/* 主播直播间按钮 */}
+          {/* 主播直播间按钮/图标 */}
           {siteConfig?.streamer && !isAdmin && (
-            <Tooltip title={`${siteConfig.streamer.name}的直播间`}>
-              <Button
-                color="inherit"
-                startIcon={<LiveTv />}
-                onClick={handleBilibiliClick}
-                sx={{
-                  mr: 2,
-                  background: 'linear-gradient(135deg, #FF6B9D 0%, #7B68EE 100%)',
-                  color: 'white',
-                  '&:hover': {
-                    background: 'linear-gradient(135deg, #FF4A7C 0%, #6956E0 100%)',
-                  },
-                }}
-              >
-                {siteConfig.streamer.name}的直播间
-              </Button>
-            </Tooltip>
+            <>
+              {isMobile ? (
+                // 移动端：只显示图标
+                <Tooltip title={`${siteConfig.streamer.name}的直播间`}>
+                  <IconButton
+                    onClick={handleBilibiliClick}
+                    sx={{
+                      mr: 1,
+                      color: mode === 'light' ? 'primary.main' : 'inherit',
+                    }}
+                  >
+                    <LiveTv />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                // PC端：显示完整按钮
+                <Tooltip title={`${siteConfig.streamer.name}的直播间`}>
+                  <Button
+                    color="inherit"
+                    startIcon={<LiveTv />}
+                    onClick={handleBilibiliClick}
+                    sx={{
+                      mr: 2,
+                      background: 'linear-gradient(135deg, #FF6B9D 0%, #7B68EE 100%)',
+                      color: 'white',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #FF4A7C 0%, #6956E0 100%)',
+                      },
+                    }}
+                  >
+                    {siteConfig.streamer.name}的直播间
+                  </Button>
+                </Tooltip>
+              )}
+            </>
           )}
 
           {/* 管理后台按钮 */}

@@ -62,7 +62,7 @@ function App() {
       // 更新网页标题
       if (config) {
         const title = config.siteSubtitle 
-          ? `${config.siteName} - ${config.siteSubtitle}`
+          ? `${config.siteName} - ${config.siteSubtitle || 'The Next'}`
           : config.siteName || 'VUP 音乐歌单';
         document.title = title;
         

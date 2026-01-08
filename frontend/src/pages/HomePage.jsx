@@ -15,12 +15,20 @@ import {
   Alert,
   CircularProgress,
   Tooltip,
+  useMediaQuery,
+  useTheme,
+  Drawer,
+  Button,
 } from '@mui/material';
-import { Search, ContentCopy, MusicNote } from '@mui/icons-material';
+import { Search, ContentCopy, MusicNote, FilterList } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
 import { debounce, copyToClipboard, getLetterColor } from '../utils/helpers';
 
 function HomePage({ siteConfig }) {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -119,12 +127,113 @@ function HomePage({ siteConfig }) {
     setPage(1);
   };
 
+  // 筛选器组件
+  const FilterPanel = () => (
+    <Box>
+      {/* 首字母筛选 */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+          按首字母筛选
+        </Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Chip
+            label="全部"
+            onClick={() => setSelectedLetter(null)}
+            color={selectedLetter === null ? 'primary' : 'default'}
+            sx={{ mb: 1 }}
+            size="small"
+          />
+          {firstLetters.map((letter) => (
+            <Chip
+              key={letter}
+              label={letter}
+              onClick={() => setSelectedLetter(letter)}
+              color={selectedLetter === letter ? 'primary' : 'default'}
+              size="small"
+              sx={{
+                mb: 1,
+                ...(selectedLetter === letter && {
+                  background: `linear-gradient(135deg, ${getLetterColor(letter)} 0%, #7B68EE 100%)`,
+                }),
+              }}
+            />
+          ))}
+        </Stack>
+      </Box>
+
+      {/* 语种筛选 */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+          按语种筛选
+        </Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Chip
+            label="全部"
+            onClick={() => setSelectedLanguage(null)}
+            color={selectedLanguage === null ? 'primary' : 'default'}
+            sx={{ mb: 1 }}
+            size="small"
+          />
+          {languages.map((lang) => (
+            <Chip
+              key={lang}
+              label={lang}
+              onClick={() => setSelectedLanguage(lang)}
+              color={selectedLanguage === lang ? 'primary' : 'default'}
+              sx={{ mb: 1 }}
+              size="small"
+            />
+          ))}
+        </Stack>
+      </Box>
+
+      {/* 特殊歌曲筛选 */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+          特殊歌曲
+        </Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Chip
+            label="全部"
+            onClick={() => setSelectedSpecial(null)}
+            color={selectedSpecial === null ? 'primary' : 'default'}
+            size="small"
+          />
+          <Chip
+            label="特殊歌曲"
+            onClick={() => setSelectedSpecial(true)}
+            color={selectedSpecial === true ? 'secondary' : 'default'}
+            size="small"
+          />
+          <Chip
+            label="普通歌曲"
+            onClick={() => setSelectedSpecial(false)}
+            color={selectedSpecial === false ? 'default' : 'default'}
+            size="small"
+          />
+        </Stack>
+      </Box>
+
+      {/* 清除筛选按钮 */}
+      {(searchText || selectedLetter || selectedLanguage || selectedSpecial !== null) && (
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={clearFilters}
+          size="small"
+        >
+          清除所有筛选
+        </Button>
+      )}
+    </Box>
+  );
+
   return (
     <Box>
       {/* 页面标题 */}
       <Box sx={{ mb: 4, textAlign: 'center' }}>
         <Typography
-          variant="h3"
+          variant={isDesktop ? 'h3' : 'h4'}
           fontWeight={700}
           sx={{
             background: 'linear-gradient(135deg, #FF6B9D 0%, #7B68EE 100%)',
@@ -141,246 +250,180 @@ function HomePage({ siteConfig }) {
         </Typography>
       </Box>
 
-      {/* 搜索栏 */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <TextField
-            fullWidth
-            placeholder="搜索歌曲名或歌手..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </CardContent>
-      </Card>
-
-      {/* 筛选器 */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          {/* 首字母筛选 */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-              按首字母筛选
-            </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              <Chip
-                label="全部"
-                onClick={() => setSelectedLetter(null)}
-                color={selectedLetter === null ? 'primary' : 'default'}
-                sx={{ mb: 1 }}
-              />
-              {firstLetters.map((letter) => (
-                <Chip
-                  key={letter}
-                  label={letter}
-                  onClick={() => setSelectedLetter(letter)}
-                  color={selectedLetter === letter ? 'primary' : 'default'}
-                  sx={{
-                    mb: 1,
-                    ...(selectedLetter === letter && {
-                      background: `linear-gradient(135deg, ${getLetterColor(letter)} 0%, #7B68EE 100%)`,
-                    }),
+      {/* PC端布局：左侧筛选器 + 右侧内容 */}
+      {isDesktop ? (
+        <Grid container spacing={3}>
+          {/* 左侧筛选器（PC端） */}
+          <Grid item xs={12} md={3}>
+            <Card sx={{ position: 'sticky', top: 88 }}>
+              <CardContent>
+                {/* 搜索栏 */}
+                <TextField
+                  fullWidth
+                  placeholder="搜索..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  size="small"
+                  sx={{ mb: 3 }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
                   }}
                 />
-              ))}
-            </Stack>
-          </Box>
-
-          {/* 语种筛选 */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-              按语种筛选
-            </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              <Chip
-                label="全部"
-                onClick={() => setSelectedLanguage(null)}
-                color={selectedLanguage === null ? 'primary' : 'default'}
-                sx={{ mb: 1 }}
-              />
-              {languages.map((lang) => (
-                <Chip
-                  key={lang}
-                  label={lang}
-                  onClick={() => setSelectedLanguage(lang)}
-                  color={selectedLanguage === lang ? 'primary' : 'default'}
-                  sx={{ mb: 1 }}
-                />
-              ))}
-            </Stack>
-          </Box>
-
-          {/* 特殊歌曲筛选 */}
-          <Box>
-            <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-              特殊歌曲
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              <Chip
-                label="全部"
-                onClick={() => setSelectedSpecial(null)}
-                color={selectedSpecial === null ? 'primary' : 'default'}
-              />
-              <Chip
-                label="特殊歌曲"
-                onClick={() => setSelectedSpecial(true)}
-                color={selectedSpecial === true ? 'secondary' : 'default'}
-              />
-              <Chip
-                label="普通歌曲"
-                onClick={() => setSelectedSpecial(false)}
-                color={selectedSpecial === false ? 'default' : 'default'}
-              />
-            </Stack>
-          </Box>
-
-          {/* 清除筛选按钮 */}
-          {(searchText || selectedLetter || selectedLanguage || selectedSpecial !== null) && (
-            <Box sx={{ mt: 2 }}>
-              <Chip
-                label="清除所有筛选"
-                onClick={clearFilters}
-                onDelete={clearFilters}
-                color="error"
-                variant="outlined"
-              />
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 歌曲列表 */}
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-          <CircularProgress />
-        </Box>
-      ) : songs.length === 0 ? (
-        <Card>
-          <CardContent>
-            <Box sx={{ textAlign: 'center', py: 8 }}>
-              <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
-              <Typography variant="h6" color="text.secondary">
-                暂无歌曲
-              </Typography>
-            </Box>
-          </CardContent>
-        </Card>
-      ) : (
-        <>
-          <Grid container spacing={2}>
-            {songs.map((song) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={song.id}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    cursor: 'pointer',
-                    position: 'relative',
-                    overflow: 'visible',
-                  }}
-                >
-                  <CardContent>
-                    {song.special && (
-                      <Chip
-                        label="特殊"
-                        color="secondary"
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          top: 8,
-                          right: 8,
-                        }}
-                      />
-                    )}
-                    
-                    <Tooltip title="点击复制歌曲名">
-                      <Box
-                        onClick={() => handleCopy(song.songName)}
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          mb: 1,
-                          '&:hover': {
-                            '& .copy-icon': {
-                              opacity: 1,
-                            },
-                          },
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          fontWeight={600}
-                          sx={{
-                            flexGrow: 1,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {song.songName}
-                        </Typography>
-                        <IconButton
-                          size="small"
-                          className="copy-icon"
-                          sx={{
-                            opacity: 0,
-                            transition: 'opacity 0.2s',
-                            ml: 1,
-                          }}
-                        >
-                          <ContentCopy fontSize="small" />
-                        </IconButton>
-                      </Box>
-                    </Tooltip>
-
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
-                      {song.singer}
-                    </Typography>
-
-                    <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                      <Chip
-                        label={song.language}
-                        size="small"
-                        variant="outlined"
-                      />
-                      <Chip
-                        label={song.category}
-                        size="small"
-                        variant="outlined"
-                      />
-                      <Chip
-                        label={song.firstLetter}
-                        size="small"
-                        sx={{
-                          background: `linear-gradient(135deg, ${getLetterColor(song.firstLetter)} 0%, #7B68EE 100%)`,
-                          color: 'white',
-                        }}
-                      />
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+                <FilterPanel />
+              </CardContent>
+            </Card>
           </Grid>
 
-          {/* 分页 */}
-          {totalPages > 1 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-              <Pagination
-                count={totalPages}
-                page={page}
-                onChange={handlePageChange}
-                color="primary"
-                size="large"
-                showFirstButton
-                showLastButton
-              />
+          {/* 右侧歌曲列表（PC端） */}
+          <Grid item xs={12} md={9}>
+            {loading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                <CircularProgress />
+              </Box>
+            ) : songs.length === 0 ? (
+              <Card>
+                <CardContent>
+                  <Box sx={{ textAlign: 'center', py: 8 }}>
+                    <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+                    <Typography variant="h6" color="text.secondary">
+                      暂无歌曲
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                <Grid container spacing={2}>
+                  {songs.map((song) => (
+                    <Grid item xs={12} sm={6} lg={4} xl={3} key={song.id}>
+                      <SongCard song={song} onCopy={handleCopy} />
+                    </Grid>
+                  ))}
+                </Grid>
+
+                {totalPages > 1 && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                    <Pagination
+                      count={totalPages}
+                      page={page}
+                      onChange={handlePageChange}
+                      color="primary"
+                      size="large"
+                      showFirstButton
+                      showLastButton
+                    />
+                  </Box>
+                )}
+              </>
+            )}
+          </Grid>
+        </Grid>
+      ) : (
+        /* 移动端布局 */
+        <>
+          {/* 搜索栏和筛选按钮 */}
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <TextField
+                  fullWidth
+                  placeholder="搜索歌曲名或歌手..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Button
+                  variant="outlined"
+                  onClick={() => setMobileFilterOpen(true)}
+                  startIcon={<FilterList />}
+                >
+                  筛选
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
+
+          {/* 移动端筛选抽屉 */}
+          <Drawer
+            anchor="bottom"
+            open={mobileFilterOpen}
+            onClose={() => setMobileFilterOpen(false)}
+            PaperProps={{
+              sx: {
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+                maxHeight: '80vh',
+              },
+            }}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom fontWeight={600}>
+                筛选条件
+              </Typography>
+              <FilterPanel />
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2 }}
+                onClick={() => setMobileFilterOpen(false)}
+              >
+                确定
+              </Button>
             </Box>
+          </Drawer>
+
+          {/* 筛选器（移动端废弃原有的Card） */}
+          {/* 歌曲列表 */}
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+              <CircularProgress />
+            </Box>
+          ) : songs.length === 0 ? (
+            <Card>
+              <CardContent>
+                <Box sx={{ textAlign: 'center', py: 8 }}>
+                  <MusicNote sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary">
+                    暂无歌曲
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              <Grid container spacing={2}>
+                {songs.map((song) => (
+                  <Grid item xs={12} sm={6} key={song.id}>
+                    <SongCard song={song} onCopy={handleCopy} />
+                  </Grid>
+                ))}
+              </Grid>
+
+              {totalPages > 1 && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                  <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    color="primary"
+                    size="large"
+                    showFirstButton
+                    showLastButton
+                  />
+                </Box>
+              )}
+            </>
           )}
         </>
       )}
@@ -397,6 +440,100 @@ function HomePage({ siteConfig }) {
         </Alert>
       </Snackbar>
     </Box>
+  );
+}
+
+// 歌曲卡片组件
+function SongCard({ song, onCopy }) {
+  return (
+    <Card
+      sx={{
+        height: '100%',
+        cursor: 'pointer',
+        position: 'relative',
+        overflow: 'visible',
+      }}
+    >
+      <CardContent>
+        {song.special && (
+          <Chip
+            label="特殊"
+            color="secondary"
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+            }}
+          />
+        )}
+        
+        <Tooltip title="点击复制歌曲名">
+          <Box
+            onClick={() => onCopy(song.songName)}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              mb: 1,
+              '&:hover': {
+                '& .copy-icon': {
+                  opacity: 1,
+                },
+              },
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{
+                flexGrow: 1,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {song.songName}
+            </Typography>
+            <IconButton
+              size="small"
+              className="copy-icon"
+              sx={{
+                opacity: 0,
+                transition: 'opacity 0.2s',
+                ml: 1,
+              }}
+            >
+              <ContentCopy fontSize="small" />
+            </IconButton>
+          </Box>
+        </Tooltip>
+
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          {song.singer}
+        </Typography>
+
+        <Stack direction="row" spacing={1} sx={{ mt: 2 }} flexWrap="wrap" useFlexGap>
+          <Chip
+            label={song.language}
+            size="small"
+            variant="outlined"
+          />
+          <Chip
+            label={song.category}
+            size="small"
+            variant="outlined"
+          />
+          <Chip
+            label={song.firstLetter}
+            size="small"
+            sx={{
+              background: `linear-gradient(135deg, ${getLetterColor(song.firstLetter)} 0%, #7B68EE 100%)`,
+              color: 'white',
+            }}
+          />
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 

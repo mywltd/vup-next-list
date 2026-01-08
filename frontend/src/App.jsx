@@ -14,16 +14,23 @@ import LoginPage from './pages/LoginPage';
 import AppLayout from './components/AppLayout';
 
 function App() {
-  const [mode, setMode] = useState('light');
+  // 从 localStorage 读取主题模式和自定义配色
+  const [mode, setMode] = useState(() => {
+    return localStorage.getItem('themeMode') || 'light';
+  });
+  const [userThemeConfig, setUserThemeConfig] = useState(() => {
+    const saved = localStorage.getItem('userThemeConfig');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [siteConfig, setSiteConfig] = useState(null);
   const [installed, setInstalled] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 创建主题
+  // 创建主题（优先使用用户自定义配色）
   const theme = useMemo(() => {
-    const customConfig = siteConfig?.themeConfig || {};
+    const customConfig = userThemeConfig || siteConfig?.themeConfig || {};
     return createAnimeTheme(mode, customConfig);
-  }, [mode, siteConfig]);
+  }, [mode, siteConfig, userThemeConfig]);
 
   // 检查安装状态
   useEffect(() => {
@@ -40,6 +47,8 @@ function App() {
       }
     } catch (error) {
       console.error('检查安装状态失败:', error);
+      // 如果请求失败，假设未安装
+      setInstalled(false);
     } finally {
       setLoading(false);
     }
@@ -55,7 +64,16 @@ function App() {
   };
 
   const toggleTheme = () => {
-    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    setMode((prevMode) => {
+      const newMode = prevMode === 'light' ? 'dark' : 'light';
+      localStorage.setItem('themeMode', newMode);
+      return newMode;
+    });
+  };
+
+  const updateUserTheme = (config) => {
+    setUserThemeConfig(config);
+    localStorage.setItem('userThemeConfig', JSON.stringify(config));
   };
 
   const handleInstallComplete = () => {
@@ -118,6 +136,8 @@ function App() {
                 siteConfig={siteConfig}
                 mode={mode}
                 onToggleTheme={toggleTheme}
+                userThemeConfig={userThemeConfig}
+                onUpdateUserTheme={updateUserTheme}
               />
             }
           >
@@ -131,6 +151,8 @@ function App() {
                 siteConfig={siteConfig}
                 mode={mode}
                 onToggleTheme={toggleTheme}
+                userThemeConfig={userThemeConfig}
+                onUpdateUserTheme={updateUserTheme}
                 isAdmin
               />
             }

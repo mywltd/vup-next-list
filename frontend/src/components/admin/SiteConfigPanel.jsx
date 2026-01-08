@@ -1,0 +1,245 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  Stack,
+  CircularProgress,
+  InputAdornment,
+} from '@mui/material';
+import { Save, Upload } from '@mui/icons-material';
+import { siteAPI } from '../../services/api';
+
+function SiteConfigPanel({ onUpdate }) {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
+  
+  const [config, setConfig] = useState({
+    siteName: '',
+    defaultPlaylistName: '',
+    avatarUrl: '',
+    backgroundUrl: '',
+    themeConfig: {
+      primaryColor: '#FF6B9D',
+      secondaryColor: '#7B68EE',
+    },
+  });
+
+  useEffect(() => {
+    loadConfig();
+  }, []);
+
+  const loadConfig = async () => {
+    try {
+      const data = await siteAPI.getMeta();
+      setConfig({
+        siteName: data.siteName || '',
+        defaultPlaylistName: data.defaultPlaylistName || '',
+        avatarUrl: data.avatarUrl || '',
+        backgroundUrl: data.backgroundUrl || '',
+        themeConfig: data.themeConfig || {
+          primaryColor: '#FF6B9D',
+          secondaryColor: '#7B68EE',
+        },
+      });
+    } catch (error) {
+      setMessage({ type: 'error', text: '加载配置失败' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (field) => (event) => {
+    setConfig({
+      ...config,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleThemeColorChange = (field) => (event) => {
+    setConfig({
+      ...config,
+      themeConfig: {
+        ...config.themeConfig,
+        [field]: event.target.value,
+      },
+    });
+  };
+
+  const handleFileUpload = async (field) => async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    setMessage({ type: '', text: '' });
+
+    try {
+      const { url } = await siteAPI.uploadFile(file);
+      setConfig({
+        ...config,
+        [field]: url,
+      });
+      setMessage({ type: 'success', text: '文件上传成功' });
+    } catch (error) {
+      setMessage({ type: 'error', text: '文件上传失败: ' + error.message });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!config.siteName.trim()) {
+      setMessage({ type: 'error', text: '站点名称不能为空' });
+      return;
+    }
+
+    setSaving(true);
+    setMessage({ type: '', text: '' });
+
+    try {
+      await siteAPI.updateConfig(config);
+      setMessage({ type: 'success', text: '配置保存成功' });
+      if (onUpdate) onUpdate();
+    } catch (error) {
+      setMessage({ type: 'error', text: '保存失败: ' + error.message });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  return (
+    <Box>
+      <Typography variant="h6" gutterBottom fontWeight={600}>
+        站点配置
+      </Typography>
+
+      {message.text && (
+        <Alert severity={message.type} sx={{ mb: 3 }}>
+          {message.text}
+        </Alert>
+      )}
+
+      <Stack spacing={3}>
+        <TextField
+          fullWidth
+          label="站点名称"
+          value={config.siteName}
+          onChange={handleChange('siteName')}
+          required
+        />
+
+        <TextField
+          fullWidth
+          label="默认歌单名称"
+          value={config.defaultPlaylistName}
+          onChange={handleChange('defaultPlaylistName')}
+        />
+
+        <Box>
+          <TextField
+            fullWidth
+            label="站点头像 URL"
+            value={config.avatarUrl}
+            onChange={handleChange('avatarUrl')}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button
+                    component="label"
+                    startIcon={<Upload />}
+                    disabled={uploading}
+                  >
+                    上传
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleFileUpload('avatarUrl')}
+                    />
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+
+        <Box>
+          <TextField
+            fullWidth
+            label="背景图片 URL"
+            value={config.backgroundUrl}
+            onChange={handleChange('backgroundUrl')}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button
+                    component="label"
+                    startIcon={<Upload />}
+                    disabled={uploading}
+                  >
+                    上传
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleFileUpload('backgroundUrl')}
+                    />
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+
+        <Box>
+          <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+            主题配置
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <TextField
+              label="主色调"
+              type="color"
+              value={config.themeConfig.primaryColor}
+              onChange={handleThemeColorChange('primaryColor')}
+              sx={{ width: 200 }}
+            />
+            <TextField
+              label="辅色调"
+              type="color"
+              value={config.themeConfig.secondaryColor}
+              onChange={handleThemeColorChange('secondaryColor')}
+              sx={{ width: 200 }}
+            />
+          </Stack>
+        </Box>
+
+        <Box>
+          <Button
+            variant="contained"
+            startIcon={<Save />}
+            onClick={handleSave}
+            disabled={saving || uploading}
+            size="large"
+          >
+            {saving ? '保存中...' : '保存配置'}
+          </Button>
+        </Box>
+      </Stack>
+    </Box>
+  );
+}
+
+export default SiteConfigPanel;
+

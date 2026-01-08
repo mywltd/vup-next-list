@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  vup-music:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vup-music:latest
+    container_name: vup-music
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      # 数据持久化
+      - ./data:/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATA_DIR=/data
+      - SESSION_SECRET=${SESSION_SECRET:-vup-music-secret-key-please-change-me}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000}
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - vup-music-network
+
+networks:
+  vup-music-network:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
+

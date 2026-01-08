@@ -1,0 +1,36 @@
+# Node modules
+**/node_modules
+**/npm-debug.log
+
+# 前端构建产物
+frontend/build
+frontend/.vite
+
+# 开发文件
+**/.git
+**/.gitignore
+**/.DS_Store
+**/.env.local
+**/.env.development
+**/.vscode
+**/.idea
+
+# 数据文件
+data/
+**/database.db
+**/uploads/
+
+# 文档
+README.md
+LICENSE
+.github/
+
+# 日志
+**/*.log
+
+# 测试
+**/test
+**/tests
+**/__tests__
+**/coverage
+

@@ -76,30 +76,46 @@ function SiteConfigPanel({ onUpdate }) {
     });
   };
 
-  const handleFileUpload = async (field) => async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+  const handleFileUpload = (field) => {
+    return async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) {
+        // 重置input，允许重复上传同一文件
+        event.target.value = '';
+        return;
+      }
 
-    setUploading(true);
-    setMessage({ type: '', text: '' });
+      setUploading(true);
+      setMessage({ type: '', text: '' });
 
-    try {
-      const { url } = await siteAPI.uploadFile(file);
-      // 将相对路径转换为完整URL
-      const fullUrl = url.startsWith('http') 
-        ? url 
-        : `${window.location.origin}${url}`;
-      
-      setConfig({
-        ...config,
-        [field]: fullUrl,
-      });
-      setMessage({ type: 'success', text: '文件上传成功，URL已自动填充' });
-    } catch (error) {
-      setMessage({ type: 'error', text: '文件上传失败: ' + error.message });
-    } finally {
-      setUploading(false);
-    }
+      try {
+        const response = await siteAPI.uploadFile(file);
+        const url = response.data?.url || response.url;
+        
+        if (!url) {
+          throw new Error('服务器未返回文件URL');
+        }
+
+        // 将相对路径转换为完整URL
+        const fullUrl = url.startsWith('http') 
+          ? url 
+          : `${window.location.origin}${url}`;
+        
+        setConfig({
+          ...config,
+          [field]: fullUrl,
+        });
+        setMessage({ type: 'success', text: '文件上传成功，URL已自动填充' });
+      } catch (error) {
+        console.error('文件上传错误:', error);
+        const errorMessage = error.response?.data?.error || error.message || '文件上传失败';
+        setMessage({ type: 'error', text: `文件上传失败: ${errorMessage}` });
+      } finally {
+        setUploading(false);
+        // 重置input，允许重复上传同一文件
+        event.target.value = '';
+      }
+    };
   };
 
   const handleSave = async () => {

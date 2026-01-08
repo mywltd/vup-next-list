@@ -117,9 +117,10 @@ export const siteAPI = {
   uploadFile: (file) => {
     const formData = new FormData();
     formData.append('file', file);
+    // axios会自动设置Content-Type为multipart/form-data，不需要手动设置
     return api.post('/api/site/upload', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        // 让axios自动设置Content-Type，包括boundary
       },
     });
   },

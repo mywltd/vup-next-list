@@ -82,14 +82,23 @@ router.post('/upload', requireAuth, upload.single('file'), (req, res) => {
       return res.status(400).json({ error: '没有上传文件' });
     }
 
+    // 验证文件是否成功保存
+    const filePath = path.join(uploadsDir, req.file.filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(500).json({ error: '文件保存失败' });
+    }
+
     const fileUrl = `/uploads/${req.file.filename}`;
     res.json({
       success: true,
       url: fileUrl,
-      filename: req.file.filename
+      filename: req.file.filename,
+      size: req.file.size,
+      mimetype: req.file.mimetype,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('文件上传错误:', error);
+    res.status(500).json({ error: error.message || '文件上传失败' });
   }
 });
 

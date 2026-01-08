@@ -54,8 +54,12 @@ app.use(session({
   }
 }));
 
-// 静态文件服务（上传的文件）
-app.use('/uploads', express.static(path.join(DATA_DIR, 'uploads')));
+// 静态文件服务（上传的文件）- 必须在API路由之前注册
+app.use('/uploads', express.static(path.join(DATA_DIR, 'uploads'), {
+  maxAge: '1y', // 缓存1年
+  etag: true,
+  lastModified: true,
+}));
 
 // API 路由
 app.use('/api/setup', setupRouter);
@@ -68,16 +72,23 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     installed: isInstalled(),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    dataDir: DATA_DIR,
+    uploadsDir: path.join(DATA_DIR, 'uploads'),
   });
 });
 
-// 前端静态文件（生产环境）
+// 前端静态文件（生产环境）- 必须在最后注册，避免拦截API和上传文件
 if (process.env.NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, '../frontend/build');
   app.use(express.static(frontendPath));
 
-  app.get('*', (req, res) => {
+  // 只对非API和非上传路径返回前端页面
+  app.get('*', (req, res, next) => {
+    // 跳过API路由和上传文件路径
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
     res.sendFile(path.join(frontendPath, 'index.html'));
   });
 }

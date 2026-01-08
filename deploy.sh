@@ -28,11 +28,54 @@ cat << "EOF"
 EOF
 echo -e "${NC}"
 
+# 检测系统信息
+detect_system() {
+    echo -e "${BLUE}🔍 检测系统信息...${NC}"
+    
+    # 检测系统架构
+    ARCH=$(uname -m)
+    case $ARCH in
+        x86_64|amd64)
+            SYSTEM_ARCH="amd64"
+            ;;
+        aarch64|arm64)
+            SYSTEM_ARCH="arm64"
+            ;;
+        armv7l)
+            SYSTEM_ARCH="armhf"
+            ;;
+        *)
+            echo -e "${RED}❌ 不支持的系统架构: $ARCH${NC}"
+            exit 1
+            ;;
+    esac
+    
+    # 检测操作系统
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS=$ID
+        OS_VERSION=$VERSION_ID
+        OS_NAME=$NAME
+    elif [ -f /etc/redhat-release ]; then
+        OS="rhel"
+        OS_NAME="Red Hat Enterprise Linux"
+    else
+        echo -e "${RED}❌ 无法检测操作系统${NC}"
+        exit 1
+    fi
+    
+    echo -e "${GREEN}✅ 系统信息:${NC}"
+    echo -e "   操作系统: ${OS_NAME}"
+    echo -e "   系统架构: ${SYSTEM_ARCH}"
+    echo -e "   内核版本: $(uname -r)"
+    echo ""
+}
+
 # 检查是否为 root 用户
 check_root() {
     if [ "$EUID" -ne 0 ]; then 
         echo -e "${YELLOW}⚠️  建议使用 sudo 运行此脚本${NC}"
-        echo -e "${YELLOW}   或使用 root 用户${NC}"
+        echo -e "${YELLOW}   或使用 root 用户（安装 Docker 需要 root 权限）${NC}"
         read -p "是否继续? (y/n) " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -41,14 +84,110 @@ check_root() {
     fi
 }
 
+# 安装 Docker
+install_docker() {
+    echo -e "${BLUE}🐳 开始安装 Docker...${NC}"
+    
+    case $OS in
+        ubuntu|debian)
+            echo -e "${YELLOW}检测到 Ubuntu/Debian 系统${NC}"
+            
+            # 更新软件包索引
+            apt-get update
+            
+            # 安装必要的依赖
+            apt-get install -y \
+                ca-certificates \
+                curl \
+                gnupg \
+                lsb-release
+            
+            # 添加 Docker 官方 GPG 密钥
+            install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/$OS/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            chmod a+r /etc/apt/keyrings/docker.gpg
+            
+            # 设置 Docker 仓库
+            echo \
+                "deb [arch=$SYSTEM_ARCH signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$OS \
+                $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+            
+            # 安装 Docker Engine
+            apt-get update
+            apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            ;;
+            
+        centos|rhel|rocky|almalinux)
+            echo -e "${YELLOW}检测到 CentOS/RHEL 系统${NC}"
+            
+            # 安装必要的依赖
+            yum install -y yum-utils
+            
+            # 添加 Docker 仓库
+            yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+            
+            # 安装 Docker Engine
+            yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            
+            # 启动 Docker
+            systemctl start docker
+            systemctl enable docker
+            ;;
+            
+        fedora)
+            echo -e "${YELLOW}检测到 Fedora 系统${NC}"
+            
+            # 安装必要的依赖
+            dnf -y install dnf-plugins-core
+            
+            # 添加 Docker 仓库
+            dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+            
+            # 安装 Docker Engine
+            dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            
+            # 启动 Docker
+            systemctl start docker
+            systemctl enable docker
+            ;;
+            
+        *)
+            echo -e "${RED}❌ 不支持的操作系统: $OS${NC}"
+            echo -e "${YELLOW}请手动安装 Docker: https://docs.docker.com/engine/install/${NC}"
+            exit 1
+            ;;
+    esac
+    
+    # 验证 Docker 安装
+    if command -v docker &> /dev/null; then
+        echo -e "${GREEN}✅ Docker 安装成功${NC}"
+        docker --version
+        echo ""
+    else
+        echo -e "${RED}❌ Docker 安装失败${NC}"
+        exit 1
+    fi
+}
+
 # 检查 Docker 是否安装
 check_docker() {
     echo -e "${BLUE}📦 检查 Docker 环境...${NC}"
     
     if ! command -v docker &> /dev/null; then
-        echo -e "${RED}❌ Docker 未安装${NC}"
-        echo -e "${YELLOW}请先安装 Docker: https://docs.docker.com/engine/install/${NC}"
-        exit 1
+        echo -e "${YELLOW}⚠️  Docker 未安装${NC}"
+        echo ""
+        read -p "是否自动安装 Docker? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            install_docker
+        else
+            echo -e "${RED}❌ 需要安装 Docker 才能继续${NC}"
+            echo -e "${YELLOW}手动安装: https://docs.docker.com/engine/install/${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}✅ Docker 已安装${NC}"
+        docker --version
     fi
     
     # 优先检查 Docker Compose V2（docker compose）
@@ -230,6 +369,7 @@ show_info() {
 
 # 主函数
 main() {
+    detect_system
     check_root
     check_docker
     create_directory

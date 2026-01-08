@@ -18,13 +18,30 @@
 
 ## 🚀 快速开始
 
-### 方式一：使用 Docker（推荐）
+### 方式一：一键部署（推荐，自动安装 Docker）
+
+在 Linux 服务器上执行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mywltd/vup-next-list/main/deploy.sh | sudo bash
+```
+
+**脚本会自动**：
+- ✅ 检测系统架构和版本（Ubuntu, Debian, CentOS等）
+- ✅ 自动安装 Docker（如果未安装）
+- ✅ 配置并启动服务
+- ✅ 显示访问地址
+
+**支持系统**：Ubuntu, Debian, CentOS, RHEL, Rocky Linux, AlmaLinux, Fedora  
+**支持架构**：x86_64 (amd64), ARM64
+
+### 方式二：使用 Docker Compose（需要预装 Docker）
 
 1. 克隆项目
 
 ```bash
-git clone https://github.com/your-username/vup-music.git
-cd vup-music
+git clone https://github.com/mywltd/vup-next-list.git
+cd vup-next-list
 ```
 
 2. 启动服务
@@ -41,7 +58,7 @@ docker compose up -d
 
 首次访问会进入安装向导，填写站点信息即可完成初始化。
 
-### 方式二：手动部署
+### 方式三：手动部署（开发环境）
 
 #### 环境要求
 

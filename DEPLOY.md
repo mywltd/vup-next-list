@@ -4,13 +4,71 @@
 
 ## 📋 前提条件
 
-- 服务器已安装 Docker（版本 >= 20.10）
-- Docker Compose V2（集成在 Docker 中，使用 `docker compose` 命令）
+- Linux 服务器（支持 Ubuntu, Debian, CentOS, RHEL, Fedora, Rocky Linux, AlmaLinux）
+- 系统架构：x86_64 (amd64) 或 ARM64
 - 开放端口 3001（或自定义端口）
+- 具有 sudo 或 root 权限
+
+**Docker 要求**：
+- 如果未安装 Docker，部署脚本会自动检测并安装
+- 手动部署需要 Docker 版本 >= 20.10
+- 自动安装会包含 Docker Compose V2
 
 **注意**：本文档使用 Docker Compose V2 命令 `docker compose`，如果你使用的是旧版独立的 `docker-compose`，请将所有 `docker compose` 替换为 `docker-compose`。
 
-## 🚀 方式一：使用 docker-compose（推荐）
+## 🚀 方式一：一键部署脚本（最简单，推荐）
+
+### 自动安装 Docker 并部署
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mywltd/vup-next-list/main/deploy.sh | sudo bash
+```
+
+**脚本功能**：
+- ✅ 自动检测系统信息（架构、发行版）
+- ✅ 自动安装 Docker（如果未安装）
+- ✅ 自动安装 Docker Compose V2
+- ✅ 创建部署目录
+- ✅ 生成安全配置
+- ✅ 拉取最新镜像
+- ✅ 启动服务
+
+**支持的系统**：
+- Ubuntu 18.04+
+- Debian 10+
+- CentOS 7/8
+- RHEL 7/8
+- Rocky Linux 8/9
+- AlmaLinux 8/9
+- Fedora 35+
+
+**支持的架构**：
+- x86_64 (amd64)
+- aarch64 (arm64)
+- armv7l (armhf)
+
+### 分步说明
+
+如果你想了解脚本执行的具体步骤：
+
+1. **系统检测**
+   - 检测操作系统类型和版本
+   - 检测系统架构
+   - 检查内核版本
+
+2. **Docker 安装（可选）**
+   - 如果未安装 Docker，询问是否自动安装
+   - 根据系统类型选择合适的安装方法
+   - 安装 Docker Engine + Docker Compose V2
+   - 启动并启用 Docker 服务
+
+3. **服务部署**
+   - 创建 `/opt/vupmusic` 目录
+   - 生成 `docker-compose.yml` 配置
+   - 拉取 Docker 镜像
+   - 启动服务
+
+## 🔧 方式二：使用 docker compose 手动部署
 
 ### 步骤 1: 创建部署目录
 
@@ -73,7 +131,7 @@ docker compose logs -f
 
 首次访问会进入安装向导。
 
-## 🔧 方式二：使用 Docker 命令
+## 🐳 方式三：使用 Docker 命令
 
 ### 一键启动
 
@@ -91,27 +149,61 @@ docker run -d \
   mywltd/vup-music:latest
 ```
 
-## 📝 方式三：使用一键部署脚本
+## 💻 手动安装 Docker（可选）
 
-### 步骤 1: 下载部署脚本
+如果自动安装失败，可以手动安装：
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/mywltd/vup-next-list/main/deploy.sh -o deploy.sh
-chmod +x deploy.sh
-```
-
-### 步骤 2: 运行脚本
+### Ubuntu/Debian
 
 ```bash
-./deploy.sh
+# 更新软件包
+sudo apt-get update
+
+# 安装依赖
+sudo apt-get install -y ca-certificates curl gnupg
+
+# 添加 Docker GPG 密钥
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# 设置仓库
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 安装 Docker
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 启动 Docker
+sudo systemctl start docker
+sudo systemctl enable docker
 ```
 
-脚本会自动：
-- 检查 Docker 环境
-- 创建必要的目录
-- 拉取最新镜像
-- 启动服务
-- 显示访问地址
+### CentOS/RHEL
+
+```bash
+# 安装依赖
+sudo yum install -y yum-utils
+
+# 添加 Docker 仓库
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# 安装 Docker
+sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 启动 Docker
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+### 验证安装
+
+```bash
+docker --version
+docker compose version
+```
 
 ## 🌐 配置 Nginx 反向代理（可选）
 
@@ -320,7 +412,17 @@ sudo netstat -tulpn | grep 3001
 docker logs vup-music
 ```
 
-### 3. 无法访问
+### 3. Docker 安装失败
+
+**症状**：自动安装 Docker 失败
+
+**解决方案**：
+1. 检查系统是否支持（见前提条件）
+2. 检查网络连接
+3. 尝试手动安装（见上方手动安装章节）
+4. 查看详细错误日志
+
+### 4. 无法访问
 
 检查防火墙：
 
@@ -333,7 +435,7 @@ sudo firewall-cmd --permanent --add-port=3001/tcp
 sudo firewall-cmd --reload
 ```
 
-### 4. 镜像拉取失败
+### 5. 镜像拉取失败
 
 手动拉取镜像：
 
@@ -341,9 +443,38 @@ sudo firewall-cmd --reload
 docker pull mywltd/vup-music:latest
 ```
 
-如果网络问题，可以配置镜像加速器。
+如果网络问题，可以配置镜像加速器：
 
-### 5. 数据库权限问题
+```bash
+# 创建 Docker 配置目录
+sudo mkdir -p /etc/docker
+
+# 配置镜像加速器（以阿里云为例）
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://your-mirror-address.mirror.aliyuncs.com"]
+}
+EOF
+
+# 重启 Docker
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+### 6. 系统架构不支持
+
+**症状**：提示不支持的系统架构
+
+**支持的架构**：
+- x86_64 (amd64)
+- aarch64 (arm64)
+- armv7l (armhf，部分镜像可能不支持）
+
+**解决方案**：
+- 确认系统架构：`uname -m`
+- 使用支持的架构的服务器
+
+### 7. 数据库权限问题
 
 ```bash
 sudo chown -R 1000:1000 /opt/vupmusic/data

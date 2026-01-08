@@ -143,7 +143,7 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
 
       {/* 主内容区域 */}
       <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
           <Outlet />
         </Container>
       </Box>

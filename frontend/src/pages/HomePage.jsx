@@ -34,6 +34,9 @@ function HomePage({ siteConfig }) {
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   
+  // 将theme传递给子组件
+  const songListProps = { theme };
+  
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -257,7 +260,7 @@ function HomePage({ siteConfig }) {
 
       {/* PC端布局：左侧筛选器 + 右侧内容 */}
       {isDesktop ? (
-        <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
+        <Grid container spacing={3}>
           {/* 左侧筛选器（PC端） */}
           <Grid item xs={12} md={3}>
             <Card sx={{ position: 'sticky', top: 88 }}>
@@ -283,7 +286,7 @@ function HomePage({ siteConfig }) {
             </Card>
           </Grid>
 
-          {/* 右侧歌曲列表（PC端） - 列表形式 */}
+          {/* 右侧歌曲列表（PC端） - 列表形式，延伸到右边，与左边对称 */}
           <Grid item xs={12} md={9}>
             <Paper
               sx={{
@@ -292,6 +295,16 @@ function HomePage({ siteConfig }) {
                 height: 'fit-content',
                 maxHeight: 'calc(100vh - 180px)',
                 overflow: 'hidden',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                backgroundColor: theme.palette.mode === 'dark'
+                  ? 'rgba(20, 25, 45, 0.75)'
+                  : 'rgba(255, 255, 255, 0.75)',
+                border: theme.palette.mode === 'dark'
+                  ? '1px solid rgba(255, 255, 255, 0.1)'
+                  : '1px solid rgba(123, 104, 238, 0.15)',
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+                  : '0 8px 32px 0 rgba(123, 104, 238, 0.15)',
               }}
             >
               {loading ? (
@@ -326,14 +339,17 @@ function HomePage({ siteConfig }) {
                     overflowX: 'hidden',
                     flex: 1,
                     maxHeight: totalPages > 1 ? 'calc(100vh - 260px)' : 'calc(100vh - 220px)',
+                    px: 2,
+                    py: 1.5,
                   }}>
-                    <List sx={{ py: 0 }}>
+                    <List sx={{ py: 0, px: 0 }}>
                       {songs.map((song, index) => (
                         <SongListItem
                           key={song.id}
                           song={song}
                           onCopy={handleCopy}
                           isLast={index === songs.length - 1}
+                          {...songListProps}
                         />
                       ))}
                     </List>
@@ -427,7 +443,20 @@ function HomePage({ siteConfig }) {
           </Drawer>
 
           {/* 歌曲列表（移动端） - 列表形式 */}
-          <Paper>
+          <Paper
+            sx={{
+              backdropFilter: 'blur(20px) saturate(180%)',
+              backgroundColor: theme.palette.mode === 'dark'
+                ? 'rgba(20, 25, 45, 0.75)'
+                : 'rgba(255, 255, 255, 0.75)',
+              border: theme.palette.mode === 'dark'
+                ? '1px solid rgba(255, 255, 255, 0.1)'
+                : '1px solid rgba(123, 104, 238, 0.15)',
+              boxShadow: theme.palette.mode === 'dark'
+                ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+                : '0 8px 32px 0 rgba(123, 104, 238, 0.15)',
+            }}
+          >
             {loading ? (
               <Box sx={{ 
                 display: 'flex', 
@@ -455,13 +484,14 @@ function HomePage({ siteConfig }) {
               </Box>
             ) : (
               <>
-                <List sx={{ py: 0 }}>
+                <List sx={{ py: 1.5, px: 1 }}>
                   {songs.map((song, index) => (
                     <SongListItem
                       key={song.id}
                       song={song}
                       onCopy={handleCopy}
                       isLast={index === songs.length - 1}
+                      {...songListProps}
                     />
                   ))}
                 </List>
@@ -507,22 +537,61 @@ function HomePage({ siteConfig }) {
 }
 
 // 歌曲列表项组件
-function SongListItem({ song, onCopy, isLast }) {
+function SongListItem({ song, onCopy, isLast, theme }) {
+  const isDark = theme?.palette.mode === 'dark';
+  
   return (
-    <>
-      <ListItem
-        sx={{
-          py: 1.25,
-          px: { xs: 1.5, sm: 2 },
-          '&:hover': {
-            backgroundColor: 'action.hover',
-            '& .copy-icon': {
-              opacity: 1,
-            },
+    <ListItem
+      component="div"
+      sx={{
+        py: 1.75,
+        px: { xs: 2, sm: 2.5 },
+        mb: 1.5,
+        mx: { xs: 0.5, sm: 1 },
+        borderRadius: 3,
+        // 毛玻璃效果
+        backdropFilter: 'blur(16px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+        backgroundColor: isDark
+          ? 'rgba(30, 35, 55, 0.65)'
+          : 'rgba(255, 255, 255, 0.6)',
+        border: isDark
+          ? '1px solid rgba(255, 255, 255, 0.1)'
+          : '1px solid rgba(123, 104, 238, 0.12)',
+        boxShadow: isDark
+          ? '0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+          : '0 4px 12px rgba(123, 104, 238, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+        position: 'relative',
+        overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '1px',
+          background: isDark
+            ? 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)'
+            : 'linear-gradient(90deg, transparent, rgba(123, 104, 238, 0.2), transparent)',
+        },
+        '&:hover': {
+          backgroundColor: isDark
+            ? 'rgba(40, 45, 65, 0.75)'
+            : 'rgba(255, 255, 255, 0.8)',
+          transform: 'translateY(-2px)',
+          boxShadow: isDark
+            ? '0 6px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
+            : '0 6px 20px rgba(123, 104, 238, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+          borderColor: isDark
+            ? 'rgba(255, 255, 255, 0.15)'
+            : 'rgba(123, 104, 238, 0.2)',
+          '& .copy-icon': {
+            opacity: 1,
           },
-          transition: 'background-color 0.2s',
-        }}
-      >
+        },
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      }}
+    >
         <ListItemText
           primary={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.25 }}>
@@ -631,8 +700,6 @@ function SongListItem({ song, onCopy, isLast }) {
           }
         />
       </ListItem>
-      {!isLast && <Divider />}
-    </>
   );
 }
 

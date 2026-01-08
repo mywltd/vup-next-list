@@ -1,6 +1,23 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+// 获取 API 基础 URL
+// 优先级：环境变量 > 生产环境使用相对路径 > 开发环境使用 localhost
+const getApiBaseUrl = () => {
+  // 如果设置了环境变量，直接使用
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  // 生产环境：使用相对路径（自动使用当前域名）
+  if (import.meta.env.PROD) {
+    return '';
+  }
+  
+  // 开发环境：使用 localhost
+  return 'http://localhost:3001';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,

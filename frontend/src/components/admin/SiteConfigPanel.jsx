@@ -107,7 +107,7 @@ function SiteConfigPanel({ onUpdate }) {
           ...config,
           [field]: fullUrl,
         });
-        setMessage({ type: 'success', text: '文件上传成功，URL已自动填充' });
+        setMessage({ type: 'success', text: '文件上传成功' });
       } catch (error) {
         console.error('文件上传错误:', error);
         const errorMessage = error.response?.data?.error || error.message || '文件上传失败';

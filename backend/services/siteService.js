@@ -15,10 +15,15 @@ export class SiteService {
 
     return {
       siteName: siteConfig.site_name,
+      siteSubtitle: siteConfig.site_subtitle || '',
       defaultPlaylistName: siteConfig.default_playlist_name,
-      avatarUrl: siteConfig.avatar_url,
-      backgroundUrl: siteConfig.background_url,
+      avatarUrl: siteConfig.avatar_url || '',
+      backgroundUrl: siteConfig.background_url || '',
       themeConfig: siteConfig.theme_config_json ? JSON.parse(siteConfig.theme_config_json) : {},
+      seoKeywords: siteConfig.seo_keywords || '',
+      seoDescription: siteConfig.seo_description || '',
+      customCss: siteConfig.custom_css || '',
+      customJs: siteConfig.custom_js || '',
       streamer: streamer ? {
         name: streamer.name,
         bilibiliUrl: streamer.bilibili_url
@@ -30,29 +35,44 @@ export class SiteService {
   static updateSiteConfig(configData) {
     const {
       siteName,
+      siteSubtitle,
       defaultPlaylistName,
       avatarUrl,
       backgroundUrl,
-      themeConfig
+      themeConfig,
+      seoKeywords,
+      seoDescription,
+      customCss,
+      customJs
     } = configData;
 
     const stmt = db.prepare(`
       UPDATE site_config 
       SET site_name = ?, 
+          site_subtitle = ?,
           default_playlist_name = ?, 
           avatar_url = ?, 
           background_url = ?,
           theme_config_json = ?,
+          seo_keywords = ?,
+          seo_description = ?,
+          custom_css = ?,
+          custom_js = ?,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = 1
     `);
 
     stmt.run(
       siteName,
+      siteSubtitle || '',
       defaultPlaylistName,
       avatarUrl || '',
       backgroundUrl || '',
-      JSON.stringify(themeConfig || {})
+      JSON.stringify(themeConfig || {}),
+      seoKeywords || '',
+      seoDescription || '',
+      customCss || '',
+      customJs || ''
     );
 
     return { success: true, message: '站点配置更新成功' };

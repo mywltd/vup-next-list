@@ -58,6 +58,58 @@ function App() {
     try {
       const config = await siteAPI.getMeta();
       setSiteConfig(config);
+      
+      // 更新网页标题
+      if (config) {
+        const title = config.siteSubtitle 
+          ? `${config.siteName} - ${config.siteSubtitle}`
+          : config.siteName || 'VUP 音乐歌单';
+        document.title = title;
+        
+        // 更新SEO meta标签
+        if (config.seoDescription) {
+          let metaDesc = document.querySelector('meta[name="description"]');
+          if (!metaDesc) {
+            metaDesc = document.createElement('meta');
+            metaDesc.setAttribute('name', 'description');
+            document.head.appendChild(metaDesc);
+          }
+          metaDesc.setAttribute('content', config.seoDescription);
+        }
+        
+        if (config.seoKeywords) {
+          let metaKeywords = document.querySelector('meta[name="keywords"]');
+          if (!metaKeywords) {
+            metaKeywords = document.createElement('meta');
+            metaKeywords.setAttribute('name', 'keywords');
+            document.head.appendChild(metaKeywords);
+          }
+          metaKeywords.setAttribute('content', config.seoKeywords);
+        }
+        
+        // 注入自定义CSS
+        if (config.customCss) {
+          let styleEl = document.getElementById('custom-site-css');
+          if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = 'custom-site-css';
+            document.head.appendChild(styleEl);
+          }
+          styleEl.textContent = config.customCss;
+        }
+        
+        // 注入自定义JS
+        if (config.customJs) {
+          let scriptEl = document.getElementById('custom-site-js');
+          if (scriptEl) {
+            scriptEl.remove();
+          }
+          scriptEl = document.createElement('script');
+          scriptEl.id = 'custom-site-js';
+          scriptEl.textContent = config.customJs;
+          document.body.appendChild(scriptEl);
+        }
+      }
     } catch (error) {
       console.error('加载站点配置失败:', error);
     }
@@ -122,27 +174,53 @@ function App() {
       <Box
         sx={{
           minHeight: '100vh',
-          background: mode === 'dark'
-            ? 'linear-gradient(135deg, #0D0F1C 0%, #1A1F3D 100%)'
-            : 'linear-gradient(135deg, #F5F7FF 0%, #E8ECFF 100%)',
-          backgroundAttachment: 'fixed',
+          position: 'relative',
+          // 背景图片
+          ...(siteConfig?.backgroundUrl && {
+            backgroundImage: `url(${siteConfig.backgroundUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
+            backgroundRepeat: 'no-repeat',
+            '&::before': {
+              content: '""',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: mode === 'dark' 
+                ? 'rgba(13, 15, 28, 0.7)' 
+                : 'rgba(245, 247, 255, 0.8)',
+              zIndex: 0,
+              pointerEvents: 'none',
+            },
+          }),
+          // 默认渐变背景（无背景图时）
+          ...(!siteConfig?.backgroundUrl && {
+            background: mode === 'dark'
+              ? 'linear-gradient(135deg, #0D0F1C 0%, #1A1F3D 100%)'
+              : 'linear-gradient(135deg, #F5F7FF 0%, #E8ECFF 100%)',
+            backgroundAttachment: 'fixed',
+          }),
         }}
       >
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <AppLayout
-                siteConfig={siteConfig}
-                mode={mode}
-                onToggleTheme={toggleTheme}
-                userThemeConfig={userThemeConfig}
-                onUpdateUserTheme={updateUserTheme}
-              />
-            }
-          >
-            <Route index element={<HomePage siteConfig={siteConfig} />} />
-          </Route>
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <AppLayout
+                  siteConfig={siteConfig}
+                  mode={mode}
+                  onToggleTheme={toggleTheme}
+                  userThemeConfig={userThemeConfig}
+                  onUpdateUserTheme={updateUserTheme}
+                />
+              }
+            >
+              <Route index element={<HomePage siteConfig={siteConfig} />} />
+            </Route>
           <Route 
             path="/admin/login" 
             element={
@@ -164,8 +242,9 @@ function App() {
           >
             <Route index element={<AdminPage onConfigUpdate={loadSiteConfig} />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Box>
       </Box>
     </ThemeProvider>
   );

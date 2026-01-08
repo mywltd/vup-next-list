@@ -30,16 +30,22 @@ export class SetupService {
       // 2. 创建站点配置
       const insertSiteConfig = db.prepare(`
         INSERT INTO site_config (
-          id, site_name, default_playlist_name, avatar_url, 
-          background_url, theme_config_json
-        ) VALUES (1, ?, ?, ?, ?, ?)
+          id, site_name, site_subtitle, default_playlist_name, avatar_url, 
+          background_url, theme_config_json, seo_keywords, seo_description,
+          custom_css, custom_js
+        ) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       insertSiteConfig.run(
         siteName,
+        setupData.siteSubtitle || '',
         defaultPlaylistName,
         avatarUrl || '',
         backgroundUrl || '',
-        JSON.stringify(themeConfig || {})
+        JSON.stringify(themeConfig || {}),
+        setupData.seoKeywords || '',
+        setupData.seoDescription || '',
+        '',
+        ''
       );
 
       // 3. 创建主播信息

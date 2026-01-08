@@ -17,12 +17,14 @@ import {
   Logout,
   Upload,
   Download,
+  Code,
 } from '@mui/icons-material';
 import { authAPI } from '../services/api';
 import SiteConfigPanel from '../components/admin/SiteConfigPanel';
 import PlaylistManagePanel from '../components/admin/PlaylistManagePanel';
 import StreamerPanel from '../components/admin/StreamerPanel';
 import ImportExportPanel from '../components/admin/ImportExportPanel';
+import CustomConfigPanel from '../components/admin/CustomConfigPanel';
 
 function AdminPage({ onConfigUpdate }) {
   const navigate = useNavigate();
@@ -107,6 +109,7 @@ function AdminPage({ onConfigUpdate }) {
           <Tab icon={<MusicNote />} label="歌单管理" />
           <Tab icon={<LiveTv />} label="主播信息" />
           <Tab icon={<Upload />} label="导入导出" />
+          <Tab icon={<Code />} label="自定义配置" />
         </Tabs>
       </Card>
 
@@ -117,6 +120,7 @@ function AdminPage({ onConfigUpdate }) {
           {currentTab === 1 && <PlaylistManagePanel />}
           {currentTab === 2 && <StreamerPanel onUpdate={onConfigUpdate} />}
           {currentTab === 3 && <ImportExportPanel />}
+          {currentTab === 4 && <CustomConfigPanel />}
         </CardContent>
       </Card>
     </Box>

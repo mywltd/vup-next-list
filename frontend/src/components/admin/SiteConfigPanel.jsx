@@ -20,6 +20,7 @@ function SiteConfigPanel({ onUpdate }) {
   
   const [config, setConfig] = useState({
     siteName: '',
+    siteSubtitle: '',
     defaultPlaylistName: '',
     avatarUrl: '',
     backgroundUrl: '',
@@ -27,6 +28,8 @@ function SiteConfigPanel({ onUpdate }) {
       primaryColor: '#FF6B9D',
       secondaryColor: '#7B68EE',
     },
+    seoKeywords: '',
+    seoDescription: '',
   });
 
   useEffect(() => {
@@ -38,6 +41,7 @@ function SiteConfigPanel({ onUpdate }) {
       const data = await siteAPI.getMeta();
       setConfig({
         siteName: data.siteName || '',
+        siteSubtitle: data.siteSubtitle || '',
         defaultPlaylistName: data.defaultPlaylistName || '',
         avatarUrl: data.avatarUrl || '',
         backgroundUrl: data.backgroundUrl || '',
@@ -45,6 +49,8 @@ function SiteConfigPanel({ onUpdate }) {
           primaryColor: '#FF6B9D',
           secondaryColor: '#7B68EE',
         },
+        seoKeywords: data.seoKeywords || '',
+        seoDescription: data.seoDescription || '',
       });
     } catch (error) {
       setMessage({ type: 'error', text: '加载配置失败' });
@@ -79,11 +85,16 @@ function SiteConfigPanel({ onUpdate }) {
 
     try {
       const { url } = await siteAPI.uploadFile(file);
+      // 将相对路径转换为完整URL
+      const fullUrl = url.startsWith('http') 
+        ? url 
+        : `${window.location.origin}${url}`;
+      
       setConfig({
         ...config,
-        [field]: url,
+        [field]: fullUrl,
       });
-      setMessage({ type: 'success', text: '文件上传成功' });
+      setMessage({ type: 'success', text: '文件上传成功，URL已自动填充' });
     } catch (error) {
       setMessage({ type: 'error', text: '文件上传失败: ' + error.message });
     } finally {
@@ -138,6 +149,15 @@ function SiteConfigPanel({ onUpdate }) {
           value={config.siteName}
           onChange={handleChange('siteName')}
           required
+          helperText="将显示在浏览器标题栏"
+        />
+
+        <TextField
+          fullWidth
+          label="站点副标题"
+          value={config.siteSubtitle}
+          onChange={handleChange('siteSubtitle')}
+          helperText="将显示在标题后，格式：站点名称 - 副标题"
         />
 
         <TextField
@@ -201,6 +221,31 @@ function SiteConfigPanel({ onUpdate }) {
               ),
             }}
           />
+        </Box>
+
+        <Box>
+          <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+            SEO 配置
+          </Typography>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              label="SEO 关键词"
+              value={config.seoKeywords}
+              onChange={handleChange('seoKeywords')}
+              helperText="多个关键词用逗号分隔"
+              placeholder="音乐, 歌单, VUP"
+            />
+            <TextField
+              fullWidth
+              label="SEO 描述"
+              value={config.seoDescription}
+              onChange={handleChange('seoDescription')}
+              multiline
+              rows={3}
+              helperText="网站描述，用于搜索引擎展示"
+            />
+          </Stack>
         </Box>
 
         <Box>

@@ -39,12 +39,18 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
         color="default"
         sx={{
           backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
           backgroundColor: mode === 'dark'
-            ? 'rgba(20, 25, 45, 0.85)'
-            : 'rgba(255, 255, 255, 0.85)',
+            ? 'rgba(20, 25, 45, 0.75)'
+            : 'rgba(255, 255, 255, 0.75)',
+          borderBottom: mode === 'dark'
+            ? '1px solid rgba(255, 255, 255, 0.1)'
+            : '1px solid rgba(123, 104, 238, 0.15)',
           boxShadow: mode === 'dark'
-            ? '0 4px 30px rgba(0, 0, 0, 0.5)'
-            : '0 4px 30px rgba(123, 104, 238, 0.1)',
+            ? '0 4px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+            : '0 4px 30px rgba(123, 104, 238, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+          position: 'relative',
+          zIndex: 10,
         }}
       >
         <Toolbar>
@@ -142,7 +148,7 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
       </AppBar>
 
       {/* 主内容区域 */}
-      <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
+      <Box component="main" sx={{ flexGrow: 1, py: 4, position: 'relative', zIndex: 1 }}>
         <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
           <Outlet />
         </Container>
@@ -156,10 +162,16 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
           px: 2,
           mt: 'auto',
           textAlign: 'center',
-          backdropFilter: 'blur(10px)',
+          backdropFilter: 'blur(10px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(10px) saturate(180%)',
           backgroundColor: mode === 'dark'
-            ? 'rgba(20, 25, 45, 0.5)'
-            : 'rgba(255, 255, 255, 0.5)',
+            ? 'rgba(20, 25, 45, 0.6)'
+            : 'rgba(255, 255, 255, 0.6)',
+          borderTop: mode === 'dark'
+            ? '1px solid rgba(255, 255, 255, 0.08)'
+            : '1px solid rgba(123, 104, 238, 0.1)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <Typography variant="body2" color="text.secondary">

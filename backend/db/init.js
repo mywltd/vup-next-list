@@ -56,14 +56,43 @@ export function initDatabase() {
     CREATE TABLE IF NOT EXISTS site_config (
       id INTEGER PRIMARY KEY CHECK (id = 1),
       site_name TEXT NOT NULL,
+      site_subtitle TEXT,
       default_playlist_name TEXT NOT NULL,
       avatar_url TEXT,
       background_url TEXT,
       theme_config_json TEXT,
+      seo_keywords TEXT,
+      seo_description TEXT,
+      custom_css TEXT,
+      custom_js TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+  
+  // 迁移旧数据：检查并添加新字段（如果表已存在）
+  try {
+    const tableInfo = db.prepare("PRAGMA table_info(site_config)").all();
+    const columns = tableInfo.map(col => col.name);
+    
+    if (!columns.includes('site_subtitle')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN site_subtitle TEXT');
+    }
+    if (!columns.includes('seo_keywords')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN seo_keywords TEXT');
+    }
+    if (!columns.includes('seo_description')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN seo_description TEXT');
+    }
+    if (!columns.includes('custom_css')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN custom_css TEXT');
+    }
+    if (!columns.includes('custom_js')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN custom_js TEXT');
+    }
+  } catch (error) {
+    console.warn('数据库迁移警告:', error.message);
+  }
 
   // 主播信息表
   db.exec(`

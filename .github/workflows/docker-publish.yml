@@ -1,5 +1,6 @@
 name: Docker Build and Publish
 
+# 触发条件：推送到 main/master 分支、创建版本标签、或提交 PR
 on:
   push:
     branches:
@@ -12,16 +13,19 @@ on:
       - main
       - master
 
+# 环境变量配置
 env:
   REGISTRY: docker.io
+  # 使用 Repository secrets 中的 DOCKERHUB_USERNAME
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/vup-music
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    # 权限设置
     permissions:
-      contents: read
-      packages: write
+      contents: write  # 需要写权限以创建 Release
+      packages: write  # 需要写权限以推送 Docker 镜像
 
     steps:
       - name: Checkout repository
@@ -30,6 +34,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 登录 Docker Hub (使用 Repository secrets)
+      # 需要在仓库设置中配置以下 secrets:
+      # - DOCKERHUB_USERNAME: Docker Hub 用户名
+      # - DOCKERHUB_TOKEN: Docker Hub 访问令牌
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
@@ -63,20 +71,25 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
 
+      # 创建 GitHub Release (仅在推送版本标签时)
+      # GITHUB_TOKEN 是 GitHub Actions 自动提供的 Repository secret
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
           body: |
-            ## Docker 镜像
+            ## 🎉 VUP 音乐歌单系统新版本发布
+            
+            ### 📦 Docker 镜像
             
             ```bash
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
             ```
             
-            ## 快速启动
+            ### 🚀 快速启动
             
+            **方式一：Docker 命令**
             ```bash
             docker run -d \
               --name vup-music \
@@ -85,11 +98,30 @@ jobs:
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
             ```
             
-            或使用 docker-compose:
-            
+            **方式二：Docker Compose**
             ```bash
+            git clone https://github.com/${{ github.repository }}.git
+            cd vup-next-list
             docker-compose up -d
             ```
+            
+            **方式三：一键启动脚本**
+            ```bash
+            # Linux/macOS
+            ./start.sh
+            
+            # Windows
+            start.bat
+            ```
+            
+            ### 📖 文档
+            - [使用指南](https://github.com/${{ github.repository }}/blob/main/README.md)
+            - [安装文档](https://github.com/${{ github.repository }}/blob/main/INSTALL.md)
+            - [更新日志](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)
+            
+            ### 🎯 访问地址
+            启动后访问: http://localhost:3001
         env:
+          # GITHUB_TOKEN 是自动提供的 Repository secret，用于创建 Release
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

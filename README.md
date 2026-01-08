@@ -234,24 +234,40 @@ cp data/database.db data/database.db.backup
 
 ## 🚀 CI/CD
 
-项目使用 GitHub Actions 自动构建和发布。
+项目使用 GitHub Actions 自动构建和发布。所有敏感信息使用 **Repository Secrets** 存储。
 
-### 配置步骤
+### 配置 Repository Secrets
 
-1. 在 GitHub 仓库设置中添加 Secrets：
-   - `DOCKERHUB_USERNAME`: Docker Hub 用户名
-   - `DOCKERHUB_TOKEN`: Docker Hub 访问令牌
+> 📖 **详细配置指南**: [.github/SECRETS_SETUP.md](.github/SECRETS_SETUP.md)
 
-2. 推送代码到 `main` 或 `master` 分支，自动触发构建
+1. 在 GitHub 仓库设置中添加 **Repository Secrets**：
+   - 进入 `Settings` → `Secrets and variables` → `Actions`
+   - 点击 `New repository secret` 添加以下 Secrets：
+     - `DOCKERHUB_USERNAME`: 你的 Docker Hub 用户名
+     - `DOCKERHUB_TOKEN`: Docker Hub 访问令牌（在 Docker Hub 生成）
 
-3. 创建 tag 发布版本：
+2. 推送代码到 `main` 或 `master` 分支，自动触发构建：
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git push origin main
 ```
 
-系统会自动构建 Docker 镜像并创建 GitHub Release。
+3. 创建版本标签发布新版本：
+
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+### 自动化流程
+
+- ✅ **推送代码**: 自动构建并推送 `latest` 镜像
+- ✅ **创建标签**: 自动构建多个版本标签并创建 GitHub Release
+- ✅ **提交 PR**: 仅构建测试，不推送镜像
+
+### 查看构建状态
+
+访问 [Actions 页面](../../actions) 查看构建日志和状态。
 
 ## 📝 API 文档
 

@@ -5,8 +5,10 @@
 ## 📋 前提条件
 
 - 服务器已安装 Docker（版本 >= 20.10）
-- 服务器已安装 Docker Compose（版本 >= 2.0）
+- Docker Compose V2（集成在 Docker 中，使用 `docker compose` 命令）
 - 开放端口 3001（或自定义端口）
+
+**注意**：本文档使用 Docker Compose V2 命令 `docker compose`，如果你使用的是旧版独立的 `docker-compose`，请将所有 `docker compose` 替换为 `docker-compose`。
 
 ## 🚀 方式一：使用 docker-compose（推荐）
 
@@ -36,7 +38,7 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - DATA_DIR=/data
-      - SESSION_SECRET=请修改为你的随机密钥-至少32位
+      - SESSION_SECRET=VUP-hR7kY9X4QmP2EJv6A8LZCwNfS3T0K5U1rDBeMVaYqG
       - CORS_ORIGIN=http://localhost:3000
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/api/health"]
@@ -56,13 +58,13 @@ EOF
 ### 步骤 3: 启动服务
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 步骤 4: 查看日志
 
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ### 步骤 5: 访问系统
@@ -173,27 +175,27 @@ sudo certbot renew --dry-run
 
 ## 🔄 服务管理命令
 
-### 使用 docker-compose
+### 使用 docker compose
 
 ```bash
 # 启动服务
-docker-compose up -d
+docker compose up -d
 
 # 停止服务
-docker-compose down
+docker compose down
 
 # 重启服务
-docker-compose restart
+docker compose restart
 
 # 查看日志
-docker-compose logs -f
+docker compose logs -f
 
 # 查看状态
-docker-compose ps
+docker compose ps
 
 # 更新镜像
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 ```
 
 ### 使用 Docker 命令
@@ -282,8 +284,8 @@ ports:
 然后重启：
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### 修改环境变量
@@ -415,12 +417,12 @@ services:
 
 | 操作 | 命令 |
 |------|------|
-| 启动服务 | `docker-compose up -d` |
-| 停止服务 | `docker-compose down` |
-| 查看日志 | `docker-compose logs -f` |
-| 更新镜像 | `docker-compose pull && docker-compose up -d` |
-| 重启服务 | `docker-compose restart` |
-| 查看状态 | `docker-compose ps` |
+| 启动服务 | `docker compose up -d` |
+| 停止服务 | `docker compose down` |
+| 查看日志 | `docker compose logs -f` |
+| 更新镜像 | `docker compose pull && docker compose up -d` |
+| 重启服务 | `docker compose restart` |
+| 查看状态 | `docker compose ps` |
 | 备份数据 | `tar -czf backup.tar.gz /opt/vupmusic/data` |
 
 ---

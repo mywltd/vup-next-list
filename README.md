@@ -30,8 +30,10 @@ cd vup-music
 2. 启动服务
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
+
+> **注意**：如果你使用的是旧版 Docker Compose V1，请使用 `docker-compose` 命令。
 
 3. 访问应用
 
@@ -208,6 +210,10 @@ docker run -d \
 ### 自定义构建
 
 ```bash
+# 使用 docker compose 构建
+docker compose build
+
+# 或使用 docker build
 docker build -t vup-music:custom .
 docker run -d --name vup-music -p 3001:3001 -v ./data:/data vup-music:custom
 ```

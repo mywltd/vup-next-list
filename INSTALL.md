@@ -62,13 +62,15 @@ nano .env
 3. **启动服务**
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
+
+> **注意**：本项目使用 Docker Compose V2。如果你的环境使用 V1，请将 `docker compose` 替换为 `docker-compose`。
 
 4. **查看日志**
 
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
 5. **访问应用**
@@ -79,27 +81,29 @@ docker-compose logs -f
 
 ```bash
 # 启动服务
-docker-compose up -d
+docker compose up -d
 
 # 停止服务
-docker-compose down
+docker compose down
 
 # 重启服务
-docker-compose restart
+docker compose restart
 
 # 查看日志
-docker-compose logs -f
+docker compose logs -f
 
 # 查看服务状态
-docker-compose ps
+docker compose ps
 
 # 更新服务
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 
 # 完全清理（包括数据）
-docker-compose down -v
+docker compose down -v
 ```
+
+> **Docker Compose V1 用户**：如果你使用的是旧版 `docker-compose` 命令，请将上述命令中的 `docker compose` 替换为 `docker-compose`。
 
 ## 手动部署
 
@@ -295,14 +299,14 @@ rm data/database.db-shm
 
 ```bash
 docker system prune -a
-docker-compose build --no-cache
+docker compose build --no-cache
 ```
 
 ### 查看详细日志
 
 ```bash
 # Docker 日志
-docker-compose logs -f
+docker compose logs -f
 
 # 后端日志
 cd backend
@@ -334,13 +338,13 @@ cp data/database.db backup/database.db.$(date +%Y%m%d)
 
 ```bash
 # 拉取最新镜像
-docker-compose pull
+docker compose pull
 
 # 停止旧版本
-docker-compose down
+docker compose down
 
 # 启动新版本
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 手动升级

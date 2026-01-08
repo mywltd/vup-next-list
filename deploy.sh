@@ -51,15 +51,22 @@ check_docker() {
         exit 1
     fi
     
-    if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
+    # 优先检查 Docker Compose V2（docker compose）
+    if docker compose version &> /dev/null; then
+        COMPOSE_CMD="docker compose"
+        echo -e "${GREEN}✅ 检测到 Docker Compose V2${NC}"
+    elif command -v docker-compose &> /dev/null; then
+        COMPOSE_CMD="docker-compose"
+        echo -e "${YELLOW}⚠️  检测到 Docker Compose V1，建议升级到 V2${NC}"
+    else
         echo -e "${RED}❌ Docker Compose 未安装${NC}"
-        echo -e "${YELLOW}请先安装 Docker Compose${NC}"
+        echo -e "${YELLOW}请先安装 Docker Compose V2${NC}"
         exit 1
     fi
     
     echo -e "${GREEN}✅ Docker 环境检查通过${NC}"
     docker --version
-    docker-compose version 2>/dev/null || docker compose version
+    $COMPOSE_CMD version
     echo ""
 }
 
@@ -165,7 +172,7 @@ stop_old_container() {
 start_service() {
     echo -e "${BLUE}🚀 启动服务...${NC}"
     
-    docker-compose up -d
+    $COMPOSE_CMD up -d
     
     echo -e "${GREEN}✅ 服务启动成功${NC}"
     echo ""
@@ -208,10 +215,10 @@ show_info() {
     echo -e "   3. 配置完成后即可使用"
     echo ""
     echo -e "${BLUE}🔧 常用命令:${NC}"
-    echo -e "   查看日志: ${YELLOW}cd ${INSTALL_DIR} && docker-compose logs -f${NC}"
-    echo -e "   停止服务: ${YELLOW}cd ${INSTALL_DIR} && docker-compose down${NC}"
-    echo -e "   重启服务: ${YELLOW}cd ${INSTALL_DIR} && docker-compose restart${NC}"
-    echo -e "   更新镜像: ${YELLOW}cd ${INSTALL_DIR} && docker-compose pull && docker-compose up -d${NC}"
+    echo -e "   查看日志: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} logs -f${NC}"
+    echo -e "   停止服务: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} down${NC}"
+    echo -e "   重启服务: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} restart${NC}"
+    echo -e "   更新镜像: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} pull && ${COMPOSE_CMD} up -d${NC}"
     echo ""
     echo -e "${BLUE}📁 数据目录:${NC}"
     echo -e "   ${INSTALL_DIR}/data"

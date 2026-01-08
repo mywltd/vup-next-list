@@ -12,9 +12,14 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# 检查 Docker Compose 是否安装
-if ! command -v docker-compose &> /dev/null; then
-    echo "❌ 错误: 未检测到 Docker Compose，请先安装 Docker Compose"
+# 检查 Docker Compose 是否安装（优先 V2）
+if docker compose version &> /dev/null 2>&1; then
+    COMPOSE_CMD="docker compose"
+elif command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD="docker-compose"
+    echo "⚠️  检测到 Docker Compose V1，建议升级到 V2"
+else
+    echo "❌ 错误: 未检测到 Docker Compose，请先安装"
     exit 1
 fi
 
@@ -30,14 +35,14 @@ fi
 
 echo ""
 echo "🚀 启动服务..."
-docker-compose up -d
+$COMPOSE_CMD up -d
 
 echo ""
 echo "⏳ 等待服务启动..."
 sleep 3
 
 # 检查服务状态
-if docker-compose ps | grep -q "Up"; then
+if $COMPOSE_CMD ps | grep -q "Up"; then
     echo ""
     echo "✅ 服务启动成功！"
     echo ""
@@ -47,13 +52,13 @@ if docker-compose ps | grep -q "Up"; then
     echo ""
     echo "💡 提示:"
     echo "   - 首次访问会进入安装向导"
-    echo "   - 查看日志: docker-compose logs -f"
-    echo "   - 停止服务: docker-compose down"
+    echo "   - 查看日志: $COMPOSE_CMD logs -f"
+    echo "   - 停止服务: $COMPOSE_CMD down"
     echo ""
 else
     echo ""
     echo "❌ 服务启动失败，请检查日志:"
-    echo "   docker-compose logs"
+    echo "   $COMPOSE_CMD logs"
     exit 1
 fi
 

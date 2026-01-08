@@ -180,7 +180,7 @@ function App() {
             backgroundImage: `url(${siteConfig.backgroundUrl})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
+            backgroundAttachment: { xs: 'scroll', md: 'fixed' }, // 移动端使用scroll，PC端使用fixed
             backgroundRepeat: 'no-repeat',
             '&::before': {
               content: '""',

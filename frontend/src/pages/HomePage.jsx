@@ -23,8 +23,6 @@ import {
   ListItemText,
   Divider,
   Paper,
-  FormControlLabel,
-  Checkbox,
 } from '@mui/material';
 import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
@@ -74,12 +72,10 @@ function HomePage({ siteConfig }) {
     }
   }, [siteConfig?.avatarUrl]);
   
-  // 可用的筛选选项
+  // 可用的筛选选项（标签云）
   const [languages, setLanguages] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [firstLetters, setFirstLetters] = useState([]);
-  
-  // 固定的种类选项（根据图片描述）
-  const categories = ['流行', '摇滚', '古典', '电子', '嘻哈'];
   
   // 提示消息
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -113,18 +109,16 @@ function HomePage({ siteConfig }) {
     }
   }, [page, searchText, selectedLetter, selectedLanguages, selectedSpecial]);
 
-  // 加载筛选选项
+  // 加载筛选选项（标签云）
   useEffect(() => {
     const loadFilters = async () => {
       try {
-        const [languagesData, lettersData] = await Promise.all([
-          playlistAPI.getLanguages(),
-          playlistAPI.getFirstLetters(),
-        ]);
-        setLanguages(languagesData.languages);
-        setFirstLetters(lettersData.firstLetters);
+        const tagCloud = await playlistAPI.getTagCloud();
+        setLanguages(tagCloud.languages || []);
+        setCategories(tagCloud.categories || []);
+        setFirstLetters(tagCloud.firstLetters || []);
       } catch (error) {
-        console.error('加载筛选选项失败:', error);
+        console.error('加载标签云失败:', error);
       }
     };
     loadFilters();
@@ -175,126 +169,166 @@ function HomePage({ siteConfig }) {
     setPage(1);
   };
 
-  // 处理语言复选框变化
-  const handleLanguageChange = (lang) => (event) => {
-    if (event.target.checked) {
-      setSelectedLanguages([...selectedLanguages, lang]);
-    } else {
-      setSelectedLanguages(selectedLanguages.filter(l => l !== lang));
-    }
-  };
 
-  // 处理种类复选框变化
-  const handleCategoryChange = (category) => (event) => {
-    if (event.target.checked) {
-      setSelectedCategories([...selectedCategories, category]);
-    } else {
-      setSelectedCategories(selectedCategories.filter(c => c !== category));
-    }
-  };
-
-  // 筛选器组件
+  // 筛选器组件 - 标签云形式
   const FilterPanel = () => (
     <Box>
-      {/* 语言筛选 */}
+      {/* 首字母筛选 */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-          <Language sx={{ fontSize: 20, color: 'text.secondary' }} />
-          <Typography variant="subtitle2" fontWeight={600}>
-            语言
+          <Typography variant="subtitle2" fontWeight={600} color="primary">
+            首字母
           </Typography>
         </Box>
-        <Stack spacing={0.5}>
-          {languages.map((lang) => (
-            <FormControlLabel
-              key={lang}
-              control={
-                <Checkbox
-                  checked={selectedLanguages.includes(lang)}
-                  onChange={handleLanguageChange(lang)}
-                  size="small"
-                  sx={{
-                    color: 'primary.main',
-                    '&.Mui-checked': {
-                      color: 'primary.main',
-                    },
-                  }}
-                />
-              }
-              label={lang}
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+          {firstLetters.map((letter) => (
+            <Chip
+              key={letter}
+              label={letter}
+              size="small"
+              onClick={() => {
+                setSelectedLetter(selectedLetter === letter ? null : letter);
+                setPage(1);
+              }}
               sx={{
-                '& .MuiFormControlLabel-label': {
-                  fontSize: '0.875rem',
+                cursor: 'pointer',
+                backgroundColor: selectedLetter === letter 
+                  ? 'primary.main' 
+                  : theme.palette.mode === 'dark'
+                    ? 'rgba(110, 193, 228, 0.15)'
+                    : 'rgba(110, 193, 228, 0.12)',
+                color: selectedLetter === letter ? 'white' : 'primary.main',
+                border: `1px solid ${selectedLetter === letter ? 'primary.main' : 'rgba(110, 193, 228, 0.3)'}`,
+                fontWeight: selectedLetter === letter ? 700 : 600,
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  transform: 'scale(1.05)',
                 },
+                transition: 'all 0.2s ease',
               }}
             />
           ))}
-        </Stack>
+        </Box>
+      </Box>
+
+      {/* 语言筛选 */}
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+          <Typography variant="subtitle2" fontWeight={600} color="primary">
+            语言
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+          {languages.map((lang) => (
+            <Chip
+              key={lang}
+              label={lang}
+              size="small"
+              onClick={() => {
+                if (selectedLanguages.includes(lang)) {
+                  setSelectedLanguages(selectedLanguages.filter(l => l !== lang));
+                } else {
+                  setSelectedLanguages([...selectedLanguages, lang]);
+                }
+                setPage(1);
+              }}
+              sx={{
+                cursor: 'pointer',
+                backgroundColor: selectedLanguages.includes(lang)
+                  ? 'primary.main'
+                  : theme.palette.mode === 'dark'
+                    ? 'rgba(110, 193, 228, 0.15)'
+                    : 'rgba(110, 193, 228, 0.12)',
+                color: selectedLanguages.includes(lang) ? 'white' : 'primary.main',
+                border: `1px solid ${selectedLanguages.includes(lang) ? 'primary.main' : 'rgba(110, 193, 228, 0.3)'}`,
+                fontWeight: selectedLanguages.includes(lang) ? 700 : 600,
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  transform: 'scale(1.05)',
+                },
+                transition: 'all 0.2s ease',
+              }}
+            />
+          ))}
+        </Box>
       </Box>
 
       {/* 种类筛选 */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-          <Category sx={{ fontSize: 20, color: 'text.secondary' }} />
-          <Typography variant="subtitle2" fontWeight={600}>
+          <Typography variant="subtitle2" fontWeight={600} color="secondary">
             种类
           </Typography>
         </Box>
-        <Stack spacing={0.5}>
-          {categories.map((category) => (
-            <FormControlLabel
-              key={category}
-              control={
-                <Checkbox
-                  checked={selectedCategories.includes(category)}
-                  onChange={handleCategoryChange(category)}
-                  size="small"
-                  sx={{
-                    color: 'primary.main',
-                    '&.Mui-checked': {
-                      color: 'primary.main',
-                    },
-                  }}
-                />
-              }
-              label={category}
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+          {categories.map((cat) => (
+            <Chip
+              key={cat}
+              label={cat}
+              size="small"
+              onClick={() => {
+                if (selectedCategories.includes(cat)) {
+                  setSelectedCategories(selectedCategories.filter(c => c !== cat));
+                } else {
+                  setSelectedCategories([...selectedCategories, cat]);
+                }
+                setPage(1);
+              }}
               sx={{
-                '& .MuiFormControlLabel-label': {
-                  fontSize: '0.875rem',
+                cursor: 'pointer',
+                backgroundColor: selectedCategories.includes(cat)
+                  ? 'secondary.main'
+                  : theme.palette.mode === 'dark'
+                    ? 'rgba(255, 182, 193, 0.15)'
+                    : 'rgba(255, 182, 193, 0.12)',
+                color: selectedCategories.includes(cat) ? 'white' : 'secondary.main',
+                border: `1px solid ${selectedCategories.includes(cat) ? 'secondary.main' : 'rgba(255, 182, 193, 0.3)'}`,
+                fontWeight: selectedCategories.includes(cat) ? 700 : 600,
+                '&:hover': {
+                  backgroundColor: 'secondary.main',
+                  color: 'white',
+                  transform: 'scale(1.05)',
                 },
+                transition: 'all 0.2s ease',
               }}
             />
           ))}
-        </Stack>
+        </Box>
       </Box>
 
       {/* 特殊歌曲筛选 */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-          <Star sx={{ fontSize: 20, color: 'text.secondary' }} />
-          <Typography variant="subtitle2" fontWeight={600}>
+          <Typography variant="subtitle2" fontWeight={600} color="text.secondary">
             特殊歌曲
           </Typography>
         </Box>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={selectedSpecial === true}
-              onChange={(e) => setSelectedSpecial(e.target.checked ? true : null)}
-              size="small"
-              sx={{
-                color: 'primary.main',
-                '&.Mui-checked': {
-                  color: 'primary.main',
-                },
-              }}
-            />
-          }
+        <Chip
           label="仅显示特殊歌曲"
+          size="small"
+          icon={<Star sx={{ fontSize: 16 }} />}
+          onClick={() => {
+            setSelectedSpecial(selectedSpecial === true ? null : true);
+            setPage(1);
+          }}
           sx={{
-            '& .MuiFormControlLabel-label': {
-              fontSize: '0.875rem',
+            cursor: 'pointer',
+            backgroundColor: selectedSpecial === true
+              ? 'secondary.main'
+              : theme.palette.mode === 'dark'
+                ? 'rgba(255, 182, 193, 0.15)'
+                : 'rgba(255, 182, 193, 0.12)',
+            color: selectedSpecial === true ? 'white' : 'secondary.main',
+            border: `1px solid ${selectedSpecial === true ? 'secondary.main' : 'rgba(255, 182, 193, 0.3)'}`,
+            fontWeight: selectedSpecial === true ? 700 : 600,
+            '&:hover': {
+              backgroundColor: 'secondary.main',
+              color: 'white',
+              transform: 'scale(1.05)',
             },
+            transition: 'all 0.2s ease',
           }}
         />
       </Box>
@@ -413,9 +447,15 @@ function HomePage({ siteConfig }) {
 
       {/* PC端布局：左侧筛选器 + 右侧内容 */}
       {isDesktop ? (
-        <Box sx={{ display: 'flex', gap: 2, px: 3 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 3, 
+          maxWidth: 1400, 
+          mx: 'auto', 
+          px: 3 
+        }}>
           {/* 左侧筛选器（PC端）- 固定宽度 */}
-          <Box sx={{ flexShrink: 0, width: 280 }}>
+          <Box sx={{ flexShrink: 0, width: 260 }}>
             <Card 
               sx={{ 
                 position: 'sticky', 
@@ -843,8 +883,19 @@ function HomePage({ siteConfig }) {
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{
+          top: { xs: 72, sm: 80 }, // 在导航栏下方
+          zIndex: 1300, // 高于AppBar(1100)
+        }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity={snackbar.severity} 
+          sx={{ 
+            width: '100%',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

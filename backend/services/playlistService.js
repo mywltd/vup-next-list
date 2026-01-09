@@ -71,6 +71,25 @@ export class PlaylistService {
     return stmt.all().map(row => row.firstLetter);
   }
 
+  // 获取所有种类列表
+  static getCategories() {
+    const stmt = db.prepare('SELECT DISTINCT category FROM playlist ORDER BY category');
+    return stmt.all().map(row => row.category);
+  }
+
+  // 获取所有标签云数据（一次返回所有筛选选项）
+  static getTagCloud() {
+    const languages = this.getLanguages();
+    const categories = this.getCategories();
+    const firstLetters = this.getFirstLetters();
+    
+    return {
+      languages,
+      categories,
+      firstLetters
+    };
+  }
+
   // 添加歌曲
   static addSong(songData) {
     const { songName, singer, language, category, special, firstLetter, bilibiliClipUrl } = songData;

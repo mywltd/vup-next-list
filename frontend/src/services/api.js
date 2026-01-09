@@ -104,6 +104,9 @@ export const playlistAPI = {
   // 获取首字母列表
   getFirstLetters: () => api.get('/api/playlist/first-letters'),
   
+  // 获取标签云数据
+  getTagCloud: () => api.get('/api/playlist/tag-cloud'),
+  
   // 添加歌曲
   addSong: (data) => api.post('/api/playlist/add', data),
   

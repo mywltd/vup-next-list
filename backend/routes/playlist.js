@@ -43,6 +43,16 @@ router.get('/first-letters', (req, res) => {
   }
 });
 
+// 获取所有标签云数据
+router.get('/tag-cloud', (req, res) => {
+  try {
+    const tagCloud = PlaylistService.getTagCloud();
+    res.json(tagCloud);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // 添加歌曲（需要认证）
 router.post('/add', requireAuth, (req, res) => {
   try {

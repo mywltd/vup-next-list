@@ -116,7 +116,14 @@ function convertXlsxToJson(xlsxPath, jsonPath) {
             row['special'] === 'true';
         }
 
-        return {
+        const bilibiliClipUrl =
+          row['B站切片'] ||
+          row['切片链接'] ||
+          row['bilibiliClipUrl'] ||
+          row['bilibili_clip_url'] ||
+          '';
+
+        const result = {
           songName,
           singer,
           language,
@@ -124,6 +131,13 @@ function convertXlsxToJson(xlsxPath, jsonPath) {
           special,
           firstLetter: getFirstLetter(songName, row)
         };
+
+        // 只在有切片链接时才添加该字段
+        if (bilibiliClipUrl) {
+          result.bilibiliClipUrl = bilibiliClipUrl;
+        }
+
+        return result;
       })
       .filter(Boolean);
 
@@ -175,7 +189,7 @@ if (process.argv[1] === __filename) {
   node xlsx2json.js playlist.xlsx output.json
 
 Excel 推荐字段:
-  歌曲名 | 歌手 | 语种 | 种类 | 首字母 | 特殊歌曲
+  歌曲名 | 歌手 | 语种 | 种类 | 首字母 | 特殊歌曲 | B站切片
 `);
     process.exit(1);
   }

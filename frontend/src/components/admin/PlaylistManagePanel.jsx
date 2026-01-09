@@ -23,8 +23,15 @@ import {
   Stack,
   Pagination,
 } from '@mui/material';
-import { Add, Edit, Delete, Search } from '@mui/icons-material';
+import { Add, Edit, Delete, Search, PlayCircleOutline } from '@mui/icons-material';
 import { playlistAPI } from '../../services/api';
+
+// 从B站链接提取BV号
+function extractBVNumber(url) {
+  if (!url) return null;
+  const match = url.match(/BV[a-zA-Z0-9]+/);
+  return match ? match[0] : null;
+}
 
 function PlaylistManagePanel() {
   const [songs, setSongs] = useState([]);
@@ -182,6 +189,7 @@ function PlaylistManagePanel() {
               <TableCell>种类</TableCell>
               <TableCell>首字母</TableCell>
               <TableCell>特殊</TableCell>
+              <TableCell>切片</TableCell>
               <TableCell align="right">操作</TableCell>
             </TableRow>
           </TableHead>
@@ -195,6 +203,28 @@ function PlaylistManagePanel() {
                 <TableCell><Chip label={song.firstLetter} size="small" color="primary" /></TableCell>
                 <TableCell>
                   {song.special && <Chip label="特殊" size="small" color="secondary" />}
+                </TableCell>
+                <TableCell>
+                  {song.bilibiliClipUrl && (
+                    <Tooltip title={song.bilibiliClipUrl}>
+                      <Chip
+                        label={extractBVNumber(song.bilibiliClipUrl) || 'BV'}
+                        size="small"
+                        icon={<PlayCircleOutline />}
+                        onClick={() => window.open(song.bilibiliClipUrl, '_blank')}
+                        sx={{
+                          cursor: 'pointer',
+                          backgroundColor: 'rgba(0, 161, 214, 0.1)',
+                          color: '#00A1D6',
+                          border: '1px solid rgba(0, 161, 214, 0.3)',
+                          '&:hover': {
+                            backgroundColor: '#00A1D6',
+                            color: 'white',
+                          },
+                        }}
+                      />
+                    </Tooltip>
+                  )}
                 </TableCell>
                 <TableCell align="right">
                   <IconButton size="small" onClick={() => handleEdit(song)}>

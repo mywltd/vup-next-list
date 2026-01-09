@@ -25,11 +25,27 @@ import LoginPage from './pages/LoginPage';
 import AppLayout from './components/AppLayout';
 import LoadingPage from './components/LoadingPage';
 
+// 获取系统主题偏好
+function getSystemTheme() {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+}
+
 function App() {
-  // 从 localStorage 读取主题模式和自定义配色
+  // 主题模式：'light' (浅色) / 'dark' (深色)
+  // 初始化时优先使用系统配置，如果没有手动设置过则使用系统主题
   const [mode, setMode] = useState(() => {
-    return localStorage.getItem('themeMode') || 'light';
+    const saved = localStorage.getItem('themeMode');
+    if (saved) {
+      // 用户手动设置过，使用用户设置
+      return saved;
+    }
+    // 没有设置过，使用系统主题
+    return getSystemTheme();
   });
+  
   const [userThemeConfig, setUserThemeConfig] = useState(() => {
     const saved = localStorage.getItem('userThemeConfig');
     return saved ? JSON.parse(saved) : null;
@@ -38,6 +54,7 @@ function App() {
   const [installed, setInstalled] = useState(null);
   const [loading, setLoading] = useState(true);
   const [backgroundUrl, setBackgroundUrl] = useState(null);
+
 
   // 创建主题（优先使用用户自定义配色）
   const theme = useMemo(() => {
@@ -248,7 +265,7 @@ function App() {
               bottom: 0,
               backgroundColor: mode === 'dark' 
                 ? 'rgba(13, 15, 28, 0.7)' 
-                : 'rgba(245, 247, 255, 0.8)',
+                : 'rgba(245, 247, 255, 0.4)',
               zIndex: 0,
               pointerEvents: 'none',
             },
@@ -277,13 +294,8 @@ function App() {
               }
             >
               <Route index element={<HomePage siteConfig={siteConfig} />} />
+              <Route path="admin/login" element={<LoginPage mode={mode} />} />
             </Route>
-          <Route 
-            path="/admin/login" 
-            element={
-              <LoginPage mode={mode} />
-            } 
-          />
           <Route
             path="/admin"
             element={

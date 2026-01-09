@@ -70,42 +70,11 @@ function LoginPage({ mode = 'light' }) {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        minHeight: 'calc(100vh - 140px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 2,
-        position: 'relative',
-        // 背景图片
-        ...(siteConfig?.backgroundUrl && {
-          backgroundImage: `url(${siteConfig.backgroundUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-          backgroundRepeat: 'no-repeat',
-          '&::before': {
-            content: '""',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            backgroundColor: isDark 
-              ? 'rgba(13, 15, 28, 0.7)' 
-              : 'rgba(245, 247, 255, 0.8)',
-            zIndex: 0,
-            pointerEvents: 'none',
-          },
-        }),
-        // 默认渐变背景（无背景图时）
-        ...(!siteConfig?.backgroundUrl && {
-          background: isDark
-            ? 'linear-gradient(135deg, #0D0F1C 0%, #1A1F3D 100%)'
-            : 'linear-gradient(180deg, #f2f3f5 0%, #ffffff 100%)',
-          backgroundAttachment: 'fixed',
-        }),
       }}
     >
       <Card

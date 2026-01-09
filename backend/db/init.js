@@ -93,6 +93,9 @@ export function initDatabase() {
     if (!columns.includes('hidden_title')) {
       db.exec('ALTER TABLE site_config ADD COLUMN hidden_title TEXT');
     }
+    if (!columns.includes('copy_mode')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN copy_mode TEXT DEFAULT "normal"');
+    }
   } catch (error) {
     console.warn('数据库迁移警告:', error.message);
   }

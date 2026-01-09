@@ -8,6 +8,11 @@ import {
   Stack,
   CircularProgress,
   InputAdornment,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from '@mui/material';
 import { Save, Upload } from '@mui/icons-material';
 import { siteAPI } from '../../services/api';
@@ -31,6 +36,7 @@ function SiteConfigPanel({ onUpdate }) {
     seoKeywords: '',
     seoDescription: '',
     hiddenTitle: '',
+    copyMode: 'normal',
   });
 
   useEffect(() => {
@@ -53,6 +59,7 @@ function SiteConfigPanel({ onUpdate }) {
         seoKeywords: data.seoKeywords || '',
         seoDescription: data.seoDescription || '',
         hiddenTitle: data.hiddenTitle || '',
+        copyMode: data.copyMode || 'normal',
       });
     } catch (error) {
       setMessage({ type: 'error', text: '加载配置失败' });
@@ -186,6 +193,28 @@ function SiteConfigPanel({ onUpdate }) {
           value={config.defaultPlaylistName}
           onChange={handleChange('defaultPlaylistName')}
         />
+
+        <FormControl component="fieldset">
+          <FormLabel component="legend">复制模式</FormLabel>
+          <RadioGroup
+            value={config.copyMode}
+            onChange={handleChange('copyMode')}
+          >
+            <FormControlLabel 
+              value="normal" 
+              control={<Radio />} 
+              label="正常模式 - 只复制歌曲名"
+            />
+            <FormControlLabel 
+              value="song-request" 
+              control={<Radio />} 
+              label="点歌模式 - 复制为「点歌 歌名」格式"
+            />
+          </RadioGroup>
+          <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+            设置用户点击歌曲名时的复制格式，方便直播间点歌
+          </Typography>
+        </FormControl>
 
         <Box>
           <TextField

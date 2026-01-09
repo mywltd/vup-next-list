@@ -142,7 +142,15 @@ function HomePage({ siteConfig }) {
   };
 
   const handleCopy = async (songName) => {
-    const success = await copyToClipboard(songName);
+    // 根据站点配置的复制模式决定复制内容
+    const copyMode = siteConfig?.copyMode || 'normal';
+    let textToCopy = songName;
+    
+    if (copyMode === 'song-request') {
+      textToCopy = `点歌 ${songName}`;
+    }
+    
+    const success = await copyToClipboard(textToCopy);
     if (success) {
       showSnackbar(`已复制: ${songName}`, 'success');
     } else {
@@ -713,7 +721,7 @@ function HomePage({ siteConfig }) {
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}

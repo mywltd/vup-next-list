@@ -25,7 +25,7 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
       },
       background: {
         default: isDark ? '#0D0F1C' : '#F5F7FF',
-        paper: isDark ? 'rgba(20, 25, 45, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+        paper: isDark ? 'rgba(20, 25, 45, 0.8)' : 'rgba(255, 255, 255, 0.6)',
       },
       text: {
         primary: isDark ? '#E8E9FF' : '#1A1F3D',
@@ -131,13 +131,13 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
             backdropFilter: 'blur(20px) saturate(180%)',
             backgroundColor: isDark
               ? 'rgba(20, 25, 45, 0.75)'
-              : 'rgba(255, 255, 255, 0.75)',
+              : 'rgba(255, 255, 255, 0.5)',
             border: isDark
               ? '1px solid rgba(255, 255, 255, 0.1)'
-              : '1px solid rgba(123, 104, 238, 0.15)',
+              : '1px solid rgba(123, 104, 238, 0.1)',
             boxShadow: isDark
               ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-              : '0 8px 32px 0 rgba(123, 104, 238, 0.15)',
+              : '0 8px 32px 0 rgba(123, 104, 238, 0.1)',
           },
         },
       },
@@ -147,16 +147,16 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
             backdropFilter: 'blur(20px) saturate(180%)',
             backgroundColor: isDark
               ? 'rgba(20, 25, 45, 0.75)'
-              : 'rgba(255, 255, 255, 0.75)',
+              : 'rgba(255, 255, 255, 0.5)',
             border: isDark
               ? '1px solid rgba(255, 255, 255, 0.1)'
-              : '1px solid rgba(123, 104, 238, 0.15)',
+              : '1px solid rgba(123, 104, 238, 0.1)',
             transition: 'transform 0.3s ease, box-shadow 0.3s ease',
             '&:hover': {
               transform: 'translateY(-4px)',
               boxShadow: isDark
                 ? '0 12px 40px 0 rgba(123, 104, 238, 0.3)'
-                : '0 12px 40px 0 rgba(123, 104, 238, 0.25)',
+                : '0 12px 40px 0 rgba(123, 104, 238, 0.15)',
             },
           },
         },

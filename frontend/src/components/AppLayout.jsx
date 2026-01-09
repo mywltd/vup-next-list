@@ -183,7 +183,7 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
               />
 
               {/* 日夜模式切换 */}
-              <Tooltip title={mode === 'light' ? '切换到暗色模式' : '切换到亮色模式'}>
+              <Tooltip title={mode === 'light' ? '切换到深色模式' : '切换到浅色模式'}>
                 <IconButton 
                   onClick={onToggleTheme}
                   sx={{

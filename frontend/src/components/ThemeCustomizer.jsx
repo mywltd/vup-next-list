@@ -120,16 +120,17 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
                   sx={{
                     minWidth: 0,
                     p: 1.5,
-                    background: `linear-gradient(135deg, ${preset.primary} 0%, ${preset.secondary} 100%)`,
+                    backgroundColor: preset.primary,
                     color: 'white',
-                    border: 'none',
+                    borderColor: preset.secondary,
+                    borderWidth: 2,
                     fontSize: '0.875rem',
                     fontWeight: 600,
-                    textShadow: '0 1px 2px rgba(0,0,0,0.2)',
                     '&:hover': {
                       transform: 'scale(1.05)',
+                      backgroundColor: preset.secondary,
+                      borderColor: preset.primary,
                       boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                      border: 'none',
                     },
                     transition: 'all 0.2s ease',
                   }}
@@ -198,21 +199,36 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
             <Typography variant="caption" color="text.secondary" gutterBottom>
               预览效果
             </Typography>
-            <Box
-              sx={{
-                mt: 1,
-                p: 2,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`,
-                color: 'white',
-                textAlign: 'center',
-                textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-              }}
-            >
-              <Typography variant="body2" fontWeight={600}>
-                渐变预览效果
-              </Typography>
-            </Box>
+            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+              <Box
+                sx={{
+                  flex: 1,
+                  p: 1.5,
+                  borderRadius: 2,
+                  backgroundColor: primaryColor,
+                  color: 'white',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="caption" fontWeight={600}>
+                  主色
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  flex: 1,
+                  p: 1.5,
+                  borderRadius: 2,
+                  backgroundColor: secondaryColor,
+                  color: 'white',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="caption" fontWeight={600}>
+                  辅色
+                </Typography>
+              </Box>
+            </Stack>
           </Box>
 
           {/* 操作按钮 */}

@@ -348,36 +348,39 @@ function SiteConfigPanel({ onUpdate }) {
               快速选择预设配色：
             </Typography>
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              {colorPresets.map((preset) => (
-                <Button
-                  key={preset.name}
-                  variant="outlined"
-                  size="small"
-                  startIcon={<Palette />}
-                  onClick={() => {
-                    setConfig({
-                      ...config,
-                      themeConfig: {
-                        primaryColor: preset.primaryColor,
-                        secondaryColor: preset.secondaryColor,
-                      },
-                    });
-                    setMessage({ type: 'info', text: `已应用「${preset.name}」配色预设` });
-                  }}
-                  sx={{
-                    background: `linear-gradient(135deg, ${preset.primaryColor} 0%, ${preset.secondaryColor} 100%)`,
-                    color: 'white',
-                    border: 'none',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      border: 'none',
+            {colorPresets.map((preset) => (
+              <Button
+                key={preset.name}
+                variant="outlined"
+                size="small"
+                startIcon={<Palette />}
+                onClick={() => {
+                  setConfig({
+                    ...config,
+                    themeConfig: {
+                      primaryColor: preset.primaryColor,
+                      secondaryColor: preset.secondaryColor,
                     },
-                  }}
-                  title={preset.description}
-                >
-                  {preset.name}
-                </Button>
-              ))}
+                  });
+                  setMessage({ type: 'info', text: `已应用「${preset.name}」配色预设` });
+                }}
+                sx={{
+                  backgroundColor: preset.primaryColor,
+                  color: 'white',
+                  borderColor: preset.secondaryColor,
+                  borderWidth: 2,
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    backgroundColor: preset.secondaryColor,
+                    borderColor: preset.primaryColor,
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+                title={preset.description}
+              >
+                {preset.name}
+              </Button>
+            ))}
             </Stack>
           </Box>
           

@@ -327,23 +327,34 @@ function HomePage({ siteConfig }) {
         {avatarUrl && !isDesktop && (
           <Box
             sx={{
-              mb: 2,
+              mb: 3,
               display: 'flex',
               justifyContent: 'center',
             }}
           >
             <Box
               sx={{
-                width: { xs: 80, sm: 100 },
-                height: { xs: 80, sm: 100 },
+                width: { xs: 100, sm: 120 },
+                height: { xs: 100, sm: 120 },
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: `3px solid ${theme.palette.divider}`,
+                border: `4px solid`,
+                borderColor: theme.palette.mode === 'dark'
+                  ? 'rgba(110, 193, 228, 0.3)'
+                  : 'rgba(110, 193, 228, 0.4)',
                 backdropFilter: 'blur(10px)',
                 backgroundColor: theme.palette.mode === 'dark'
                   ? 'rgba(20, 25, 45, 0.5)'
-                  : 'rgba(255, 255, 255, 0.5)',
-                padding: '3px',
+                  : 'rgba(255, 255, 255, 0.4)',
+                padding: '4px',
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 8px 24px rgba(0, 0, 0, 0.4)'
+                  : '0 8px 24px rgba(110, 193, 228, 0.25)',
+                animation: 'float 3s ease-in-out infinite',
+                '@keyframes float': {
+                  '0%, 100%': { transform: 'translateY(0px)' },
+                  '50%': { transform: 'translateY(-10px)' },
+                },
               }}
             >
               <Box
@@ -363,15 +374,41 @@ function HomePage({ siteConfig }) {
         
         <Typography
           variant={isDesktop ? 'h3' : 'h4'}
-          fontWeight={600}
+          fontWeight={700}
           color="primary"
-          sx={{ mb: 1 }}
+          sx={{ 
+            mb: 1.5,
+            letterSpacing: '0.02em',
+          }}
         >
           {siteConfig?.defaultPlaylistName || '歌单'}
         </Typography>
-        <Typography variant="body1" color="text.secondary">
-          共收录 {total} 首歌曲
-        </Typography>
+        <Box
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 1,
+            px: 2.5,
+            py: 0.75,
+            borderRadius: 20,
+            backdropFilter: 'blur(10px)',
+            backgroundColor: theme.palette.mode === 'dark'
+              ? 'rgba(110, 193, 228, 0.15)'
+              : 'rgba(110, 193, 228, 0.12)',
+            border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(110, 193, 228, 0.3)' : 'rgba(110, 193, 228, 0.25)'}`,
+          }}
+        >
+          <MusicNote sx={{ fontSize: 18, color: 'primary.main' }} />
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              fontWeight: 600,
+              color: 'primary.main',
+            }}
+          >
+            共收录 {total} 首歌曲
+          </Typography>
+        </Box>
       </Box>
 
       {/* PC端布局：左侧筛选器 + 右侧内容 */}
@@ -537,58 +574,77 @@ function HomePage({ siteConfig }) {
               placeholder="搜索歌曲或歌手..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              size="small"
+              size="medium"
               sx={{
                 mb: 1.5,
                 '& .MuiOutlinedInput-root': {
                   backdropFilter: 'blur(20px) saturate(180%)',
                   WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                   backgroundColor: theme.palette.mode === 'dark'
-                    ? 'rgba(20, 25, 45, 0.7)'
-                    : 'rgba(255, 255, 255, 0.7)',
-                  border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
-                  borderRadius: 2,
+                    ? 'rgba(20, 25, 45, 0.75)'
+                    : 'rgba(255, 255, 255, 0.45)',
+                  border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.2)'}`,
+                  borderRadius: 3,
+                  boxShadow: theme.palette.mode === 'dark'
+                    ? 'none'
+                    : '0 2px 8px rgba(110, 193, 228, 0.08)',
                   '&:hover': {
                     backgroundColor: theme.palette.mode === 'dark'
-                      ? 'rgba(20, 25, 45, 0.8)'
-                      : 'rgba(255, 255, 255, 0.8)',
+                      ? 'rgba(20, 25, 45, 0.85)'
+                      : 'rgba(255, 255, 255, 0.6)',
+                    borderColor: 'primary.main',
                   },
                   '&.Mui-focused': {
                     backgroundColor: theme.palette.mode === 'dark'
-                      ? 'rgba(20, 25, 45, 0.8)'
-                      : 'rgba(255, 255, 255, 0.8)',
+                      ? 'rgba(20, 25, 45, 0.85)'
+                      : 'rgba(255, 255, 255, 0.6)',
+                    borderColor: 'primary.main',
+                    boxShadow: theme.palette.mode === 'dark'
+                      ? '0 0 0 2px rgba(110, 193, 228, 0.2)'
+                      : '0 0 0 2px rgba(110, 193, 228, 0.15)',
                   },
                 },
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Search sx={{ color: 'text.secondary' }} />
+                    <Search sx={{ color: 'primary.main' }} />
                   </InputAdornment>
                 ),
               }}
             />
-            {/* 筛选按钮 - 与搜索框左右对齐，高度一致 */}
+            {/* 筛选按钮 */}
             <Button
               fullWidth
               variant="outlined"
               onClick={() => setMobileFilterOpen(true)}
               startIcon={<FilterList />}
               sx={{
-                height: '40px', // 与TextField高度一致
+                height: '48px',
                 backdropFilter: 'blur(20px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                 backgroundColor: theme.palette.mode === 'dark'
-                  ? 'rgba(20, 25, 45, 0.7)'
-                  : 'rgba(255, 255, 255, 0.7)',
-                border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
-                borderRadius: 2,
+                  ? 'rgba(20, 25, 45, 0.75)'
+                  : 'rgba(255, 255, 255, 0.45)',
+                border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.25)'}`,
+                borderRadius: 3,
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                color: 'primary.main',
+                boxShadow: theme.palette.mode === 'dark'
+                  ? 'none'
+                  : '0 2px 8px rgba(110, 193, 228, 0.08)',
                 '&:hover': {
                   backgroundColor: theme.palette.mode === 'dark'
-                    ? 'rgba(20, 25, 45, 0.8)'
-                    : 'rgba(255, 255, 255, 0.8)',
+                    ? 'rgba(20, 25, 45, 0.85)'
+                    : 'rgba(255, 255, 255, 0.6)',
                   borderColor: 'primary.main',
+                  transform: 'translateY(-2px)',
+                  boxShadow: theme.palette.mode === 'dark'
+                    ? '0 4px 12px rgba(0, 0, 0, 0.3)'
+                    : '0 4px 16px rgba(110, 193, 228, 0.2)',
                 },
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
               筛选
@@ -602,21 +658,64 @@ function HomePage({ siteConfig }) {
             onClose={() => setMobileFilterOpen(false)}
             PaperProps={{
               sx: {
-                borderTopLeftRadius: 16,
-                borderTopRightRadius: 16,
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
                 maxHeight: '80vh',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                backgroundColor: theme.palette.mode === 'dark'
+                  ? 'rgba(20, 25, 45, 0.95)'
+                  : 'rgba(255, 255, 255, 0.95)',
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 -4px 24px rgba(0, 0, 0, 0.5)'
+                  : '0 -4px 24px rgba(110, 193, 228, 0.2)',
               },
             }}
           >
             <Box sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom fontWeight={600}>
+              {/* 抽屉顶部指示器 */}
+              <Box
+                sx={{
+                  width: 40,
+                  height: 4,
+                  borderRadius: 2,
+                  backgroundColor: theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.2)'
+                    : 'rgba(110, 193, 228, 0.3)',
+                  mx: 'auto',
+                  mb: 2,
+                }}
+              />
+              <Typography 
+                variant="h6" 
+                gutterBottom 
+                fontWeight={700}
+                color="primary"
+                sx={{ mb: 2 }}
+              >
                 筛选条件
               </Typography>
               <FilterPanel />
               <Button
                 fullWidth
                 variant="contained"
-                sx={{ mt: 2 }}
+                size="large"
+                sx={{ 
+                  mt: 3,
+                  py: 1.5,
+                  borderRadius: 3,
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  boxShadow: theme.palette.mode === 'dark'
+                    ? '0 4px 16px rgba(110, 193, 228, 0.3)'
+                    : '0 4px 16px rgba(110, 193, 228, 0.25)',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: theme.palette.mode === 'dark'
+                      ? '0 6px 24px rgba(110, 193, 228, 0.4)'
+                      : '0 6px 24px rgba(110, 193, 228, 0.35)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
                 onClick={() => setMobileFilterOpen(false)}
               >
                 确定
@@ -630,13 +729,14 @@ function HomePage({ siteConfig }) {
               backdropFilter: 'blur(20px) saturate(180%)',
               WebkitBackdropFilter: 'blur(20px) saturate(180%)',
               backgroundColor: theme.palette.mode === 'dark'
-                ? 'rgba(20, 25, 45, 0.7)'
-                : 'rgba(255, 255, 255, 0.7)',
-              border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
-              borderRadius: 2,
+                ? 'rgba(20, 25, 45, 0.75)'
+                : 'rgba(255, 255, 255, 0.45)',
+              border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.15)'}`,
+              borderRadius: 3,
               boxShadow: theme.palette.mode === 'dark'
                 ? '0 8px 32px rgba(0, 0, 0, 0.3)'
-                : '0 8px 32px rgba(0, 0, 0, 0.1)',
+                : '0 4px 24px rgba(110, 193, 228, 0.15)',
+              overflow: 'hidden',
             }}
           >
             {loading ? (
@@ -695,9 +795,12 @@ function HomePage({ siteConfig }) {
                   <Box sx={{ 
                     display: 'flex', 
                     justifyContent: 'center', 
-                    py: 2,
-                    borderTop: 1,
-                    borderColor: 'divider',
+                    py: 2.5,
+                    borderTop: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(110, 193, 228, 0.15)'}`,
+                    backdropFilter: 'blur(10px)',
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? 'rgba(20, 25, 45, 0.3)'
+                      : 'rgba(255, 255, 255, 0.3)',
                   }}>
                     <Pagination
                       count={totalPages}
@@ -707,6 +810,24 @@ function HomePage({ siteConfig }) {
                       size="medium"
                       showFirstButton
                       showLastButton
+                      sx={{
+                        '& .MuiPaginationItem-root': {
+                          fontWeight: 600,
+                          borderRadius: 2,
+                          '&:hover': {
+                            transform: 'scale(1.1)',
+                            backgroundColor: 'primary.main',
+                            color: 'white',
+                          },
+                          transition: 'all 0.2s ease',
+                        },
+                        '& .Mui-selected': {
+                          backgroundColor: 'primary.main',
+                          color: 'white',
+                          fontWeight: 700,
+                          boxShadow: '0 2px 8px rgba(110, 193, 228, 0.3)',
+                        },
+                      }}
                     />
                   </Box>
                 )}
@@ -949,25 +1070,33 @@ function SongListItem({
     <ListItem
       component="div"
       sx={{
-        py: 1.5,
-        px: { xs: 2, sm: 2.5 },
-        mb: 1,
-        mx: { xs: 0.5, sm: 1 },
-        borderRadius: 2,
-        backdropFilter: 'blur(10px)',
+        py: 2,
+        px: { xs: 2.5, sm: 3 },
+        mb: 1.5,
+        mx: 0,
+        borderRadius: 3,
+        backdropFilter: 'blur(15px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(15px) saturate(150%)',
         backgroundColor: isDark
-          ? 'rgba(30, 35, 55, 0.5)'
-          : 'rgba(255, 255, 255, 0.5)',
-        border: `1px solid ${theme.palette.divider}`,
+          ? 'rgba(30, 35, 55, 0.6)'
+          : 'rgba(255, 255, 255, 0.4)',
+        border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.2)'}`,
+        boxShadow: isDark
+          ? '0 2px 8px rgba(0, 0, 0, 0.2)'
+          : '0 2px 12px rgba(110, 193, 228, 0.12)',
         '&:hover': {
           backgroundColor: isDark
-            ? 'rgba(40, 45, 65, 0.6)'
-            : 'rgba(255, 255, 255, 0.7)',
+            ? 'rgba(40, 45, 65, 0.7)'
+            : 'rgba(255, 255, 255, 0.55)',
+          transform: 'translateY(-2px)',
+          boxShadow: isDark
+            ? '0 4px 16px rgba(0, 0, 0, 0.3)'
+            : '0 4px 20px rgba(110, 193, 228, 0.2)',
           '& .copy-icon': {
             opacity: 1,
           },
         },
-        transition: 'background-color 0.2s',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
         <ListItemText
@@ -976,15 +1105,18 @@ function SongListItem({
               <Tooltip title="点击复制歌曲名">
                 <Typography
                   variant="body1"
-                  fontWeight={600}
+                  fontWeight={700}
                   onClick={() => onCopy(song.songName)}
                   sx={{
                     flexGrow: 1,
                     cursor: 'pointer',
-                    fontSize: { xs: '0.95rem', sm: '1rem' },
+                    fontSize: { xs: '1rem', sm: '1.05rem' },
+                    letterSpacing: '0.02em',
+                    color: 'text.primary',
                     '&:hover': {
                       color: 'primary.main',
                     },
+                    transition: 'color 0.2s ease',
                   }}
                 >
                   {song.songName}
@@ -1050,8 +1182,19 @@ function SongListItem({
             >
               <Typography 
                 variant="body2" 
-                color="text.secondary"
-                sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}
+                sx={{ 
+                  fontSize: { xs: '0.85rem', sm: '0.9rem' },
+                  color: isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(42, 63, 95, 0.7)',
+                  fontWeight: 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  '&::before': {
+                    content: '"♪"',
+                    marginRight: '6px',
+                    color: 'primary.main',
+                    fontSize: '0.9rem',
+                  },
+                }}
               >
                 {song.singer}
               </Typography>
@@ -1059,19 +1202,25 @@ function SongListItem({
                 <Chip
                   label={song.language}
                   size="small"
-                  variant="outlined"
+                  variant="filled"
                   onClick={() => onFilterByLanguage(song.language)}
                   sx={{ 
-                    height: 20, 
-                    fontSize: '0.65rem',
+                    height: 22, 
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
                     cursor: 'pointer',
+                    backgroundColor: isDark ? 'rgba(110, 193, 228, 0.15)' : 'rgba(110, 193, 228, 0.12)',
+                    color: 'primary.main',
+                    border: `1px solid ${isDark ? 'rgba(110, 193, 228, 0.3)' : 'rgba(110, 193, 228, 0.25)'}`,
                     '&:hover': {
                       backgroundColor: 'primary.main',
                       color: 'white',
-                      borderColor: 'primary.main',
+                      transform: 'scale(1.05)',
+                      boxShadow: '0 2px 8px rgba(110, 193, 228, 0.3)',
                     },
+                    transition: 'all 0.2s ease',
                     '& .MuiChip-label': {
-                      px: 0.75,
+                      px: 1,
                     },
                   }}
                 />
@@ -1080,19 +1229,25 @@ function SongListItem({
                 <Chip
                   label={song.category}
                   size="small"
-                  variant="outlined"
+                  variant="filled"
                   onClick={() => onFilterByCategory(song.category)}
                   sx={{ 
-                    height: 20, 
-                    fontSize: '0.65rem',
+                    height: 22, 
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
                     cursor: 'pointer',
+                    backgroundColor: isDark ? 'rgba(255, 182, 193, 0.15)' : 'rgba(255, 182, 193, 0.12)',
+                    color: 'secondary.main',
+                    border: `1px solid ${isDark ? 'rgba(255, 182, 193, 0.3)' : 'rgba(255, 182, 193, 0.25)'}`,
                     '&:hover': {
                       backgroundColor: 'secondary.main',
                       color: 'white',
-                      borderColor: 'secondary.main',
+                      transform: 'scale(1.05)',
+                      boxShadow: '0 2px 8px rgba(255, 182, 193, 0.3)',
                     },
+                    transition: 'all 0.2s ease',
                     '& .MuiChip-label': {
-                      px: 0.75,
+                      px: 1,
                     },
                   }}
                 />
@@ -1101,19 +1256,25 @@ function SongListItem({
                 <Chip
                   label={song.firstLetter}
                   size="small"
-                  color="primary"
-                  variant="outlined"
+                  variant="filled"
                   onClick={() => onFilterByLetter(song.firstLetter)}
                   sx={{
-                    height: 20,
-                    fontSize: '0.65rem',
+                    height: 22,
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
                     cursor: 'pointer',
+                    backgroundColor: isDark ? 'rgba(110, 193, 228, 0.2)' : 'rgba(110, 193, 228, 0.15)',
+                    color: 'primary.main',
+                    border: `1px solid rgba(110, 193, 228, 0.4)`,
                     '&:hover': {
                       backgroundColor: 'primary.main',
                       color: 'white',
+                      transform: 'scale(1.05)',
+                      boxShadow: '0 2px 8px rgba(110, 193, 228, 0.3)',
                     },
+                    transition: 'all 0.2s ease',
                     '& .MuiChip-label': {
-                      px: 0.75,
+                      px: 1,
                     },
                   }}
                 />

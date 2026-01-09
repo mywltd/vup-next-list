@@ -254,7 +254,7 @@ function App() {
             backgroundImage: `url(${backgroundUrl})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            backgroundAttachment: { xs: 'scroll', md: 'fixed' }, // 移动端使用scroll，PC端使用fixed
+            backgroundAttachment: 'fixed', // 统一使用fixed，背景不滚动
             backgroundRepeat: 'no-repeat',
             '&::before': {
               content: '""',
@@ -263,9 +263,11 @@ function App() {
               left: 0,
               right: 0,
               bottom: 0,
+              backdropFilter: 'blur(8px)', // 只使用轻微模糊
+              WebkitBackdropFilter: 'blur(8px)',
               backgroundColor: mode === 'dark' 
-                ? 'rgba(13, 15, 28, 0.7)' 
-                : 'rgba(245, 247, 255, 0.4)',
+                ? 'rgba(13, 15, 28, 0.3)' // 深色模式保留少量遮罩
+                : 'transparent', // 浅色模式完全透明
               zIndex: 0,
               pointerEvents: 'none',
             },

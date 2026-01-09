@@ -30,6 +30,10 @@ const api = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config) => {
+    // 如果是FormData，删除Content-Type header，让浏览器自动设置（包括boundary）
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
     return config;
   },
   (error) => {
@@ -115,14 +119,15 @@ export const siteAPI = {
   
   // 上传文件
   uploadFile: (file) => {
+    if (!file) {
+      return Promise.reject(new Error('请选择文件'));
+    }
+    
     const formData = new FormData();
     formData.append('file', file);
-    // axios会自动设置Content-Type为multipart/form-data，不需要手动设置
-    return api.post('/api/site/upload', formData, {
-      headers: {
-        // 让axios自动设置Content-Type，包括boundary
-      },
-    });
+    
+    // 请求拦截器会自动处理FormData的Content-Type
+    return api.post('/api/site/upload', formData);
   },
 };
 

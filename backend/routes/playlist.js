@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
       limit: parseInt(req.query.limit) || 50,
       firstLetter: req.query.firstLetter || null,
       language: req.query.language || null,
+      category: req.query.category || null,
       special: req.query.special === 'true' ? true : req.query.special === 'false' ? false : null,
       search: req.query.search || ''
     };

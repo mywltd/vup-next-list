@@ -49,6 +49,7 @@ export function initDatabase() {
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_firstLetter ON playlist(firstLetter);
     CREATE INDEX IF NOT EXISTS idx_language ON playlist(language);
+    CREATE INDEX IF NOT EXISTS idx_category ON playlist(category);
     CREATE INDEX IF NOT EXISTS idx_special ON playlist(special);
   `);
   

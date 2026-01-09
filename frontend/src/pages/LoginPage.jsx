@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { Visibility, VisibilityOff, AdminPanelSettings } from '@mui/icons-material';
-import { authAPI } from '../services/api';
+import { authAPI, siteAPI } from '../services/api';
 
 function LoginPage({ mode = 'light' }) {
   const theme = useTheme();
@@ -24,6 +24,20 @@ function LoginPage({ mode = 'light' }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [siteConfig, setSiteConfig] = useState(null);
+
+  // 加载站点配置
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const config = await siteAPI.getMeta();
+        setSiteConfig(config);
+      } catch (error) {
+        console.error('加载站点配置失败:', error);
+      }
+    };
+    loadConfig();
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -62,23 +76,56 @@ function LoginPage({ mode = 'light' }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isDark
-          ? 'linear-gradient(135deg, #0D0F1C 0%, #1A1F3D 100%)'
-          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: 2,
+        position: 'relative',
+        // 背景图片
+        ...(siteConfig?.backgroundUrl && {
+          backgroundImage: `url(${siteConfig.backgroundUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          backgroundRepeat: 'no-repeat',
+          '&::before': {
+            content: '""',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            backgroundColor: isDark 
+              ? 'rgba(13, 15, 28, 0.7)' 
+              : 'rgba(245, 247, 255, 0.8)',
+            zIndex: 0,
+            pointerEvents: 'none',
+          },
+        }),
+        // 默认渐变背景（无背景图时）
+        ...(!siteConfig?.backgroundUrl && {
+          background: isDark
+            ? 'linear-gradient(135deg, #0D0F1C 0%, #1A1F3D 100%)'
+            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          backgroundAttachment: 'fixed',
+        }),
       }}
     >
       <Card
         sx={{
           maxWidth: 400,
           width: '100%',
+          position: 'relative',
+          zIndex: 1,
           backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
           backgroundColor: isDark
-            ? 'rgba(20, 25, 45, 0.95)'
-            : 'rgba(255, 255, 255, 0.95)',
-          border: isDark
-            ? '1px solid rgba(255, 255, 255, 0.1)'
-            : 'none',
+            ? 'rgba(20, 25, 45, 0.8)'
+            : 'rgba(255, 255, 255, 0.8)',
+          border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+          borderRadius: 2,
+          boxShadow: isDark
+            ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+            : '0 8px 32px rgba(0, 0, 0, 0.1)',
         }}
       >
         <CardContent sx={{ p: 4 }}>

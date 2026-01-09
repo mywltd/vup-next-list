@@ -20,6 +20,7 @@ function HCaptchaPanel({ onUpdate }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   
+  const [fullConfig, setFullConfig] = useState(null); // 完整配置
   const [config, setConfig] = useState({
     hcaptchaEnabled: false,
     hcaptchaSiteKey: '',
@@ -33,6 +34,7 @@ function HCaptchaPanel({ onUpdate }) {
   const loadConfig = async () => {
     try {
       const data = await siteAPI.getMeta();
+      setFullConfig(data); // 保存完整配置
       setConfig({
         hcaptchaEnabled: data.hcaptchaEnabled || false,
         hcaptchaSiteKey: data.hcaptchaSiteKey || '',
@@ -72,7 +74,15 @@ function HCaptchaPanel({ onUpdate }) {
         }
       }
 
-      await siteAPI.updateConfig(config);
+      // 合并完整配置，只更新 hCaptcha 相关字段
+      const updateData = {
+        ...fullConfig,
+        hcaptchaEnabled: config.hcaptchaEnabled,
+        hcaptchaSiteKey: config.hcaptchaSiteKey,
+        hcaptchaSecretKey: config.hcaptchaSecretKey,
+      };
+
+      await siteAPI.updateConfig(updateData);
       setMessage({ type: 'success', text: 'hCaptcha配置保存成功' });
       
       if (onUpdate) {

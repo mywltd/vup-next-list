@@ -99,9 +99,9 @@ function SiteConfigPanel({ onUpdate }) {
         }
 
         // 将相对路径转换为完整URL
-        const fullUrl = url.startsWith('http') 
-          ? url 
-          : `${window.location.origin}${url}`;
+        // const fullUrl = url.startsWith('http') 
+        //   ? url 
+        //   : `${window.location.origin}${url}`;
         
         setConfig({
           ...config,

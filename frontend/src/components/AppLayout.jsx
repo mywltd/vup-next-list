@@ -84,17 +84,11 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
                 // PC端：显示完整按钮
                 <Tooltip title={`${siteConfig.streamer.name}的直播间`}>
                   <Button
-                    color="inherit"
+                    variant="contained"
+                    color="primary"
                     startIcon={<LiveTv />}
                     onClick={handleBilibiliClick}
-                    sx={{
-                      mr: 2,
-                      background: 'linear-gradient(135deg, #FF6B9D 0%, #7B68EE 100%)',
-                      color: 'white',
-                      '&:hover': {
-                        background: 'linear-gradient(135deg, #FF4A7C 0%, #6956E0 100%)',
-                      },
-                    }}
+                    sx={{ mr: 2 }}
                   >
                     {siteConfig.streamer.name}的直播间
                   </Button>

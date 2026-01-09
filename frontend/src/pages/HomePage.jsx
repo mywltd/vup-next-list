@@ -686,12 +686,11 @@ function SongListItem({ song, onCopy, isLast, theme }) {
               <Chip
                 label={song.firstLetter}
                 size="small"
+                color="primary"
+                variant="outlined"
                 sx={{
                   height: 20,
                   fontSize: '0.65rem',
-                  background: `linear-gradient(135deg, ${getLetterColor(song.firstLetter)} 0%, #7B68EE 100%)`,
-                  color: 'white',
-                  fontWeight: 600,
                   '& .MuiChip-label': {
                     px: 0.75,
                   },

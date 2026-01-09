@@ -95,6 +95,10 @@ function HomePage({ siteConfig }) {
       if (selectedLanguages.length > 0) {
         params.language = selectedLanguages[0];
       }
+      // 如果选择了种类，使用第一个
+      if (selectedCategories.length > 0) {
+        params.category = selectedCategories[0];
+      }
       if (selectedSpecial !== null) params.special = selectedSpecial;
       
       const data = await playlistAPI.getPlaylist(params);
@@ -107,7 +111,7 @@ function HomePage({ siteConfig }) {
     } finally {
       setLoading(false);
     }
-  }, [page, searchText, selectedLetter, selectedLanguages, selectedSpecial]);
+  }, [page, searchText, selectedLetter, selectedLanguages, selectedCategories, selectedSpecial]);
 
   // 加载筛选选项（标签云）
   useEffect(() => {
@@ -491,21 +495,16 @@ function HomePage({ siteConfig }) {
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Paper
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: 'fit-content',
-                maxHeight: 'calc(100vh - 180px)',
-                overflow: 'hidden',
                 backdropFilter: 'blur(20px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                 backgroundColor: theme.palette.mode === 'dark'
                   ? 'rgba(20, 25, 45, 0.7)'
-                  : 'rgba(255, 255, 255, 0.7)',
-                border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+                  : 'rgba(255, 255, 255, 0.5)',
+                border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.15)'}`,
                 borderRadius: 2,
                 boxShadow: theme.palette.mode === 'dark'
                   ? '0 8px 32px rgba(0, 0, 0, 0.3)'
-                  : '0 8px 32px rgba(0, 0, 0, 0.1)',
+                  : '0 4px 24px rgba(110, 193, 228, 0.15)',
               }}
             >
               <Box sx={{ p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}>
@@ -544,10 +543,6 @@ function HomePage({ siteConfig }) {
               ) : (
                 <>
                   <Box sx={{ 
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                    flex: 1,
-                    maxHeight: totalPages > 1 ? 'calc(100vh - 260px)' : 'calc(100vh - 220px)',
                     px: 2,
                     py: 1.5,
                   }}>
@@ -581,11 +576,10 @@ function HomePage({ siteConfig }) {
                     <Box sx={{ 
                       display: 'flex', 
                       justifyContent: 'center', 
-                      py: 2,
+                      py: 2.5,
                       px: 2,
-                      borderTop: 1,
-                      borderColor: 'divider',
-                      flexShrink: 0,
+                      mt: 2,
+                      borderTop: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(110, 193, 228, 0.15)'}`,
                     }}>
                       <Pagination
                         count={totalPages}

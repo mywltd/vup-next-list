@@ -8,6 +8,7 @@ export class PlaylistService {
       limit = 50,
       firstLetter = null,
       language = null,
+      category = null,
       special = null,
       search = ''
     } = options;
@@ -23,6 +24,11 @@ export class PlaylistService {
     if (language) {
       query += ' AND language = ?';
       params.push(language);
+    }
+
+    if (category) {
+      query += ' AND category = ?';
+      params.push(category);
     }
 
     if (special !== null) {
@@ -49,8 +55,14 @@ export class PlaylistService {
 
     return {
       songs: songs.map(song => ({
-        ...song,
-        special: Boolean(song.special)
+        id: song.id,
+        songName: song.songName,
+        singer: song.singer,
+        language: song.language,
+        category: song.category,
+        special: Boolean(song.special),
+        firstLetter: song.firstLetter,
+        ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
       })),
       total: count,
       page,

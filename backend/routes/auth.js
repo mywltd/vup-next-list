@@ -1,6 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthService } from '../services/authService.js';
+import { HCaptchaService } from '../services/hcaptchaService.js';
 import { requireAuth, verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -11,10 +12,20 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'; // 默认7天过期
 // 管理员登录
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, hcaptchaToken } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ error: '用户名和密码不能为空' });
+    }
+
+    // 验证 hCaptcha（如果启用）
+    if (HCaptchaService.isEnabled()) {
+      try {
+        const clientIp = req.ip || req.connection.remoteAddress;
+        await HCaptchaService.verify(hcaptchaToken, clientIp);
+      } catch (error) {
+        return res.status(400).json({ error: error.message });
+      }
     }
 
     const admin = await AuthService.login(username, password);
@@ -61,6 +72,22 @@ router.get('/status', verifyToken, (req, res) => {
     });
   } else {
     res.json({ authenticated: false });
+  }
+});
+
+// 获取 hCaptcha 配置（公开接口）
+router.get('/hcaptcha-config', async (req, res) => {
+  try {
+    const isEnabled = HCaptchaService.isEnabled();
+    const { getSiteConfig } = await import('../db/init.js');
+    const siteConfig = getSiteConfig();
+    
+    res.json({
+      enabled: isEnabled,
+      siteKey: isEnabled && siteConfig ? siteConfig.hcaptcha_site_key : null
+    });
+  } catch (error) {
+    res.json({ enabled: false, siteKey: null });
   }
 });
 

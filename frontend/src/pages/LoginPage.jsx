@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -25,6 +25,10 @@ function LoginPage({ mode = 'light' }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [siteConfig, setSiteConfig] = useState(null);
+  const [hcaptchaConfig, setHcaptchaConfig] = useState({ enabled: false, siteKey: null });
+  const [hcaptchaToken, setHcaptchaToken] = useState(null);
+  const hcaptchaRef = useRef(null);
+  const hcaptchaContainerRef = useRef(null);
 
   // 加载站点配置
   useEffect(() => {
@@ -39,6 +43,65 @@ function LoginPage({ mode = 'light' }) {
     loadConfig();
   }, []);
 
+  // 加载 hCaptcha 配置
+  useEffect(() => {
+    const loadHCaptchaConfig = async () => {
+      try {
+        const config = await authAPI.getHCaptchaConfig();
+        setHcaptchaConfig(config);
+        
+        // 如果启用了 hCaptcha，加载脚本
+        if (config.enabled && config.siteKey) {
+          loadHCaptchaScript();
+        }
+      } catch (error) {
+        console.error('加载 hCaptcha 配置失败:', error);
+      }
+    };
+    loadHCaptchaConfig();
+  }, []);
+
+  // 加载 hCaptcha 脚本
+  const loadHCaptchaScript = () => {
+    if (document.getElementById('hcaptcha-script')) {
+      renderHCaptcha();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id = 'hcaptcha-script';
+    script.src = 'https://js.hcaptcha.com/1/api.js';
+    script.async = true;
+    script.defer = true;
+    script.onload = renderHCaptcha;
+    document.head.appendChild(script);
+  };
+
+  // 渲染 hCaptcha
+  const renderHCaptcha = () => {
+    if (!hcaptchaContainerRef.current || !window.hcaptcha || !hcaptchaConfig.siteKey) {
+      return;
+    }
+
+    try {
+      const widgetId = window.hcaptcha.render(hcaptchaContainerRef.current, {
+        sitekey: hcaptchaConfig.siteKey,
+        callback: (token) => {
+          setHcaptchaToken(token);
+        },
+        'expired-callback': () => {
+          setHcaptchaToken(null);
+        },
+        'error-callback': () => {
+          setError('hCaptcha加载失败，请刷新页面重试');
+        },
+      });
+      hcaptchaRef.current = widgetId;
+    } catch (error) {
+      console.error('hCaptcha渲染失败:', error);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     
@@ -47,11 +110,17 @@ function LoginPage({ mode = 'light' }) {
       return;
     }
 
+    // 如果启用了 hCaptcha 但没有验证
+    if (hcaptchaConfig.enabled && !hcaptchaToken) {
+      setError('请完成人机验证');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      const result = await authAPI.login(username, password);
+      const result = await authAPI.login(username, password, hcaptchaToken);
       
       // 保存JWT token到localStorage
       if (result.token) {
@@ -62,6 +131,11 @@ function LoginPage({ mode = 'light' }) {
       }
     } catch (err) {
       setError(err.message || '登录失败');
+      // 重置 hCaptcha
+      if (hcaptchaRef.current) {
+        hcaptchaRef.current.resetCaptcha();
+        setHcaptchaToken(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -176,11 +250,26 @@ function LoginPage({ mode = 'light' }) {
               }}
             />
 
+            {/* hCaptcha 验证码 */}
+            {hcaptchaConfig.enabled && hcaptchaConfig.siteKey && (
+              <Box 
+                ref={hcaptchaContainerRef}
+                sx={{ 
+                  mt: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  '& > div': {
+                    margin: '0 auto',
+                  },
+                }}
+              />
+            )}
+
             <Button
               fullWidth
               variant="contained"
               type="submit"
-              disabled={loading}
+              disabled={loading || (hcaptchaConfig.enabled && !hcaptchaToken)}
               sx={{ mt: 3, py: 1.5 }}
             >
               {loading ? '登录中...' : '登录'}

@@ -110,6 +110,15 @@ export function initDatabase() {
     if (!columns.includes('copy_mode')) {
       db.exec('ALTER TABLE site_config ADD COLUMN copy_mode TEXT DEFAULT "normal"');
     }
+    if (!columns.includes('hcaptcha_enabled')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN hcaptcha_enabled INTEGER DEFAULT 0');
+    }
+    if (!columns.includes('hcaptcha_site_key')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN hcaptcha_site_key TEXT');
+    }
+    if (!columns.includes('hcaptcha_secret_key')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN hcaptcha_secret_key TEXT');
+    }
   } catch (error) {
     console.warn('数据库迁移警告:', error.message);
   }

@@ -81,13 +81,17 @@ export const setupAPI = {
 
 export const authAPI = {
   // 登录
-  login: (username, password) => api.post('/api/auth/login', { username, password }),
+  login: (username, password, hcaptchaToken = null) => 
+    api.post('/api/auth/login', { username, password, hcaptchaToken }),
   
   // 退出
   logout: () => api.post('/api/auth/logout'),
   
   // 检查登录状态
   getStatus: () => api.get('/api/auth/status'),
+  
+  // 获取 hCaptcha 配置
+  getHCaptchaConfig: () => api.get('/api/auth/hcaptcha-config'),
   
   // 修改密码
   changePassword: (oldPassword, newPassword) =>

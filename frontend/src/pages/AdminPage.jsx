@@ -19,6 +19,7 @@ import {
   Download,
   Code,
   AccountCircle,
+  Security,
 } from '@mui/icons-material';
 import { authAPI } from '../services/api';
 import SiteConfigPanel from '../components/admin/SiteConfigPanel';
@@ -26,6 +27,7 @@ import PlaylistManagePanel from '../components/admin/PlaylistManagePanel';
 import StreamerPanel from '../components/admin/StreamerPanel';
 import ImportExportPanel from '../components/admin/ImportExportPanel';
 import CustomConfigPanel from '../components/admin/CustomConfigPanel';
+import HCaptchaPanel from '../components/admin/HCaptchaPanel';
 import AccountSettingsPanel from '../components/admin/AccountSettingsPanel';
 
 function AdminPage({ onConfigUpdate }) {
@@ -131,6 +133,7 @@ function AdminPage({ onConfigUpdate }) {
           <Tab icon={<LiveTv />} label="主播信息" />
           <Tab icon={<Upload />} label="导入导出" />
           <Tab icon={<Code />} label="自定义配置" />
+          <Tab icon={<Security />} label="验证码" />
           <Tab icon={<AccountCircle />} label="账户设置" />
         </Tabs>
       </Card>
@@ -143,7 +146,8 @@ function AdminPage({ onConfigUpdate }) {
           {currentTab === 2 && <StreamerPanel onUpdate={onConfigUpdate} />}
           {currentTab === 3 && <ImportExportPanel />}
           {currentTab === 4 && <CustomConfigPanel />}
-          {currentTab === 5 && <AccountSettingsPanel />}
+          {currentTab === 5 && <HCaptchaPanel onUpdate={onConfigUpdate} />}
+          {currentTab === 6 && <AccountSettingsPanel />}
         </CardContent>
       </Card>
     </Box>

@@ -13,6 +13,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { Visibility, VisibilityOff, AdminPanelSettings } from '@mui/icons-material';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { authAPI, siteAPI } from '../services/api';
 
 function LoginPage({ mode = 'light' }) {
@@ -28,7 +29,6 @@ function LoginPage({ mode = 'light' }) {
   const [hcaptchaConfig, setHcaptchaConfig] = useState({ enabled: false, siteKey: null });
   const [hcaptchaToken, setHcaptchaToken] = useState(null);
   const hcaptchaRef = useRef(null);
-  const hcaptchaContainerRef = useRef(null);
 
   // 加载站点配置
   useEffect(() => {
@@ -49,11 +49,6 @@ function LoginPage({ mode = 'light' }) {
       try {
         const config = await authAPI.getHCaptchaConfig();
         setHcaptchaConfig(config);
-        
-        // 如果启用了 hCaptcha，加载脚本
-        if (config.enabled && config.siteKey) {
-          loadHCaptchaScript();
-        }
       } catch (error) {
         console.error('加载 hCaptcha 配置失败:', error);
       }
@@ -61,45 +56,22 @@ function LoginPage({ mode = 'light' }) {
     loadHCaptchaConfig();
   }, []);
 
-  // 加载 hCaptcha 脚本
-  const loadHCaptchaScript = () => {
-    if (document.getElementById('hcaptcha-script')) {
-      renderHCaptcha();
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.id = 'hcaptcha-script';
-    script.src = 'https://js.hcaptcha.com/1/api.js';
-    script.async = true;
-    script.defer = true;
-    script.onload = renderHCaptcha;
-    document.head.appendChild(script);
+  // hCaptcha 验证成功回调
+  const handleHCaptchaVerify = (token) => {
+    setHcaptchaToken(token);
+    setError(''); // 清除之前的错误
   };
 
-  // 渲染 hCaptcha
-  const renderHCaptcha = () => {
-    if (!hcaptchaContainerRef.current || !window.hcaptcha || !hcaptchaConfig.siteKey) {
-      return;
-    }
+  // hCaptcha 过期回调
+  const handleHCaptchaExpire = () => {
+    setHcaptchaToken(null);
+  };
 
-    try {
-      const widgetId = window.hcaptcha.render(hcaptchaContainerRef.current, {
-        sitekey: hcaptchaConfig.siteKey,
-        callback: (token) => {
-          setHcaptchaToken(token);
-        },
-        'expired-callback': () => {
-          setHcaptchaToken(null);
-        },
-        'error-callback': () => {
-          setError('hCaptcha加载失败，请刷新页面重试');
-        },
-      });
-      hcaptchaRef.current = widgetId;
-    } catch (error) {
-      console.error('hCaptcha渲染失败:', error);
-    }
+  // hCaptcha 错误回调
+  const handleHCaptchaError = (err) => {
+    console.error('hCaptcha错误:', err);
+    setHcaptchaToken(null);
+    setError('验证码加载失败，请刷新页面重试');
   };
 
   const handleLogin = async (e) => {
@@ -253,16 +225,20 @@ function LoginPage({ mode = 'light' }) {
             {/* hCaptcha 验证码 */}
             {hcaptchaConfig.enabled && hcaptchaConfig.siteKey && (
               <Box 
-                ref={hcaptchaContainerRef}
                 sx={{ 
                   mt: 2,
                   display: 'flex',
                   justifyContent: 'center',
-                  '& > div': {
-                    margin: '0 auto',
-                  },
                 }}
-              />
+              >
+                <HCaptcha
+                  sitekey={hcaptchaConfig.siteKey}
+                  onVerify={handleHCaptchaVerify}
+                  onExpire={handleHCaptchaExpire}
+                  onError={handleHCaptchaError}
+                  ref={hcaptchaRef}
+                />
+              </Box>
             )}
 
             <Button

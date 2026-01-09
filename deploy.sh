@@ -240,8 +240,8 @@ generate_secret() {
 create_compose_file() {
     echo -e "${BLUE}📝 创建 docker-compose.yml...${NC}"
     
-    # 生成随机 SESSION_SECRET
-    SESSION_SECRET=$(generate_secret)
+    # 生成随机 JWT_SECRET
+    JWT_SECRET=$(generate_secret)
     
     cat > docker-compose.yml << EOF
 version: '3.8'
@@ -259,7 +259,8 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - DATA_DIR=/data
-      - SESSION_SECRET=${SESSION_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=7d
       - CORS_ORIGIN=http://localhost:3000
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/api/health"]
@@ -280,7 +281,7 @@ volumes:
 EOF
     
     echo -e "${GREEN}✅ docker-compose.yml 创建完成${NC}"
-    echo -e "${YELLOW}📝 SESSION_SECRET 已自动生成${NC}"
+    echo -e "${YELLOW}📝 JWT_SECRET 已自动生成${NC}"
     echo ""
 }
 

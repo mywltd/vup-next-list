@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import {
   AppBar,
@@ -24,6 +24,7 @@ import {
   MusicNote,
 } from '@mui/icons-material';
 import ThemeCustomizer from './ThemeCustomizer';
+import { authAPI } from '../services/api';
 
 // 创建搜索上下文
 const SearchContext = createContext();
@@ -36,6 +37,34 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // < 768px
   const isDesktop = useMediaQuery(theme.breakpoints.up('md')); // >= 960px
   const [searchText, setSearchText] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // 检查登录状态
+  useEffect(() => {
+    if (!isAdmin) {
+      checkAuthStatus();
+    }
+  }, [isAdmin]);
+
+  const checkAuthStatus = async () => {
+    try {
+      // 先检查localStorage中的token
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        // 验证token是否有效
+        const status = await authAPI.getStatus();
+        setIsAuthenticated(status.authenticated);
+        if (!status.authenticated) {
+          localStorage.removeItem('authToken');
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      setIsAuthenticated(false);
+      localStorage.removeItem('authToken');
+    }
+  };
 
   const handleBilibiliClick = () => {
     if (siteConfig?.streamer?.bilibiliUrl) {
@@ -165,27 +194,53 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
                 </IconButton>
               </Tooltip>
 
-              {/* 登录按钮 - 放到最右边 */}
+              {/* 登录/管理按钮 - 放到最右边 */}
               {!isAdmin && (
-                <Tooltip title="登录">
-                  <Button
-                    variant="outlined"
-                    startIcon={<Person />}
-                    onClick={() => navigate('/admin/login')}
-                    sx={{
-                      borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
-                      color: mode === 'dark' ? 'inherit' : 'inherit',
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                        backgroundColor: mode === 'dark' 
-                          ? 'rgba(255, 255, 255, 0.05)' 
-                          : 'rgba(0, 0, 0, 0.04)',
-                      },
-                    }}
-                  >
-                    登录
-                  </Button>
-                </Tooltip>
+                isAuthenticated ? (
+                  <Tooltip title="管理后台">
+                    <IconButton
+                      onClick={() => navigate('/admin')}
+                      sx={{
+                        color: mode === 'light' ? 'primary.main' : 'inherit',
+                      }}
+                    >
+                      <AdminPanelSettings />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  isMobile ? (
+                    <Tooltip title="登录">
+                      <IconButton
+                        onClick={() => navigate('/admin/login')}
+                        sx={{
+                          color: mode === 'light' ? 'primary.main' : 'inherit',
+                        }}
+                      >
+                        <Person />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="登录">
+                      <Button
+                        variant="outlined"
+                        startIcon={<Person />}
+                        onClick={() => navigate('/admin/login')}
+                        sx={{
+                          borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
+                          color: mode === 'dark' ? 'inherit' : 'inherit',
+                          '&:hover': {
+                            borderColor: 'primary.main',
+                            backgroundColor: mode === 'dark' 
+                              ? 'rgba(255, 255, 255, 0.05)' 
+                              : 'rgba(0, 0, 0, 0.04)',
+                          },
+                        }}
+                      >
+                        登录
+                      </Button>
+                    </Tooltip>
+                  )
+                )
               )}
             </Box>
           </Toolbar>

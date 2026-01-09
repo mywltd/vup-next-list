@@ -4,6 +4,17 @@ import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { createAnimeTheme } from './theme/theme';
 import { setupAPI, siteAPI } from './services/api';
 
+// 设置favicon的辅助函数
+function setFavicon(url) {
+  let favicon = document.querySelector('link[rel="icon"]');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.setAttribute('rel', 'icon');
+    document.head.appendChild(favicon);
+  }
+  favicon.setAttribute('href', url);
+}
+
 // 页面组件
 import SetupPage from './pages/SetupPage';
 import HomePage from './pages/HomePage';
@@ -26,6 +37,7 @@ function App() {
   const [siteConfig, setSiteConfig] = useState(null);
   const [installed, setInstalled] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [backgroundUrl, setBackgroundUrl] = useState(null);
 
   // 创建主题（优先使用用户自定义配色）
   const theme = useMemo(() => {
@@ -67,15 +79,45 @@ function App() {
           : config.siteName || 'VUP 音乐歌单';
         document.title = title;
         
-        // 设置favicon（使用头像）
+        // 设置favicon（使用头像，带缓存）
         if (config.avatarUrl) {
-          let favicon = document.querySelector('link[rel="icon"]');
-          if (!favicon) {
-            favicon = document.createElement('link');
-            favicon.setAttribute('rel', 'icon');
-            document.head.appendChild(favicon);
-          }
-          favicon.setAttribute('href', config.avatarUrl);
+          import('./utils/imageCache.js').then(({ getCachedImage, cacheImage }) => {
+            const cached = getCachedImage(config.avatarUrl);
+            if (cached) {
+              setFavicon(cached);
+            } else {
+              cacheImage(config.avatarUrl).then(cachedUrl => {
+                setFavicon(cachedUrl);
+              });
+            }
+          });
+        }
+        
+        // 缓存背景图和头像
+        if (config.backgroundUrl) {
+          import('./utils/imageCache.js').then(({ getCachedImage, cacheImage }) => {
+            const cached = getCachedImage(config.backgroundUrl);
+            if (cached) {
+              setBackgroundUrl(cached);
+            } else {
+              setBackgroundUrl(config.backgroundUrl);
+              cacheImage(config.backgroundUrl).then(cachedUrl => {
+                if (cachedUrl) {
+                  setBackgroundUrl(cachedUrl);
+                }
+              });
+            }
+          });
+        } else {
+          setBackgroundUrl(null);
+        }
+        
+        if (config.avatarUrl) {
+          import('./utils/imageCache.js').then(({ getCachedImage, cacheImage }) => {
+            if (!getCachedImage(config.avatarUrl)) {
+              cacheImage(config.avatarUrl);
+            }
+          });
         }
         
         // 监听页面可见性变化，动态改变标题
@@ -190,9 +232,9 @@ function App() {
         sx={{
           minHeight: '100vh',
           position: 'relative',
-          // 背景图片
-          ...(siteConfig?.backgroundUrl && {
-            backgroundImage: `url(${siteConfig.backgroundUrl})`,
+          // 背景图片（使用缓存）
+          ...(backgroundUrl && {
+            backgroundImage: `url(${backgroundUrl})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundAttachment: { xs: 'scroll', md: 'fixed' }, // 移动端使用scroll，PC端使用fixed
@@ -212,7 +254,7 @@ function App() {
             },
           }),
           // 默认渐变背景（无背景图时）
-          ...(!siteConfig?.backgroundUrl && {
+          ...(!backgroundUrl && {
             background: mode === 'dark'
               ? 'linear-gradient(135deg, #0D0F1C 0%, #1A1F3D 100%)'
               : 'linear-gradient(135deg, #F5F7FF 0%, #E8ECFF 100%)',

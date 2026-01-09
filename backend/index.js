@@ -1,5 +1,4 @@
 import express from 'express';
-import session from 'express-session';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -35,24 +34,6 @@ app.use(cors(corsOptions));
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
-// Session 配置
-// 生产环境如果使用HTTPS，secure设为true；否则设为false
-const isSecure = process.env.SESSION_SECURE === 'true' || 
-                 (process.env.NODE_ENV === 'production' && process.env.SESSION_SECURE !== 'false');
-
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'vup-music-secret-key-change-in-production',
-  resave: false,
-  saveUninitialized: false,
-  name: 'vupmusic.sid', // 自定义session名称
-  cookie: {
-    secure: isSecure, // 仅在HTTPS时设为true
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000, // 24小时
-    sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax' // 同站策略
-  }
-}));
 
 // 静态文件服务（上传的文件）- 必须在API路由之前注册
 app.use('/uploads', express.static(path.join(DATA_DIR, 'uploads'), {

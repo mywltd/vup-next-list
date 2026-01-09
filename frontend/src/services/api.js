@@ -34,6 +34,13 @@ api.interceptors.request.use(
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     }
+    
+    // 添加JWT token到请求头
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    
     return config;
   },
   (error) => {
@@ -48,6 +55,16 @@ api.interceptors.response.use(
   },
   (error) => {
     const message = error.response?.data?.error || '请求失败';
+    
+    // 如果是401错误（未授权），清除token并跳转到登录页
+    if (error.response?.status === 401) {
+      localStorage.removeItem('authToken');
+      // 只在非登录页面时跳转
+      if (!window.location.pathname.includes('/admin/login')) {
+        window.location.href = '/admin/login';
+      }
+    }
+    
     console.error('API Error:', message);
     return Promise.reject(new Error(message));
   }

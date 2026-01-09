@@ -1,8 +1,12 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import { AuthService } from '../services/authService.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
+
+const JWT_SECRET = process.env.JWT_SECRET || 'vup-music-jwt-secret-key-change-in-production';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'; // 默认7天过期
 
 // 管理员登录
 router.post('/login', async (req, res) => {
@@ -15,12 +19,21 @@ router.post('/login', async (req, res) => {
 
     const admin = await AuthService.login(username, password);
 
-    // 设置 session
-    req.session.adminId = admin.id;
-    req.session.username = admin.username;
+    // 生成JWT token
+    const token = jwt.sign(
+      {
+        id: admin.id,
+        username: admin.username
+      },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRES_IN
+      }
+    );
 
     res.json({
       success: true,
+      token,
       admin: {
         id: admin.id,
         username: admin.username
@@ -31,24 +44,19 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// 退出登录
+// 退出登录（JWT是无状态的，这里只是返回成功，前端删除token即可）
 router.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ error: '退出失败' });
-    }
-    res.json({ success: true, message: '退出成功' });
-  });
+  res.json({ success: true, message: '退出成功' });
 });
 
 // 检查登录状态
-router.get('/status', (req, res) => {
-  if (req.session && req.session.adminId) {
+router.get('/status', verifyToken, (req, res) => {
+  if (req.admin) {
     res.json({
       authenticated: true,
       admin: {
-        id: req.session.adminId,
-        username: req.session.username
+        id: req.admin.id,
+        username: req.admin.username
       }
     });
   } else {
@@ -70,7 +78,7 @@ router.post('/change-password', requireAuth, async (req, res) => {
     }
 
     const result = await AuthService.changePassword(
-      req.session.adminId,
+      req.admin.id,
       oldPassword,
       newPassword
     );

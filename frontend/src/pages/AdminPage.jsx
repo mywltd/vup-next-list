@@ -18,6 +18,7 @@ import {
   Upload,
   Download,
   Code,
+  AccountCircle,
 } from '@mui/icons-material';
 import { authAPI } from '../services/api';
 import SiteConfigPanel from '../components/admin/SiteConfigPanel';
@@ -25,6 +26,7 @@ import PlaylistManagePanel from '../components/admin/PlaylistManagePanel';
 import StreamerPanel from '../components/admin/StreamerPanel';
 import ImportExportPanel from '../components/admin/ImportExportPanel';
 import CustomConfigPanel from '../components/admin/CustomConfigPanel';
+import AccountSettingsPanel from '../components/admin/AccountSettingsPanel';
 
 function AdminPage({ onConfigUpdate }) {
   const navigate = useNavigate();
@@ -38,13 +40,23 @@ function AdminPage({ onConfigUpdate }) {
 
   const checkAuth = async () => {
     try {
+      // 检查localStorage中的token
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        navigate('/admin/login');
+        return;
+      }
+      
+      // 验证token是否有效
       const { authenticated: isAuth } = await authAPI.getStatus();
       if (!isAuth) {
+        localStorage.removeItem('authToken');
         navigate('/admin/login');
       } else {
         setAuthenticated(true);
       }
     } catch (error) {
+      localStorage.removeItem('authToken');
       navigate('/admin/login');
     } finally {
       setLoading(false);
@@ -54,11 +66,13 @@ function AdminPage({ onConfigUpdate }) {
   const handleLogout = async () => {
     try {
       await authAPI.logout();
+      localStorage.removeItem('authToken');
       navigate('/admin/login');
     } catch (error) {
       console.error('退出失败:', error);
     }
   };
+
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -110,6 +124,7 @@ function AdminPage({ onConfigUpdate }) {
           <Tab icon={<LiveTv />} label="主播信息" />
           <Tab icon={<Upload />} label="导入导出" />
           <Tab icon={<Code />} label="自定义配置" />
+          <Tab icon={<AccountCircle />} label="账户设置" />
         </Tabs>
       </Card>
 
@@ -121,6 +136,7 @@ function AdminPage({ onConfigUpdate }) {
           {currentTab === 2 && <StreamerPanel onUpdate={onConfigUpdate} />}
           {currentTab === 3 && <ImportExportPanel />}
           {currentTab === 4 && <CustomConfigPanel />}
+          {currentTab === 5 && <AccountSettingsPanel />}
         </CardContent>
       </Card>
     </Box>

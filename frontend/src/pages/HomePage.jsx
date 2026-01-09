@@ -31,12 +31,14 @@ import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, R
 import { playlistAPI } from '../services/api';
 import { debounce, copyToClipboard, getLetterColor } from '../utils/helpers';
 import { useSearch } from '../components/AppLayout';
+import { getCachedImage, cacheImage } from '../utils/imageCache';
 
 function HomePage({ siteConfig }) {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(siteConfig?.avatarUrl || '');
   
   // 从Context获取搜索文本
   const { searchText, setSearchText } = useSearch();
@@ -55,6 +57,23 @@ function HomePage({ siteConfig }) {
   const [selectedLanguages, setSelectedLanguages] = useState([]); // 改为数组
   const [selectedCategories, setSelectedCategories] = useState([]); // 新增种类筛选
   const [selectedSpecial, setSelectedSpecial] = useState(null);
+
+  // 加载并缓存头像
+  useEffect(() => {
+    if (siteConfig?.avatarUrl) {
+      const cached = getCachedImage(siteConfig.avatarUrl);
+      if (cached) {
+        setAvatarUrl(cached);
+      } else {
+        setAvatarUrl(siteConfig.avatarUrl);
+        cacheImage(siteConfig.avatarUrl).then(cachedUrl => {
+          if (cachedUrl) {
+            setAvatarUrl(cachedUrl);
+          }
+        });
+      }
+    }
+  }, [siteConfig?.avatarUrl]);
   
   // 可用的筛选选项
   const [languages, setLanguages] = useState([]);
@@ -298,7 +317,7 @@ function HomePage({ siteConfig }) {
       {/* 页面标题 */}
       <Box sx={{ mb: 4, textAlign: 'center', position: 'relative', zIndex: 1 }}>
         {/* 头像 - PC端不显示，移动端显示 */}
-        {siteConfig?.avatarUrl && !isDesktop && (
+        {avatarUrl && !isDesktop && (
           <Box
             sx={{
               mb: 2,
@@ -322,7 +341,7 @@ function HomePage({ siteConfig }) {
             >
               <Box
                 component="img"
-                src={siteConfig.avatarUrl}
+                src={avatarUrl}
                 alt="头像"
                 sx={{
                   width: '100%',

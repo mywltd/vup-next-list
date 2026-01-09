@@ -39,6 +39,7 @@ export function initDatabase() {
       category TEXT NOT NULL,
       special INTEGER DEFAULT 0,
       firstLetter TEXT NOT NULL,
+      bilibili_clip_url TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
@@ -50,6 +51,19 @@ export function initDatabase() {
     CREATE INDEX IF NOT EXISTS idx_language ON playlist(language);
     CREATE INDEX IF NOT EXISTS idx_special ON playlist(special);
   `);
+  
+  // 迁移playlist表：添加bilibili_clip_url字段
+  try {
+    const playlistInfo = db.prepare("PRAGMA table_info(playlist)").all();
+    const playlistColumns = playlistInfo.map(col => col.name);
+    
+    if (!playlistColumns.includes('bilibili_clip_url')) {
+      db.exec('ALTER TABLE playlist ADD COLUMN bilibili_clip_url TEXT');
+      console.log('✅ 已添加 bilibili_clip_url 字段到 playlist 表');
+    }
+  } catch (error) {
+    console.warn('playlist表迁移警告:', error.message);
+  }
 
   // 站点配置表
   db.exec(`

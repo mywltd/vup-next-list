@@ -4,45 +4,45 @@ import { createTheme } from '@mui/material/styles';
 export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
   const isDark = mode === 'dark';
 
-  // 默认主题色（可以被用户自定义覆盖）
-  const primaryColor = customConfig.primaryColor || '#4FC3F7'; // 清新蓝
-  const secondaryColor = customConfig.secondaryColor || '#66BB6A'; // 清新绿
+  // 默认主题色（轻动漫风格 - 天空蓝配色）
+  const primaryColor = customConfig.primaryColor || '#6EC1E4'; // 天空蓝
+  const secondaryColor = customConfig.secondaryColor || '#FFB6C1'; // 浅粉色
 
   return createTheme({
     palette: {
       mode,
       primary: {
         main: primaryColor,
-        light: isDark ? '#FF8FB5' : '#FF4A7C',
-        dark: isDark ? '#CC5680' : '#E63973',
+        light: isDark ? '#8FD3F0' : '#5AB8DD',
+        dark: isDark ? '#4BA8CC' : '#3A8FB5',
         contrastText: '#FFFFFF',
       },
       secondary: {
         main: secondaryColor,
-        light: isDark ? '#9A89F7' : '#6956E0',
-        dark: isDark ? '#5E4DC7' : '#503DB8',
+        light: isDark ? '#FFC9D4' : '#FFA3B5',
+        dark: isDark ? '#FF8FA8' : '#E6899A',
         contrastText: '#FFFFFF',
       },
       background: {
-        default: isDark ? '#0D0F1C' : '#F5F7FF',
+        default: isDark ? '#0D0F1C' : '#F8FBFF', // 更柔和的浅蓝白
         paper: isDark ? 'rgba(20, 25, 45, 0.8)' : 'rgba(255, 255, 255, 0.6)',
       },
       text: {
-        primary: isDark ? '#E8E9FF' : '#1A1F3D',
-        secondary: isDark ? '#A0A5C8' : '#5A5F7D',
+        primary: isDark ? '#E8E9FF' : '#2A3F5F', // 更柔和的深蓝灰
+        secondary: isDark ? '#A0A5C8' : '#6B7C95', // 更清新的灰蓝
       },
-      divider: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
+      divider: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(110, 193, 228, 0.12)', // 淡蓝色分割线
       error: {
-        main: '#FF5252',
+        main: '#FF6B8A', // 更柔和的粉红错误色
       },
       warning: {
-        main: '#FFB74D',
+        main: '#FFB366', // 温暖的橙色
       },
       info: {
-        main: '#64B5F6',
+        main: '#6EC1E4', // 与主色调一致的天空蓝
       },
       success: {
-        main: '#81C784',
+        main: '#98D8C8', // 薄荷绿成功色
       },
     },
     typography: {
@@ -92,11 +92,11 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
         ]
       : [
           'none',
-          '0px 2px 8px rgba(123, 104, 238, 0.12)',
-          '0px 4px 16px rgba(123, 104, 238, 0.12)',
-          '0px 6px 24px rgba(123, 104, 238, 0.12)',
-          '0px 8px 32px rgba(123, 104, 238, 0.15)',
-          ...Array(20).fill('0px 10px 40px rgba(123, 104, 238, 0.18)'),
+          '0px 2px 8px rgba(110, 193, 228, 0.08)', // 天空蓝色阴影
+          '0px 4px 16px rgba(110, 193, 228, 0.10)',
+          '0px 6px 24px rgba(110, 193, 228, 0.12)',
+          '0px 8px 32px rgba(110, 193, 228, 0.14)',
+          ...Array(20).fill('0px 10px 40px rgba(110, 193, 228, 0.16)'),
         ],
     components: {
       MuiButton: {
@@ -134,10 +134,10 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
               : 'rgba(255, 255, 255, 0.5)',
             border: isDark
               ? '1px solid rgba(255, 255, 255, 0.1)'
-              : '1px solid rgba(123, 104, 238, 0.1)',
+              : '1px solid rgba(110, 193, 228, 0.15)', // 天空蓝边框
             boxShadow: isDark
               ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-              : '0 8px 32px 0 rgba(123, 104, 238, 0.1)',
+              : '0 8px 32px 0 rgba(110, 193, 228, 0.12)',
           },
         },
       },
@@ -150,13 +150,13 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
               : 'rgba(255, 255, 255, 0.5)',
             border: isDark
               ? '1px solid rgba(255, 255, 255, 0.1)'
-              : '1px solid rgba(123, 104, 238, 0.1)',
+              : '1px solid rgba(110, 193, 228, 0.15)', // 天空蓝边框
             transition: 'transform 0.3s ease, box-shadow 0.3s ease',
             '&:hover': {
               transform: 'translateY(-4px)',
               boxShadow: isDark
-                ? '0 12px 40px 0 rgba(123, 104, 238, 0.3)'
-                : '0 12px 40px 0 rgba(123, 104, 238, 0.15)',
+                ? '0 12px 40px 0 rgba(110, 193, 228, 0.3)'
+                : '0 12px 40px 0 rgba(110, 193, 228, 0.18)', // 天空蓝悬浮阴影
             },
           },
         },

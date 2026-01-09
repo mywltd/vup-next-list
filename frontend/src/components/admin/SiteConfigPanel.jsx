@@ -14,7 +14,47 @@ import {
   FormControlLabel,
   Radio,
 } from '@mui/material';
-import { Save, Upload } from '@mui/icons-material';
+import { Save, Upload, Palette } from '@mui/icons-material';
+
+// 轻动漫风格配色预设
+const colorPresets = [
+  {
+    name: '樱花粉',
+    primaryColor: '#FFB3D9',
+    secondaryColor: '#B8E6FF',
+    description: '柔和的粉蓝配色，清新可爱'
+  },
+  {
+    name: '薄荷绿',
+    primaryColor: '#98D8C8',
+    secondaryColor: '#F7DC6F',
+    description: '清爽的绿黄配色，活力满满'
+  },
+  {
+    name: '天空蓝',
+    primaryColor: '#6EC1E4',
+    secondaryColor: '#FFB6C1',
+    description: '天空般的蓝粉配色，梦幻温柔'
+  },
+  {
+    name: '薰衣草',
+    primaryColor: '#B19CD9',
+    secondaryColor: '#FFB7CE',
+    description: '浪漫的紫粉配色，优雅梦幻'
+  },
+  {
+    name: '珊瑚橙',
+    primaryColor: '#FF9A8B',
+    secondaryColor: '#96E6A1',
+    description: '温暖的橙绿配色，青春活力'
+  },
+  {
+    name: '奶油黄',
+    primaryColor: '#FFE66D',
+    secondaryColor: '#A8DADC',
+    description: '温柔的黄蓝配色，清新明亮'
+  }
+];
 import { siteAPI } from '../../services/api';
 
 function SiteConfigPanel({ onUpdate }) {
@@ -301,6 +341,46 @@ function SiteConfigPanel({ onUpdate }) {
           <Typography variant="subtitle2" gutterBottom fontWeight={600}>
             主题配置
           </Typography>
+          
+          {/* 配色预设 */}
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+              快速选择预设配色：
+            </Typography>
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+              {colorPresets.map((preset) => (
+                <Button
+                  key={preset.name}
+                  variant="outlined"
+                  size="small"
+                  startIcon={<Palette />}
+                  onClick={() => {
+                    setConfig({
+                      ...config,
+                      themeConfig: {
+                        primaryColor: preset.primaryColor,
+                        secondaryColor: preset.secondaryColor,
+                      },
+                    });
+                    setMessage({ type: 'info', text: `已应用「${preset.name}」配色预设` });
+                  }}
+                  sx={{
+                    background: `linear-gradient(135deg, ${preset.primaryColor} 0%, ${preset.secondaryColor} 100%)`,
+                    color: 'white',
+                    border: 'none',
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      border: 'none',
+                    },
+                  }}
+                  title={preset.description}
+                >
+                  {preset.name}
+                </Button>
+              ))}
+            </Stack>
+          </Box>
+          
           <Stack direction="row" spacing={2}>
             <TextField
               label="主色调"

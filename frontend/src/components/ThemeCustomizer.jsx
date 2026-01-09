@@ -10,13 +10,14 @@ import {
 } from '@mui/material';
 import { Palette, Refresh } from '@mui/icons-material';
 
+// 轻动漫风格配色预设（与后台配置保持一致）
 const PRESET_THEMES = [
-  { name: '清新蓝绿', primary: '#4FC3F7', secondary: '#66BB6A' },
-  { name: '薄荷绿', primary: '#81C784', secondary: '#4DD0E1' },
-  { name: '天空蓝', primary: '#64B5F6', secondary: '#42A5F5' },
-  { name: '樱花粉', primary: '#F48FB1', secondary: '#CE93D8' },
-  { name: '柠檬黄', primary: '#FFD54F', secondary: '#FFB74D' },
-  { name: '薰衣草', primary: '#BA68C8', secondary: '#9575CD' },
+  { name: '樱花粉', primary: '#FFB3D9', secondary: '#B8E6FF', description: '柔和的粉蓝配色，清新可爱' },
+  { name: '薄荷绿', primary: '#98D8C8', secondary: '#F7DC6F', description: '清爽的绿黄配色，活力满满' },
+  { name: '天空蓝', primary: '#6EC1E4', secondary: '#FFB6C1', description: '天空般的蓝粉配色，梦幻温柔' },
+  { name: '薰衣草', primary: '#B19CD9', secondary: '#FFB7CE', description: '浪漫的紫粉配色，优雅梦幻' },
+  { name: '珊瑚橙', primary: '#FF9A8B', secondary: '#96E6A1', description: '温暖的橙绿配色，青春活力' },
+  { name: '奶油黄', primary: '#FFE66D', secondary: '#A8DADC', description: '温柔的黄蓝配色，清新明亮' },
 ];
 
 function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
@@ -110,21 +111,30 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
           <Typography variant="subtitle2" gutterBottom sx={{ mt: 2, mb: 1 }}>
             预设主题
           </Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, mb: 3 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5, mb: 3 }}>
             {PRESET_THEMES.map((preset) => (
-              <Tooltip key={preset.name} title={preset.name}>
+              <Tooltip key={preset.name} title={preset.description} arrow>
                 <Button
                   onClick={() => handlePresetClick(preset)}
+                  variant="outlined"
                   sx={{
                     minWidth: 0,
-                    p: 2,
-                    backgroundColor: preset.secondary,
+                    p: 1.5,
+                    background: `linear-gradient(135deg, ${preset.primary} 0%, ${preset.secondary} 100%)`,
+                    color: 'white',
+                    border: 'none',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.2)',
                     '&:hover': {
-                      opacity: 0.8,
+                      transform: 'scale(1.05)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                      border: 'none',
                     },
+                    transition: 'all 0.2s ease',
                   }}
                 >
-                  {' '}
+                  {preset.name}
                 </Button>
               </Tooltip>
             ))}
@@ -193,13 +203,14 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
                 mt: 1,
                 p: 2,
                 borderRadius: 2,
-                backgroundColor: secondaryColor,
+                background: `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`,
                 color: 'white',
                 textAlign: 'center',
+                textShadow: '0 1px 2px rgba(0,0,0,0.2)',
               }}
             >
               <Typography variant="body2" fontWeight={600}>
-                按钮预览
+                渐变预览效果
               </Typography>
             </Box>
           </Box>

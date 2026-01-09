@@ -26,7 +26,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh } from '@mui/icons-material';
+import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
 import { debounce, copyToClipboard, getLetterColor } from '../utils/helpers';
 import { useSearch } from '../components/AppLayout';
@@ -917,6 +917,28 @@ function SongListItem({
               />
             )}
           </Stack>
+          
+          {/* B站切片链接 */}
+          {song.bilibiliClipUrl && (
+            <Tooltip title="观看B站切片">
+              <IconButton
+                size="small"
+                onClick={() => window.open(song.bilibiliClipUrl, '_blank')}
+                sx={{
+                  color: '#00A1D6', // B站品牌色
+                  ml: 'auto',
+                  flexShrink: 0,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 161, 214, 0.1)',
+                    transform: 'scale(1.1)',
+                  },
+                  transition: 'all 0.2s',
+                }}
+              >
+                <PlayCircleOutline />
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
       </ListItem>
     );
@@ -995,6 +1017,25 @@ function SongListItem({
                     },
                   }}
                 />
+              )}
+              {/* B站切片链接（移动端） */}
+              {song.bilibiliClipUrl && (
+                <Tooltip title="观看B站切片">
+                  <IconButton
+                    size="small"
+                    onClick={() => window.open(song.bilibiliClipUrl, '_blank')}
+                    sx={{
+                      color: '#00A1D6',
+                      width: 28,
+                      height: 28,
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 161, 214, 0.1)',
+                      },
+                    }}
+                  >
+                    <PlayCircleOutline fontSize="small" />
+                  </IconButton>
+                </Tooltip>
               )}
             </Box>
           }

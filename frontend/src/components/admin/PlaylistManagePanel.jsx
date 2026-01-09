@@ -45,6 +45,7 @@ function PlaylistManagePanel() {
     category: '',
     special: false,
     firstLetter: '',
+    bilibiliClipUrl: '',
   });
 
   useEffect(() => {
@@ -78,6 +79,7 @@ function PlaylistManagePanel() {
       category: '',
       special: false,
       firstLetter: '',
+      bilibiliClipUrl: '',
     });
     setDialogOpen(true);
   };
@@ -92,6 +94,7 @@ function PlaylistManagePanel() {
       category: song.category,
       special: song.special,
       firstLetter: song.firstLetter,
+      bilibiliClipUrl: song.bilibiliClipUrl || '',
     });
     setDialogOpen(true);
   };
@@ -268,6 +271,14 @@ function PlaylistManagePanel() {
                 />
               }
               label="特殊歌曲"
+            />
+            <TextField
+              fullWidth
+              label="B站切片链接"
+              value={formData.bilibiliClipUrl}
+              onChange={handleChange('bilibiliClipUrl')}
+              placeholder="https://www.bilibili.com/video/BVxxxxxxxxx"
+              helperText="可选，填写后会在歌曲旁显示播放图标"
             />
           </Stack>
         </DialogContent>

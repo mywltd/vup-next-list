@@ -73,11 +73,11 @@ export class PlaylistService {
 
   // 添加歌曲
   static addSong(songData) {
-    const { songName, singer, language, category, special, firstLetter } = songData;
+    const { songName, singer, language, category, special, firstLetter, bilibiliClipUrl } = songData;
 
     const stmt = db.prepare(`
-      INSERT INTO playlist (songName, singer, language, category, special, firstLetter)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO playlist (songName, singer, language, category, special, firstLetter, bilibili_clip_url)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
@@ -86,7 +86,8 @@ export class PlaylistService {
       language,
       category,
       special ? 1 : 0,
-      firstLetter
+      firstLetter,
+      bilibiliClipUrl || null
     );
 
     return {
@@ -97,12 +98,12 @@ export class PlaylistService {
 
   // 更新歌曲
   static updateSong(id, songData) {
-    const { songName, singer, language, category, special, firstLetter } = songData;
+    const { songName, singer, language, category, special, firstLetter, bilibiliClipUrl } = songData;
 
     const stmt = db.prepare(`
       UPDATE playlist 
       SET songName = ?, singer = ?, language = ?, category = ?, 
-          special = ?, firstLetter = ?, updated_at = CURRENT_TIMESTAMP
+          special = ?, firstLetter = ?, bilibili_clip_url = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `);
 
@@ -113,6 +114,7 @@ export class PlaylistService {
       category,
       special ? 1 : 0,
       firstLetter,
+      bilibiliClipUrl || null,
       id
     );
 
@@ -137,8 +139,8 @@ export class PlaylistService {
       db.exec('BEGIN TRANSACTION');
 
       const stmt = db.prepare(`
-        INSERT INTO playlist (songName, singer, language, category, special, firstLetter)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO playlist (songName, singer, language, category, special, firstLetter, bilibili_clip_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `);
 
       let imported = 0;
@@ -150,7 +152,8 @@ export class PlaylistService {
             song.language,
             song.category,
             song.special ? 1 : 0,
-            song.firstLetter
+            song.firstLetter,
+            song.bilibiliClipUrl || null
           );
           imported++;
         } catch (error) {
@@ -173,12 +176,17 @@ export class PlaylistService {
 
   // 导出歌单
   static exportPlaylist() {
-    const stmt = db.prepare('SELECT songName, singer, language, category, special, firstLetter FROM playlist ORDER BY firstLetter, songName');
+    const stmt = db.prepare('SELECT songName, singer, language, category, special, firstLetter, bilibili_clip_url FROM playlist ORDER BY firstLetter, songName');
     const songs = stmt.all();
 
     return songs.map(song => ({
-      ...song,
-      special: Boolean(song.special)
+      songName: song.songName,
+      singer: song.singer,
+      language: song.language,
+      category: song.category,
+      special: Boolean(song.special),
+      firstLetter: song.firstLetter,
+      ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
     }));
   }
 

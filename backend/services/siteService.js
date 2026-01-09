@@ -24,6 +24,7 @@ export class SiteService {
       seoDescription: siteConfig.seo_description || '',
       customCss: siteConfig.custom_css || '',
       customJs: siteConfig.custom_js || '',
+      hiddenTitle: siteConfig.hidden_title || '',
       streamer: streamer ? {
         name: streamer.name,
         bilibiliUrl: streamer.bilibili_url
@@ -43,7 +44,8 @@ export class SiteService {
       seoKeywords,
       seoDescription,
       customCss,
-      customJs
+      customJs,
+      hiddenTitle
     } = configData;
 
     const stmt = db.prepare(`
@@ -58,6 +60,7 @@ export class SiteService {
           seo_description = ?,
           custom_css = ?,
           custom_js = ?,
+          hidden_title = ?,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = 1
     `);
@@ -72,7 +75,8 @@ export class SiteService {
       seoKeywords || '',
       seoDescription || '',
       customCss || '',
-      customJs || ''
+      customJs || '',
+      hiddenTitle || ''
     );
 
     return { success: true, message: '站点配置更新成功' };

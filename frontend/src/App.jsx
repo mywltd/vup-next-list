@@ -67,6 +67,32 @@ function App() {
           : config.siteName || 'VUP 音乐歌单';
         document.title = title;
         
+        // 设置favicon（使用头像）
+        if (config.avatarUrl) {
+          let favicon = document.querySelector('link[rel="icon"]');
+          if (!favicon) {
+            favicon = document.createElement('link');
+            favicon.setAttribute('rel', 'icon');
+            document.head.appendChild(favicon);
+          }
+          favicon.setAttribute('href', config.avatarUrl);
+        }
+        
+        // 监听页面可见性变化，动态改变标题
+        const hiddenTitle = config.hiddenTitle || '';
+        const handleVisibilityChange = () => {
+          if (document.hidden && hiddenTitle) {
+            document.title = hiddenTitle;
+          } else {
+            document.title = title;
+          }
+        };
+        
+        // 移除旧的监听器（如果存在）
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        // 添加新的监听器
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        
         // 更新SEO meta标签
         if (config.seoDescription) {
           let metaDesc = document.querySelector('meta[name="description"]');

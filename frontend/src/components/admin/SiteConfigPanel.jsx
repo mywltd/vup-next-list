@@ -30,6 +30,7 @@ function SiteConfigPanel({ onUpdate }) {
     },
     seoKeywords: '',
     seoDescription: '',
+    hiddenTitle: '',
   });
 
   useEffect(() => {
@@ -51,6 +52,7 @@ function SiteConfigPanel({ onUpdate }) {
         },
         seoKeywords: data.seoKeywords || '',
         seoDescription: data.seoDescription || '',
+        hiddenTitle: data.hiddenTitle || '',
       });
     } catch (error) {
       setMessage({ type: 'error', text: '加载配置失败' });
@@ -99,9 +101,9 @@ function SiteConfigPanel({ onUpdate }) {
         }
 
         // 将相对路径转换为完整URL
-        // const fullUrl = url.startsWith('http') 
-        //   ? url 
-        //   : `${window.location.origin}${url}`;
+        const fullUrl = url.startsWith('http') 
+          ? url 
+          : `${window.location.origin}${url}`;
         
         setConfig({
           ...config,
@@ -287,6 +289,15 @@ function SiteConfigPanel({ onUpdate }) {
             />
           </Stack>
         </Box>
+
+        <TextField
+          fullWidth
+          label="离开页面后的标题"
+          value={config.hiddenTitle}
+          onChange={handleChange('hiddenTitle')}
+          helperText="用户离开页面（切换标签页或最小化窗口）后显示的标题"
+          placeholder="例如：快回来看看我~"
+        />
 
         <Box>
           <Button

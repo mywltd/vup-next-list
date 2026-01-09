@@ -90,6 +90,9 @@ export function initDatabase() {
     if (!columns.includes('custom_js')) {
       db.exec('ALTER TABLE site_config ADD COLUMN custom_js TEXT');
     }
+    if (!columns.includes('hidden_title')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN hidden_title TEXT');
+    }
   } catch (error) {
     console.warn('数据库迁移警告:', error.message);
   }

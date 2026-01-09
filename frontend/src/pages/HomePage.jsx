@@ -297,8 +297,8 @@ function HomePage({ siteConfig }) {
     <Box>
       {/* 页面标题 */}
       <Box sx={{ mb: 4, textAlign: 'center', position: 'relative', zIndex: 1 }}>
-        {/* 头像 */}
-        {siteConfig?.avatarUrl && (
+        {/* 头像 - PC端不显示，移动端显示 */}
+        {siteConfig?.avatarUrl && !isDesktop && (
           <Box
             sx={{
               mb: 2,
@@ -308,8 +308,8 @@ function HomePage({ siteConfig }) {
           >
             <Box
               sx={{
-                width: { xs: 80, sm: 100, md: 120 },
-                height: { xs: 80, sm: 100, md: 120 },
+                width: { xs: 80, sm: 100 },
+                height: { xs: 80, sm: 100 },
                 borderRadius: '50%',
                 overflow: 'hidden',
                 border: `3px solid ${theme.palette.divider}`,

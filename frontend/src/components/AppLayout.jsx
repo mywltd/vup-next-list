@@ -47,7 +47,7 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
     <SearchContext.Provider value={{ searchText, setSearchText }}>
       <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <AppBar 
-          position="sticky" 
+          position="fixed" 
           elevation={0}
           color="default"
           sx={{
@@ -57,8 +57,7 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
               ? 'rgba(20, 25, 45, 0.7)'
               : 'rgba(255, 255, 255, 0.7)',
             borderBottom: `1px solid ${mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
-            position: 'relative',
-            zIndex: 10,
+            zIndex: 1100,
           }}
         >
           <Toolbar sx={{ gap: 2 }}>
@@ -89,7 +88,13 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
 
             {/* PC端搜索框 - 居中 */}
             {isDesktop && !isAdmin && (
-              <Box sx={{ flex: 1, maxWidth: 600, mx: 'auto' }}>
+              <Box sx={{ 
+                position: 'absolute', 
+                left: '50%', 
+                transform: 'translateX(-50%)',
+                width: '100%',
+                maxWidth: 600,
+              }}>
                 <TextField
                   fullWidth
                   placeholder="搜索歌曲或歌手..."
@@ -127,57 +132,17 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
 
             {/* 右侧操作按钮组 */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, ml: 'auto' }}>
-              {/* 主播直播间按钮/图标 */}
+              {/* 主播直播间图标（PC和移动端都只显示图标） */}
               {siteConfig?.streamer && !isAdmin && (
-                <>
-                  {isMobile ? (
-                    // 移动端：只显示图标
-                    <Tooltip title={`${siteConfig.streamer.name}的直播间`}>
-                      <IconButton
-                        onClick={handleBilibiliClick}
-                        sx={{
-                          color: mode === 'light' ? 'primary.main' : 'inherit',
-                        }}
-                      >
-                        <LiveTv />
-                      </IconButton>
-                    </Tooltip>
-                  ) : (
-                    // PC端：显示完整按钮
-                    <Tooltip title={`${siteConfig.streamer.name}的直播间`}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<LiveTv />}
-                        onClick={handleBilibiliClick}
-                      >
-                        {siteConfig.streamer.name}的直播间
-                      </Button>
-                    </Tooltip>
-                  )}
-                </>
-              )}
-
-              {/* 登录按钮 */}
-              {!isAdmin && (
-                <Tooltip title="登录">
-                  <Button
-                    variant="outlined"
-                    startIcon={<Person />}
-                    onClick={() => navigate('/admin/login')}
+                <Tooltip title={`${siteConfig.streamer.name}的直播间`}>
+                  <IconButton
+                    onClick={handleBilibiliClick}
                     sx={{
-                      borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
-                      color: mode === 'dark' ? 'inherit' : 'inherit',
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                        backgroundColor: mode === 'dark' 
-                          ? 'rgba(255, 255, 255, 0.05)' 
-                          : 'rgba(0, 0, 0, 0.04)',
-                      },
+                      color: mode === 'light' ? 'primary.main' : 'inherit',
                     }}
                   >
-                    登录
-                  </Button>
+                    <LiveTv />
+                  </IconButton>
                 </Tooltip>
               )}
 
@@ -199,9 +164,35 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
                   {mode === 'light' ? <Brightness4 /> : <Brightness7 />}
                 </IconButton>
               </Tooltip>
+
+              {/* 登录按钮 - 放到最右边 */}
+              {!isAdmin && (
+                <Tooltip title="登录">
+                  <Button
+                    variant="outlined"
+                    startIcon={<Person />}
+                    onClick={() => navigate('/admin/login')}
+                    sx={{
+                      borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
+                      color: mode === 'dark' ? 'inherit' : 'inherit',
+                      '&:hover': {
+                        borderColor: 'primary.main',
+                        backgroundColor: mode === 'dark' 
+                          ? 'rgba(255, 255, 255, 0.05)' 
+                          : 'rgba(0, 0, 0, 0.04)',
+                      },
+                    }}
+                  >
+                    登录
+                  </Button>
+                </Tooltip>
+              )}
             </Box>
           </Toolbar>
         </AppBar>
+        
+        {/* 为固定导航栏添加占位空间 */}
+        <Toolbar />
 
       {/* 主内容区域 */}
       <Box component="main" sx={{ flexGrow: 1, py: 4, position: 'relative', zIndex: 1 }}>

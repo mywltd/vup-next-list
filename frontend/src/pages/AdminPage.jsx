@@ -94,7 +94,14 @@ function AdminPage({ onConfigUpdate }) {
     <Box>
       {/* 页面标题 */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h4" fontWeight={700}>
+        <Typography 
+          variant="h4" 
+          fontWeight={700}
+          color="primary"
+          sx={{
+            letterSpacing: '0.02em',
+          }}
+        >
           管理后台
         </Typography>
         <Button

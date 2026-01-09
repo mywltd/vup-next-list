@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage';
 
 // 布局组件
 import AppLayout from './components/AppLayout';
+import LoadingPage from './components/LoadingPage';
 
 function App() {
   // 从 localStorage 读取主题模式和自定义配色
@@ -137,19 +138,7 @@ function App() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100vh',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          }}
-        >
-          <Box sx={{ textAlign: 'center', color: 'white' }}>
-            <h1>🎵 加载中...</h1>
-          </Box>
-        </Box>
+        <LoadingPage />
       </ThemeProvider>
     );
   }

@@ -158,12 +158,7 @@ function HomePage({ siteConfig }) {
               onClick={() => setSelectedLetter(letter)}
               color={selectedLetter === letter ? 'primary' : 'default'}
               size="small"
-              sx={{
-                mb: 1,
-                ...(selectedLetter === letter && {
-                  background: `linear-gradient(135deg, ${getLetterColor(letter)} 0%, #7B68EE 100%)`,
-                }),
-              }}
+              sx={{ mb: 1 }}
             />
           ))}
         </Stack>
@@ -296,14 +291,9 @@ function HomePage({ siteConfig }) {
         
         <Typography
           variant={isDesktop ? 'h3' : 'h4'}
-          fontWeight={700}
-          sx={{
-            background: 'linear-gradient(135deg, #FF6B9D 0%, #7B68EE 100%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            mb: 1,
-          }}
+          fontWeight={600}
+          color="primary"
+          sx={{ mb: 1 }}
         >
           {siteConfig?.defaultPlaylistName || '歌单'}
         </Typography>
@@ -312,12 +302,22 @@ function HomePage({ siteConfig }) {
         </Typography>
       </Box>
 
-      {/* PC端布局：左侧筛选器 + 右侧内容 */}
+      {/* PC端布局：左侧筛选器 + 右侧内容 (3:7比例) */}
       {isDesktop ? (
-        <Grid container spacing={3}>
-          {/* 左侧筛选器（PC端） */}
+        <Grid container spacing={2}>
+          {/* 左侧筛选器（PC端）- 30% */}
           <Grid item xs={12} md={3}>
-            <Card sx={{ position: 'sticky', top: 88 }}>
+            <Card 
+              sx={{ 
+                position: 'sticky', 
+                top: 88,
+                backdropFilter: 'blur(10px)',
+                backgroundColor: theme.palette.mode === 'dark'
+                  ? 'rgba(20, 25, 45, 0.6)'
+                  : 'rgba(255, 255, 255, 0.6)',
+                border: `1px solid ${theme.palette.divider}`,
+              }}
+            >
               <CardContent>
                 {/* 搜索栏 */}
                 <TextField
@@ -340,7 +340,7 @@ function HomePage({ siteConfig }) {
             </Card>
           </Grid>
 
-          {/* 右侧歌曲列表（PC端） - 列表形式，延伸到右边，与左边对称 */}
+          {/* 右侧歌曲列表（PC端） - 70% */}
           <Grid item xs={12} md={9}>
             <Paper
               sx={{
@@ -349,16 +349,11 @@ function HomePage({ siteConfig }) {
                 height: 'fit-content',
                 maxHeight: 'calc(100vh - 180px)',
                 overflow: 'hidden',
-                backdropFilter: 'blur(20px) saturate(180%)',
+                backdropFilter: 'blur(10px)',
                 backgroundColor: theme.palette.mode === 'dark'
-                  ? 'rgba(20, 25, 45, 0.75)'
-                  : 'rgba(255, 255, 255, 0.75)',
-                border: theme.palette.mode === 'dark'
-                  ? '1px solid rgba(255, 255, 255, 0.1)'
-                  : '1px solid rgba(123, 104, 238, 0.15)',
-                boxShadow: theme.palette.mode === 'dark'
-                  ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-                  : '0 8px 32px 0 rgba(123, 104, 238, 0.15)',
+                  ? 'rgba(20, 25, 45, 0.6)'
+                  : 'rgba(255, 255, 255, 0.6)',
+                border: `1px solid ${theme.palette.divider}`,
               }}
             >
               {loading ? (
@@ -499,16 +494,11 @@ function HomePage({ siteConfig }) {
           {/* 歌曲列表（移动端） - 列表形式 */}
           <Paper
             sx={{
-              backdropFilter: 'blur(20px) saturate(180%)',
+              backdropFilter: 'blur(10px)',
               backgroundColor: theme.palette.mode === 'dark'
-                ? 'rgba(20, 25, 45, 0.75)'
-                : 'rgba(255, 255, 255, 0.75)',
-              border: theme.palette.mode === 'dark'
-                ? '1px solid rgba(255, 255, 255, 0.1)'
-                : '1px solid rgba(123, 104, 238, 0.15)',
-              boxShadow: theme.palette.mode === 'dark'
-                ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-                : '0 8px 32px 0 rgba(123, 104, 238, 0.15)',
+                ? 'rgba(20, 25, 45, 0.6)'
+                : 'rgba(255, 255, 255, 0.6)',
+              border: `1px solid ${theme.palette.divider}`,
             }}
           >
             {loading ? (
@@ -598,52 +588,25 @@ function SongListItem({ song, onCopy, isLast, theme }) {
     <ListItem
       component="div"
       sx={{
-        py: 1.75,
+        py: 1.5,
         px: { xs: 2, sm: 2.5 },
-        mb: 1.5,
+        mb: 1,
         mx: { xs: 0.5, sm: 1 },
-        borderRadius: 3,
-        // 毛玻璃效果
-        backdropFilter: 'blur(16px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+        borderRadius: 2,
+        backdropFilter: 'blur(10px)',
         backgroundColor: isDark
-          ? 'rgba(30, 35, 55, 0.65)'
-          : 'rgba(255, 255, 255, 0.6)',
-        border: isDark
-          ? '1px solid rgba(255, 255, 255, 0.1)'
-          : '1px solid rgba(123, 104, 238, 0.12)',
-        boxShadow: isDark
-          ? '0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-          : '0 4px 12px rgba(123, 104, 238, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-        position: 'relative',
-        overflow: 'hidden',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '1px',
-          background: isDark
-            ? 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)'
-            : 'linear-gradient(90deg, transparent, rgba(123, 104, 238, 0.2), transparent)',
-        },
+          ? 'rgba(30, 35, 55, 0.5)'
+          : 'rgba(255, 255, 255, 0.5)',
+        border: `1px solid ${theme.palette.divider}`,
         '&:hover': {
           backgroundColor: isDark
-            ? 'rgba(40, 45, 65, 0.75)'
-            : 'rgba(255, 255, 255, 0.8)',
-          transform: 'translateY(-2px)',
-          boxShadow: isDark
-            ? '0 6px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
-            : '0 6px 20px rgba(123, 104, 238, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
-          borderColor: isDark
-            ? 'rgba(255, 255, 255, 0.15)'
-            : 'rgba(123, 104, 238, 0.2)',
+            ? 'rgba(40, 45, 65, 0.6)'
+            : 'rgba(255, 255, 255, 0.7)',
           '& .copy-icon': {
             opacity: 1,
           },
         },
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        transition: 'background-color 0.2s',
       }}
     >
         <ListItemText

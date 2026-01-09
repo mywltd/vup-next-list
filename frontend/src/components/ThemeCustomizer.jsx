@@ -87,6 +87,19 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
           vertical: 'top',
           horizontal: 'right',
         }}
+        sx={{
+          // 移动端居中
+          '& .MuiPopover-paper': {
+            '@media (max-width: 600px)': {
+              position: 'fixed !important',
+              top: '50% !important',
+              left: '50% !important',
+              transform: 'translate(-50%, -50%) !important',
+              maxWidth: '90vw',
+              maxHeight: '80vh',
+            },
+          },
+        }}
       >
         <Box sx={{ p: 3, minWidth: 300 }}>
           <Typography variant="h6" gutterBottom fontWeight={600}>

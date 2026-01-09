@@ -38,17 +38,12 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
         elevation={0}
         color="default"
         sx={{
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
           backgroundColor: mode === 'dark'
-            ? 'rgba(20, 25, 45, 0.75)'
-            : 'rgba(255, 255, 255, 0.75)',
-          borderBottom: mode === 'dark'
-            ? '1px solid rgba(255, 255, 255, 0.1)'
-            : '1px solid rgba(123, 104, 238, 0.15)',
-          boxShadow: mode === 'dark'
-            ? '0 4px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-            : '0 4px 30px rgba(123, 104, 238, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+            ? 'rgba(20, 25, 45, 0.7)'
+            : 'rgba(255, 255, 255, 0.7)',
+          borderBottom: `1px solid ${mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
           position: 'relative',
           zIndex: 10,
         }}
@@ -60,11 +55,8 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
             component="div"
             sx={{
               flexGrow: 1,
-              fontWeight: 700,
-              background: 'linear-gradient(135deg, #FF6B9D 0%, #7B68EE 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              fontWeight: 600,
+              color: 'primary.main',
               cursor: 'pointer',
             }}
             onClick={() => navigate('/')}
@@ -162,14 +154,11 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
           px: 2,
           mt: 'auto',
           textAlign: 'center',
-          backdropFilter: 'blur(10px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(10px) saturate(180%)',
+          backdropFilter: 'blur(10px)',
           backgroundColor: mode === 'dark'
-            ? 'rgba(20, 25, 45, 0.6)'
-            : 'rgba(255, 255, 255, 0.6)',
-          borderTop: mode === 'dark'
-            ? '1px solid rgba(255, 255, 255, 0.08)'
-            : '1px solid rgba(123, 104, 238, 0.1)',
+            ? 'rgba(20, 25, 45, 0.5)'
+            : 'rgba(255, 255, 255, 0.5)',
+          borderTop: `1px solid ${mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)'}`,
           position: 'relative',
           zIndex: 1,
         }}

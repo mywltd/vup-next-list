@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
-  Grid,
   Card,
   CardContent,
   Typography,
@@ -367,11 +366,11 @@ function HomePage({ siteConfig }) {
         </Typography>
       </Box>
 
-      {/* PC端布局：左侧筛选器 + 右侧内容 (3:7比例) */}
+      {/* PC端布局：左侧筛选器 + 右侧内容 */}
       {isDesktop ? (
-        <Grid container spacing={2}>
-          {/* 左侧筛选器（PC端）- 30% */}
-          <Grid item xs={12} md={3}>
+        <Box sx={{ display: 'flex', gap: 2, px: 3 }}>
+          {/* 左侧筛选器（PC端）- 固定宽度 */}
+          <Box sx={{ flexShrink: 0, width: 280 }}>
             <Card 
               sx={{ 
                 position: 'sticky', 
@@ -401,10 +400,10 @@ function HomePage({ siteConfig }) {
                 <FilterPanel />
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          {/* 右侧歌曲列表（PC端） - 70% */}
-          <Grid item xs={12} md={9}>
+          {/* 右侧歌曲列表（PC端） - 自适应宽度 */}
+          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Paper
               sx={{
                 display: 'flex',
@@ -474,6 +473,19 @@ function HomePage({ siteConfig }) {
                           song={song}
                           onCopy={handleCopy}
                           isLast={index === songs.length - 1}
+                          onFilterByLanguage={(lang) => {
+                            setSelectedLanguages([lang]);
+                            setPage(1);
+                          }}
+                          onFilterByCategory={(cat) => {
+                            setSelectedCategories([cat]);
+                            setPage(1);
+                          }}
+                          onFilterByLetter={(letter) => {
+                            setSelectedLetter(letter);
+                            setPage(1);
+                          }}
+                          isDesktop={isDesktop}
                           {...songListProps}
                         />
                       ))}
@@ -504,8 +516,8 @@ function HomePage({ siteConfig }) {
                 </>
               )}
             </Paper>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       ) : (
         /* 移动端布局 */
         <>
@@ -653,6 +665,19 @@ function HomePage({ siteConfig }) {
                       song={song}
                       onCopy={handleCopy}
                       isLast={index === songs.length - 1}
+                      onFilterByLanguage={(lang) => {
+                        setSelectedLanguages([lang]);
+                        setPage(1);
+                      }}
+                      onFilterByCategory={(cat) => {
+                        setSelectedCategories([cat]);
+                        setPage(1);
+                      }}
+                      onFilterByLetter={(letter) => {
+                        setSelectedLetter(letter);
+                        setPage(1);
+                      }}
+                      isDesktop={isDesktop}
                       {...songListProps}
                     />
                   ))}
@@ -699,9 +724,197 @@ function HomePage({ siteConfig }) {
 }
 
 // 歌曲列表项组件
-function SongListItem({ song, onCopy, isLast, theme }) {
+function SongListItem({ 
+  song, 
+  onCopy, 
+  isLast, 
+  theme, 
+  isDesktop,
+  onFilterByLanguage,
+  onFilterByCategory,
+  onFilterByLetter
+}) {
   const isDark = theme?.palette.mode === 'dark';
   
+  // PC端：横向布局
+  if (isDesktop) {
+    return (
+      <ListItem
+        component="div"
+        sx={{
+          py: 1.5,
+          px: 2.5,
+          mb: 1,
+          mx: 1,
+          borderRadius: 2,
+          backdropFilter: 'blur(10px)',
+          backgroundColor: isDark
+            ? 'rgba(30, 35, 55, 0.5)'
+            : 'rgba(255, 255, 255, 0.5)',
+          border: `1px solid ${theme.palette.divider}`,
+          '&:hover': {
+            backgroundColor: isDark
+              ? 'rgba(40, 45, 65, 0.6)'
+              : 'rgba(255, 255, 255, 0.7)',
+            '& .copy-icon': {
+              opacity: 1,
+            },
+          },
+          transition: 'background-color 0.2s',
+        }}
+      >
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          width: '100%',
+          gap: 2,
+        }}>
+          {/* 歌曲名称 */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 200, flexShrink: 0 }}>
+            <Tooltip title="点击复制歌曲名">
+              <Typography
+                variant="body1"
+                fontWeight={600}
+                onClick={() => onCopy(song.songName)}
+                sx={{
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  '&:hover': {
+                    color: 'primary.main',
+                  },
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {song.songName}
+              </Typography>
+            </Tooltip>
+            <IconButton
+              size="small"
+              className="copy-icon"
+              onClick={() => onCopy(song.songName)}
+              sx={{
+                opacity: 0,
+                transition: 'opacity 0.2s',
+                width: 28,
+                height: 28,
+              }}
+            >
+              <ContentCopy fontSize="small" />
+            </IconButton>
+          </Box>
+
+          {/* 歌手 */}
+          <Typography 
+            variant="body2" 
+            color="text.secondary"
+            sx={{ 
+              fontSize: '0.875rem',
+              minWidth: 120,
+              flexShrink: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {song.singer}
+          </Typography>
+
+          {/* 标签区域 */}
+          <Stack 
+            direction="row" 
+            spacing={0.75} 
+            alignItems="center"
+            sx={{ flexGrow: 1, minWidth: 0 }}
+          >
+            <Tooltip title="点击筛选此语言">
+              <Chip
+                label={song.language}
+                size="small"
+                variant="outlined"
+                onClick={() => onFilterByLanguage(song.language)}
+                sx={{ 
+                  height: 24, 
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                    borderColor: 'primary.main',
+                  },
+                  transition: 'all 0.2s',
+                  '& .MuiChip-label': {
+                    px: 1,
+                  },
+                }}
+              />
+            </Tooltip>
+            <Tooltip title="点击筛选此种类">
+              <Chip
+                label={song.category}
+                size="small"
+                variant="outlined"
+                onClick={() => onFilterByCategory(song.category)}
+                sx={{ 
+                  height: 24, 
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'secondary.main',
+                    color: 'white',
+                    borderColor: 'secondary.main',
+                  },
+                  transition: 'all 0.2s',
+                  '& .MuiChip-label': {
+                    px: 1,
+                  },
+                }}
+              />
+            </Tooltip>
+            <Tooltip title="点击筛选此首字母">
+              <Chip
+                label={song.firstLetter}
+                size="small"
+                color="primary"
+                variant="outlined"
+                onClick={() => onFilterByLetter(song.firstLetter)}
+                sx={{
+                  height: 24,
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                  },
+                  transition: 'all 0.2s',
+                  '& .MuiChip-label': {
+                    px: 1,
+                  },
+                }}
+              />
+            </Tooltip>
+            {song.special && (
+              <Chip
+                label="特殊"
+                color="secondary"
+                size="small"
+                sx={{ 
+                  height: 24, 
+                  fontSize: '0.75rem',
+                  '& .MuiChip-label': {
+                    px: 1,
+                  },
+                }}
+              />
+            )}
+          </Stack>
+        </Box>
+      </ListItem>
+    );
+  }
+  
+  // 移动端：垂直布局
   return (
     <ListItem
       component="div"
@@ -793,43 +1006,69 @@ function SongListItem({ song, onCopy, isLast, theme }) {
               >
                 {song.singer}
               </Typography>
-              <Chip
-                label={song.language}
-                size="small"
-                variant="outlined"
-                sx={{ 
-                  height: 20, 
-                  fontSize: '0.65rem',
-                  '& .MuiChip-label': {
-                    px: 0.75,
-                  },
-                }}
-              />
-              <Chip
-                label={song.category}
-                size="small"
-                variant="outlined"
-                sx={{ 
-                  height: 20, 
-                  fontSize: '0.65rem',
-                  '& .MuiChip-label': {
-                    px: 0.75,
-                  },
-                }}
-              />
-              <Chip
-                label={song.firstLetter}
-                size="small"
-                color="primary"
-                variant="outlined"
-                sx={{
-                  height: 20,
-                  fontSize: '0.65rem',
-                  '& .MuiChip-label': {
-                    px: 0.75,
-                  },
-                }}
-              />
+              <Tooltip title="点击筛选此语言">
+                <Chip
+                  label={song.language}
+                  size="small"
+                  variant="outlined"
+                  onClick={() => onFilterByLanguage(song.language)}
+                  sx={{ 
+                    height: 20, 
+                    fontSize: '0.65rem',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: 'primary.main',
+                      color: 'white',
+                      borderColor: 'primary.main',
+                    },
+                    '& .MuiChip-label': {
+                      px: 0.75,
+                    },
+                  }}
+                />
+              </Tooltip>
+              <Tooltip title="点击筛选此种类">
+                <Chip
+                  label={song.category}
+                  size="small"
+                  variant="outlined"
+                  onClick={() => onFilterByCategory(song.category)}
+                  sx={{ 
+                    height: 20, 
+                    fontSize: '0.65rem',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: 'secondary.main',
+                      color: 'white',
+                      borderColor: 'secondary.main',
+                    },
+                    '& .MuiChip-label': {
+                      px: 0.75,
+                    },
+                  }}
+                />
+              </Tooltip>
+              <Tooltip title="点击筛选此首字母">
+                <Chip
+                  label={song.firstLetter}
+                  size="small"
+                  color="primary"
+                  variant="outlined"
+                  onClick={() => onFilterByLetter(song.firstLetter)}
+                  sx={{
+                    height: 20,
+                    fontSize: '0.65rem',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: 'primary.main',
+                      color: 'white',
+                    },
+                    '& .MuiChip-label': {
+                      px: 0.75,
+                    },
+                  }}
+                />
+              </Tooltip>
             </Stack>
           }
         />

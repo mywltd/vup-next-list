@@ -25,8 +25,8 @@ function SiteConfigPanel({ onUpdate }) {
     avatarUrl: '',
     backgroundUrl: '',
     themeConfig: {
-      primaryColor: '#FF6B9D',
-      secondaryColor: '#7B68EE',
+      primaryColor: '#4FC3F7',
+      secondaryColor: '#66BB6A',
     },
     seoKeywords: '',
     seoDescription: '',

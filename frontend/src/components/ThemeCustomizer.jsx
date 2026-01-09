@@ -11,21 +11,21 @@ import {
 import { Palette, Refresh } from '@mui/icons-material';
 
 const PRESET_THEMES = [
-  { name: '默认粉紫', primary: '#FF6B9D', secondary: '#7B68EE' },
-  { name: '蓝紫渐变', primary: '#64B5F6', secondary: '#9C27B0' },
-  { name: '绿松石', primary: '#26A69A', secondary: '#00897B' },
-  { name: '橙粉红', primary: '#FF9800', secondary: '#E91E63' },
-  { name: '青蓝色', primary: '#00BCD4', secondary: '#3F51B5' },
-  { name: '紫红渐变', primary: '#AB47BC', secondary: '#F06292' },
+  { name: '清新蓝绿', primary: '#4FC3F7', secondary: '#66BB6A' },
+  { name: '薄荷绿', primary: '#81C784', secondary: '#4DD0E1' },
+  { name: '天空蓝', primary: '#64B5F6', secondary: '#42A5F5' },
+  { name: '樱花粉', primary: '#F48FB1', secondary: '#CE93D8' },
+  { name: '柠檬黄', primary: '#FFD54F', secondary: '#FFB74D' },
+  { name: '薰衣草', primary: '#BA68C8', secondary: '#9575CD' },
 ];
 
 function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [primaryColor, setPrimaryColor] = useState(
-    userThemeConfig?.primaryColor || '#FF6B9D'
+    userThemeConfig?.primaryColor || '#4FC3F7'
   );
   const [secondaryColor, setSecondaryColor] = useState(
-    userThemeConfig?.secondaryColor || '#7B68EE'
+    userThemeConfig?.secondaryColor || '#66BB6A'
   );
 
   const handleOpen = (event) => {
@@ -45,8 +45,8 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
   };
 
   const handleReset = () => {
-    setPrimaryColor('#FF6B9D');
-    setSecondaryColor('#7B68EE');
+    setPrimaryColor('#4FC3F7');
+    setSecondaryColor('#66BB6A');
     onUpdateUserTheme(null);
     localStorage.removeItem('userThemeConfig');
   };
@@ -118,7 +118,7 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
                   sx={{
                     minWidth: 0,
                     p: 2,
-                    background: `linear-gradient(135deg, ${preset.primary} 0%, ${preset.secondary} 100%)`,
+                    backgroundColor: preset.secondary,
                     '&:hover': {
                       opacity: 0.8,
                     },
@@ -184,19 +184,24 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
           </Stack>
 
           {/* 预览 */}
-          <Box
-            sx={{
-              mt: 2,
-              p: 2,
-              borderRadius: 2,
-              background: `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`,
-              color: 'white',
-              textAlign: 'center',
-            }}
-          >
-            <Typography variant="body2" fontWeight={600}>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="caption" color="text.secondary" gutterBottom>
               预览效果
             </Typography>
+            <Box
+              sx={{
+                mt: 1,
+                p: 2,
+                borderRadius: 2,
+                backgroundColor: secondaryColor,
+                color: 'white',
+                textAlign: 'center',
+              }}
+            >
+              <Typography variant="body2" fontWeight={600}>
+                按钮预览
+              </Typography>
+            </Box>
           </Box>
 
           {/* 操作按钮 */}

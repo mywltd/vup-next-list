@@ -5,8 +5,8 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
   const isDark = mode === 'dark';
 
   // 默认主题色（可以被用户自定义覆盖）
-  const primaryColor = customConfig.primaryColor || '#FF6B9D'; // 粉色
-  const secondaryColor = customConfig.secondaryColor || '#7B68EE'; // 紫色
+  const primaryColor = customConfig.primaryColor || '#4FC3F7'; // 清新蓝
+  const secondaryColor = customConfig.secondaryColor || '#66BB6A'; // 清新绿
 
   return createTheme({
     palette: {
@@ -107,15 +107,19 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
             fontWeight: 600,
             boxShadow: 'none',
             '&:hover': {
-              boxShadow: '0px 4px 12px rgba(123, 104, 238, 0.3)',
+              boxShadow: `0px 4px 12px ${secondaryColor}40`,
               transform: 'translateY(-2px)',
               transition: 'all 0.3s ease',
             },
           },
           contained: {
-            background: isDark
-              ? 'linear-gradient(135deg, #7B68EE 0%, #FF6B9D 100%)'
-              : 'linear-gradient(135deg, #FF6B9D 0%, #7B68EE 100%)',
+            backgroundColor: secondaryColor,
+            color: '#FFFFFF',
+            '&:hover': {
+              backgroundColor: isDark 
+                ? `${secondaryColor}DD` 
+                : `${secondaryColor}CC`,
+            },
           },
         },
       },

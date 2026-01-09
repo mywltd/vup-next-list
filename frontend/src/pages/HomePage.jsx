@@ -250,28 +250,12 @@ function HomePage({ siteConfig }) {
                 height: { xs: 80, sm: 100, md: 120 },
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: `4px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(123, 104, 238, 0.2)'}`,
-                boxShadow: theme.palette.mode === 'dark'
-                  ? '0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
-                  : '0 8px 32px rgba(123, 104, 238, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.5)',
+                border: `3px solid ${theme.palette.divider}`,
                 backdropFilter: 'blur(10px)',
                 backgroundColor: theme.palette.mode === 'dark'
                   ? 'rgba(20, 25, 45, 0.5)'
                   : 'rgba(255, 255, 255, 0.5)',
-                padding: '4px',
-                position: 'relative',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  borderRadius: '50%',
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                  opacity: 0.3,
-                  zIndex: -1,
-                },
+                padding: '3px',
               }}
             >
               <Box

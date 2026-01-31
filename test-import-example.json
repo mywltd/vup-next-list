@@ -1,0 +1,28 @@
+[
+  {
+    "songName": "测试歌曲1",
+    "singer": "测试歌手",
+    "language": "国语",
+    "category": ["古风", "国风", "戏腔"],
+    "special": false,
+    "firstLetter": "C",
+    "bilibiliClipUrl": ""
+  },
+  {
+    "songName": "测试歌曲2",
+    "singer": "测试歌手2",
+    "language": "粤语",
+    "category": "流行",
+    "special": true,
+    "firstLetter": "C"
+  },
+  {
+    "songName": "Test Song 3",
+    "singer": "Test Artist",
+    "language": "英语",
+    "categories": ["摇滚", "金属"],
+    "special": false,
+    "firstLetter": "T"
+  }
+]
+

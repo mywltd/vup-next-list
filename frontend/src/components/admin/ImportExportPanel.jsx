@@ -47,11 +47,43 @@ function ImportExportPanel() {
 
     try {
       const text = await file.text();
-      const songs = JSON.parse(text);
+      let songs = JSON.parse(text);
 
       if (!Array.isArray(songs)) {
         throw new Error('无效的 JSON 格式');
       }
+
+      // 处理多标签格式：兼容新旧数据格式
+      songs = songs.map(song => {
+        // 如果有 categories 数组，直接使用
+        if (Array.isArray(song.categories) && song.categories.length > 0) {
+          return song;
+        }
+        
+        // 如果 category 是数组，转换为 categories
+        if (Array.isArray(song.category)) {
+          return {
+            ...song,
+            categories: song.category,
+            category: song.category[0] || '其他'
+          };
+        }
+        
+        // 如果 category 是字符串，转换为数组
+        if (typeof song.category === 'string') {
+          return {
+            ...song,
+            categories: [song.category]
+          };
+        }
+        
+        // 默认值
+        return {
+          ...song,
+          categories: ['其他'],
+          category: '其他'
+        };
+      });
 
       const result = await playlistAPI.importPlaylist(songs, clearExisting);
       setMessage({
@@ -176,8 +208,8 @@ function ImportExportPanel() {
             </ListItem>
             <ListItem>
               <ListItemText
-                primary="category"
-                secondary="种类（必填）"
+                primary="category 或 categories"
+                secondary="种类（必填）- 支持字符串或数组，如：['古风', '国风', '戏腔']"
               />
             </ListItem>
             <ListItem>
@@ -192,7 +224,20 @@ function ImportExportPanel() {
                 secondary="是否特殊歌曲 (true/false)"
               />
             </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="bilibiliClipUrl"
+                secondary="B站切片链接（可选）"
+              />
+            </ListItem>
           </List>
+          <Alert severity="info" sx={{ mt: 2 }}>
+            <Typography variant="body2">
+              💡 支持多标签分类：category 字段可以是字符串或数组。
+              <br />
+              使用 xlsx2json.js 转换的 JSON 文件会自动包含多标签格式。
+            </Typography>
+          </Alert>
         </Paper>
 
         {/* 危险操作 */}

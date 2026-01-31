@@ -24,7 +24,7 @@ import {
   Divider,
   Paper,
 } from '@mui/material';
-import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline, Brightness7 } from '@mui/icons-material';
+import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
 import { debounce, copyToClipboard, getLetterColor } from '../utils/helpers';
 import { useSearch } from '../components/AppLayout';
@@ -961,21 +961,6 @@ function SongListItem({
         }}>
           {/* 歌曲名称 */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 200, flexShrink: 0 }}>
-            {isNewSong && (
-              <Tooltip title="新歌">
-                <Brightness7 
-                  sx={{ 
-                    fontSize: 20, 
-                    color: 'primary.main',
-                    animation: 'pulse 2s ease-in-out infinite',
-                    '@keyframes pulse': {
-                      '0%, 100%': { opacity: 0.6 },
-                      '50%': { opacity: 1 },
-                    },
-                  }} 
-                />
-              </Tooltip>
-            )}
             <Tooltip title="点击复制歌曲名">
               <Typography
                 variant="body1"
@@ -1221,21 +1206,6 @@ function SongListItem({
         <ListItemText
           primary={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.25, flexWrap: 'wrap' }}>
-              {isNewSong && (
-                <Tooltip title="新歌">
-                  <Brightness7 
-                    sx={{ 
-                      fontSize: 18, 
-                      color: 'primary.main',
-                      animation: 'pulse 2s ease-in-out infinite',
-                      '@keyframes pulse': {
-                        '0%, 100%': { opacity: 0.6 },
-                        '50%': { opacity: 1 },
-                      },
-                    }} 
-                  />
-                </Tooltip>
-              )}
               <Tooltip title="点击复制歌曲名">
                 <Typography
                   variant="body1"

@@ -6,13 +6,22 @@ import { setupAPI, siteAPI } from './services/api';
 
 // 设置favicon的辅助函数
 function setFavicon(url) {
-  let favicon = document.querySelector('link[rel="icon"]');
-  if (!favicon) {
-    favicon = document.createElement('link');
-    favicon.setAttribute('rel', 'icon');
-    document.head.appendChild(favicon);
-  }
+  // 移除所有现有的 favicon
+  const existingFavicons = document.querySelectorAll('link[rel*="icon"]');
+  existingFavicons.forEach(favicon => favicon.remove());
+  
+  // 创建新的 favicon
+  const favicon = document.createElement('link');
+  favicon.setAttribute('rel', 'icon');
+  favicon.setAttribute('type', 'image/png');
   favicon.setAttribute('href', url);
+  document.head.appendChild(favicon);
+  
+  // 也设置 apple-touch-icon（iOS 设备）
+  const appleFavicon = document.createElement('link');
+  appleFavicon.setAttribute('rel', 'apple-touch-icon');
+  appleFavicon.setAttribute('href', url);
+  document.head.appendChild(appleFavicon);
 }
 
 // 页面组件
@@ -96,15 +105,21 @@ function App() {
           : config.siteName || 'VUP 音乐歌单';
         document.title = title;
         
-        // 设置favicon（使用头像，带缓存）
+        // 设置favicon（使用头像）
         if (config.avatarUrl) {
+          // 直接使用头像地址，不等待缓存
+          setFavicon(config.avatarUrl);
+          
+          // 后台尝试缓存
           import('./utils/imageCache.js').then(({ getCachedImage, cacheImage }) => {
             const cached = getCachedImage(config.avatarUrl);
             if (cached) {
               setFavicon(cached);
             } else {
               cacheImage(config.avatarUrl).then(cachedUrl => {
-                setFavicon(cachedUrl);
+                if (cachedUrl) {
+                  setFavicon(cachedUrl);
+                }
               });
             }
           });

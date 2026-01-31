@@ -1135,28 +1135,6 @@ function SongListItem({
                 />
               </Tooltip>
             ))}
-            <Tooltip title="点击筛选此首字母">
-              <Chip
-                label={song.firstLetter}
-                size="small"
-                color="primary"
-                variant="outlined"
-                onClick={() => onFilterByLetter(song.firstLetter)}
-                sx={{
-                  height: 24,
-                  fontSize: '0.75rem',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                  },
-                  transition: 'all 0.2s',
-                  '& .MuiChip-label': {
-                    px: 1,
-                  },
-                }}
-              />
-            </Tooltip>
             {song.special && (
               <Chip
                 label="特殊"
@@ -1428,33 +1406,6 @@ function SongListItem({
                   />
                 </Tooltip>
               ))}
-              <Tooltip title="点击筛选此首字母">
-                <Chip
-                  label={song.firstLetter}
-                  size="small"
-                  variant="filled"
-                  onClick={() => onFilterByLetter(song.firstLetter)}
-                  sx={{
-                    height: 22,
-                    fontSize: '0.7rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    backgroundColor: isDark ? 'rgba(110, 193, 228, 0.2)' : 'rgba(110, 193, 228, 0.15)',
-                    color: 'primary.main',
-                    border: `1px solid rgba(110, 193, 228, 0.4)`,
-                    '&:hover': {
-                      backgroundColor: 'primary.main',
-                      color: 'white',
-                      transform: 'scale(1.05)',
-                      boxShadow: '0 2px 8px rgba(110, 193, 228, 0.3)',
-                    },
-                    transition: 'all 0.2s ease',
-                    '& .MuiChip-label': {
-                      px: 1,
-                    },
-                  }}
-                />
-              </Tooltip>
             </Stack>
           }
         />

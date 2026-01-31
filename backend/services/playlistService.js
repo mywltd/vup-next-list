@@ -80,12 +80,23 @@ export class PlaylistService {
         const createdAt = new Date(song.created_at);
         const isNewSong = highlightNewSongs && createdAt >= newSongThreshold;
         
+        // 解析多标签（优先使用 categories_json，回退到 category）
+        let categories = [song.category];
+        if (song.categories_json) {
+          try {
+            categories = JSON.parse(song.categories_json);
+          } catch (e) {
+            categories = [song.category];
+          }
+        }
+        
         return {
           id: song.id,
           songName: song.songName,
           singer: song.singer,
           language: song.language,
-          category: song.category,
+          category: song.category, // 保留主分类（向后兼容）
+          categories: categories, // 新增多标签数组
           special: Boolean(song.special),
           firstLetter: song.firstLetter,
           isNewSong: isNewSong,
@@ -135,18 +146,27 @@ export class PlaylistService {
 
   // 添加歌曲
   static addSong(songData) {
-    const { songName, singer, language, category, special, firstLetter, bilibiliClipUrl } = songData;
+    const { songName, singer, language, category, categories, special, firstLetter, bilibiliClipUrl } = songData;
+
+    // 处理多标签：优先使用 categories，回退到 category
+    let categoriesArray = categories || [category];
+    if (!Array.isArray(categoriesArray)) {
+      categoriesArray = [categoriesArray];
+    }
+    const mainCategory = categoriesArray[0] || '其他';
+    const categoriesJson = JSON.stringify(categoriesArray);
 
     const stmt = db.prepare(`
-      INSERT INTO playlist (songName, singer, language, category, special, firstLetter, bilibili_clip_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO playlist (songName, singer, language, category, categories_json, special, firstLetter, bilibili_clip_url)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
       songName,
       singer,
       language,
-      category,
+      mainCategory,
+      categoriesJson,
       special ? 1 : 0,
       firstLetter,
       bilibiliClipUrl || null
@@ -154,17 +174,26 @@ export class PlaylistService {
 
     return {
       id: result.lastInsertRowid,
-      ...songData
+      ...songData,
+      categories: categoriesArray
     };
   }
 
   // 更新歌曲
   static updateSong(id, songData) {
-    const { songName, singer, language, category, special, firstLetter, bilibiliClipUrl } = songData;
+    const { songName, singer, language, category, categories, special, firstLetter, bilibiliClipUrl } = songData;
+
+    // 处理多标签：优先使用 categories，回退到 category
+    let categoriesArray = categories || [category];
+    if (!Array.isArray(categoriesArray)) {
+      categoriesArray = [categoriesArray];
+    }
+    const mainCategory = categoriesArray[0] || '其他';
+    const categoriesJson = JSON.stringify(categoriesArray);
 
     const stmt = db.prepare(`
       UPDATE playlist 
-      SET songName = ?, singer = ?, language = ?, category = ?, 
+      SET songName = ?, singer = ?, language = ?, category = ?, categories_json = ?, 
           special = ?, firstLetter = ?, bilibili_clip_url = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `);
@@ -173,14 +202,15 @@ export class PlaylistService {
       songName,
       singer,
       language,
-      category,
+      mainCategory,
+      categoriesJson,
       special ? 1 : 0,
       firstLetter,
       bilibiliClipUrl || null,
       id
     );
 
-    return { id, ...songData };
+    return { id, ...songData, categories: categoriesArray };
   }
 
   // 删除歌曲
@@ -201,18 +231,27 @@ export class PlaylistService {
       db.exec('BEGIN TRANSACTION');
 
       const stmt = db.prepare(`
-        INSERT INTO playlist (songName, singer, language, category, special, firstLetter, bilibili_clip_url)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO playlist (songName, singer, language, category, categories_json, special, firstLetter, bilibili_clip_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       let imported = 0;
       for (const song of songs) {
         try {
+          // 处理多标签
+          let categoriesArray = song.categories || [song.category];
+          if (!Array.isArray(categoriesArray)) {
+            categoriesArray = [categoriesArray];
+          }
+          const mainCategory = categoriesArray[0] || '其他';
+          const categoriesJson = JSON.stringify(categoriesArray);
+          
           stmt.run(
             song.songName,
             song.singer,
             song.language,
-            song.category,
+            mainCategory,
+            categoriesJson,
             song.special ? 1 : 0,
             song.firstLetter,
             song.bilibiliClipUrl || null
@@ -238,18 +277,31 @@ export class PlaylistService {
 
   // 导出歌单
   static exportPlaylist() {
-    const stmt = db.prepare('SELECT songName, singer, language, category, special, firstLetter, bilibili_clip_url FROM playlist ORDER BY firstLetter, songName');
+    const stmt = db.prepare('SELECT songName, singer, language, category, categories_json, special, firstLetter, bilibili_clip_url FROM playlist ORDER BY firstLetter, songName');
     const songs = stmt.all();
 
-    return songs.map(song => ({
-      songName: song.songName,
-      singer: song.singer,
-      language: song.language,
-      category: song.category,
-      special: Boolean(song.special),
-      firstLetter: song.firstLetter,
-      ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
-    }));
+    return songs.map(song => {
+      // 解析多标签
+      let categories = [song.category];
+      if (song.categories_json) {
+        try {
+          categories = JSON.parse(song.categories_json);
+        } catch (e) {
+          categories = [song.category];
+        }
+      }
+      
+      return {
+        songName: song.songName,
+        singer: song.singer,
+        language: song.language,
+        category: song.category, // 保留主分类
+        categories: categories, // 新增多标签
+        special: Boolean(song.special),
+        firstLetter: song.firstLetter,
+        ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
+      };
+    });
   }
 
   // 清空歌单

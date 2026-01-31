@@ -1077,28 +1077,31 @@ function SongListItem({
                 }}
               />
             </Tooltip>
-            <Tooltip title="点击筛选此种类">
-              <Chip
-                label={song.category}
-                size="small"
-                variant="outlined"
-                onClick={() => onFilterByCategory(song.category)}
-                sx={{ 
-                  height: 24, 
-                  fontSize: '0.75rem',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: 'secondary.main',
-                    color: 'white',
-                    borderColor: 'secondary.main',
-                  },
-                  transition: 'all 0.2s',
-                  '& .MuiChip-label': {
-                    px: 1,
-                  },
-                }}
-              />
-            </Tooltip>
+            {/* 分类标签（支持多标签） */}
+            {(song.categories || [song.category]).map((cat, index) => (
+              <Tooltip key={index} title="点击筛选此种类">
+                <Chip
+                  label={cat}
+                  size="small"
+                  variant="outlined"
+                  onClick={() => onFilterByCategory(cat)}
+                  sx={{ 
+                    height: 24, 
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: 'secondary.main',
+                      color: 'white',
+                      borderColor: 'secondary.main',
+                    },
+                    transition: 'all 0.2s',
+                    '& .MuiChip-label': {
+                      px: 1,
+                    },
+                  }}
+                />
+              </Tooltip>
+            ))}
             <Tooltip title="点击筛选此首字母">
               <Chip
                 label={song.firstLetter}
@@ -1377,33 +1380,36 @@ function SongListItem({
                   }}
                 />
               </Tooltip>
-              <Tooltip title="点击筛选此种类">
-                <Chip
-                  label={song.category}
-                  size="small"
-                  variant="filled"
-                  onClick={() => onFilterByCategory(song.category)}
-                  sx={{ 
-                    height: 22, 
-                    fontSize: '0.7rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    backgroundColor: isDark ? 'rgba(255, 182, 193, 0.15)' : 'rgba(255, 182, 193, 0.12)',
-                    color: 'secondary.main',
-                    border: `1px solid ${isDark ? 'rgba(255, 182, 193, 0.3)' : 'rgba(255, 182, 193, 0.25)'}`,
-                    '&:hover': {
-                      backgroundColor: 'secondary.main',
-                      color: 'white',
-                      transform: 'scale(1.05)',
-                      boxShadow: '0 2px 8px rgba(255, 182, 193, 0.3)',
-                    },
-                    transition: 'all 0.2s ease',
-                    '& .MuiChip-label': {
-                      px: 1,
-                    },
-                  }}
-                />
-              </Tooltip>
+              {/* 分类标签（支持多标签） */}
+              {(song.categories || [song.category]).map((cat, index) => (
+                <Tooltip key={index} title="点击筛选此种类">
+                  <Chip
+                    label={cat}
+                    size="small"
+                    variant="filled"
+                    onClick={() => onFilterByCategory(cat)}
+                    sx={{ 
+                      height: 22, 
+                      fontSize: '0.7rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      backgroundColor: isDark ? 'rgba(255, 182, 193, 0.15)' : 'rgba(255, 182, 193, 0.12)',
+                      color: 'secondary.main',
+                      border: `1px solid ${isDark ? 'rgba(255, 182, 193, 0.3)' : 'rgba(255, 182, 193, 0.25)'}`,
+                      '&:hover': {
+                        backgroundColor: 'secondary.main',
+                        color: 'white',
+                        transform: 'scale(1.05)',
+                        boxShadow: '0 2px 8px rgba(255, 182, 193, 0.3)',
+                      },
+                      transition: 'all 0.2s ease',
+                      '& .MuiChip-label': {
+                        px: 1,
+                      },
+                    }}
+                  />
+                </Tooltip>
+              ))}
               <Tooltip title="点击筛选此首字母">
                 <Chip
                   label={song.firstLetter}

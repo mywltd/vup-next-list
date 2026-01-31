@@ -37,6 +37,7 @@ export function initDatabase() {
       singer TEXT NOT NULL,
       language TEXT NOT NULL,
       category TEXT NOT NULL,
+      categories_json TEXT,
       special INTEGER DEFAULT 0,
       firstLetter TEXT NOT NULL,
       bilibili_clip_url TEXT,
@@ -61,6 +62,20 @@ export function initDatabase() {
     if (!playlistColumns.includes('bilibili_clip_url')) {
       db.exec('ALTER TABLE playlist ADD COLUMN bilibili_clip_url TEXT');
       console.log('✅ 已添加 bilibili_clip_url 字段到 playlist 表');
+    }
+    
+    if (!playlistColumns.includes('categories_json')) {
+      db.exec('ALTER TABLE playlist ADD COLUMN categories_json TEXT');
+      console.log('✅ 已添加 categories_json 字段到 playlist 表');
+      
+      // 迁移现有数据：将 category 字段转为 categories_json
+      const songs = db.prepare('SELECT id, category FROM playlist').all();
+      const updateStmt = db.prepare('UPDATE playlist SET categories_json = ? WHERE id = ?');
+      songs.forEach(song => {
+        const categories = [song.category];
+        updateStmt.run(JSON.stringify(categories), song.id);
+      });
+      console.log(`✅ 已迁移 ${songs.length} 首歌曲的分类数据`);
     }
   } catch (error) {
     console.warn('playlist表迁移警告:', error.message);

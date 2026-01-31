@@ -95,11 +95,15 @@ function PlaylistManagePanel() {
   const handleEdit = (song) => {
     setEditMode(true);
     setCurrentSong(song);
+    // 处理多标签：将数组转为用斜杠分隔的字符串
+    const categoryStr = song.categories 
+      ? song.categories.join('/')
+      : song.category;
     setFormData({
       songName: song.songName,
       singer: song.singer,
       language: song.language,
-      category: song.category,
+      category: categoryStr,
       special: song.special,
       firstLetter: song.firstLetter,
       bilibiliClipUrl: song.bilibiliClipUrl || '',
@@ -128,11 +132,22 @@ function PlaylistManagePanel() {
     }
 
     try {
+      // 处理多标签：将用斜杠分隔的字符串转为数组
+      const categories = formData.category
+        .split(/[\/、,，]/)
+        .map(c => c.trim())
+        .filter(c => c.length > 0);
+      
+      const dataToSave = {
+        ...formData,
+        categories: categories.length > 0 ? categories : ['其他']
+      };
+      
       if (editMode) {
-        await playlistAPI.updateSong(currentSong.id, formData);
+        await playlistAPI.updateSong(currentSong.id, dataToSave);
         setMessage({ type: 'success', text: '更新成功' });
       } else {
-        await playlistAPI.addSong(formData);
+        await playlistAPI.addSong(dataToSave);
         setMessage({ type: 'success', text: '添加成功' });
       }
       setDialogOpen(false);
@@ -200,7 +215,13 @@ function PlaylistManagePanel() {
                 <TableCell>{song.songName}</TableCell>
                 <TableCell>{song.singer}</TableCell>
                 <TableCell><Chip label={song.language} size="small" /></TableCell>
-                <TableCell><Chip label={song.category} size="small" /></TableCell>
+                <TableCell>
+                  <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                    {(song.categories || [song.category]).map((cat, idx) => (
+                      <Chip key={idx} label={cat} size="small" />
+                    ))}
+                  </Stack>
+                </TableCell>
                 <TableCell><Chip label={song.firstLetter} size="small" color="primary" /></TableCell>
                 <TableCell>
                   {song.special && <Chip label="特殊" size="small" color="secondary" />}
@@ -285,6 +306,8 @@ function PlaylistManagePanel() {
               value={formData.category}
               onChange={handleChange('category')}
               required
+              placeholder="古风/国风/戏腔"
+              helperText="支持多标签，用 / 分隔，如：古风/国风/戏腔"
             />
             <TextField
               fullWidth

@@ -98,11 +98,21 @@ function convertXlsxToJson(xlsxPath, jsonPath) {
           row['language'] ||
           '未知';
 
-        const category =
+        // 解析分类标签（支持多标签，用 / 分隔）
+        const categoryRaw =
           row['种类'] ||
           row['分类'] ||
           row['category'] ||
           '其他';
+        
+        // 支持多标签：古风/国风/戏腔 -> ['古风', '国风', '戏腔']
+        const categories = categoryRaw
+          .split(/[\/、,，]/) // 支持 / 、 , ，等分隔符
+          .map(c => c.trim())
+          .filter(c => c.length > 0);
+        
+        // 如果没有标签，默认为"其他"
+        const category = categories.length > 0 ? categories : ['其他'];
 
         let special = false;
         if (row['特殊歌曲'] !== undefined) {
@@ -155,12 +165,20 @@ function convertXlsxToJson(xlsxPath, jsonPath) {
     const stats = {
       总歌曲数: playlist.length,
       特殊歌曲: playlist.filter(s => s.special).length,
-      语种分布: {}
+      语种分布: {},
+      分类分布: {}
     };
 
     playlist.forEach(song => {
       stats.语种分布[song.language] =
         (stats.语种分布[song.language] || 0) + 1;
+      
+      // 统计所有分类标签
+      if (Array.isArray(song.category)) {
+        song.category.forEach(cat => {
+          stats.分类分布[cat] = (stats.分类分布[cat] || 0) + 1;
+        });
+      }
     });
 
     console.log('\n📊 统计信息:');

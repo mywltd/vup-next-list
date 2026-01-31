@@ -573,6 +573,91 @@ backup_app() {
     echo -e "${GREEN}   备份文件: ${backup_file}${NC}"
 }
 
+# 升级应用（拉取最新镜像并重启）
+upgrade_app() {
+    echo -e "${CYAN}═══════════════════════════════════════${NC}"
+    echo -e "${CYAN}⬆️  升级应用${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════${NC}"
+    
+    list_apps
+    
+    read -p "请输入要升级的应用名称（留空升级全部）: " app_name
+    
+    if [ -z "${app_name}" ]; then
+        # 升级所有应用
+        echo -e "${BLUE}📥 拉取最新镜像...${NC}"
+        docker pull ${DOCKER_IMAGE}
+        
+        for app_dir in "${APPS_DIR}"/*; do
+            if [ -d "${app_dir}" ]; then
+                local name=$(basename "${app_dir}")
+                cd "${app_dir}"
+                echo -e "${BLUE}🔄 升级 ${name}...${NC}"
+                docker compose pull
+                docker compose up -d --force-recreate
+            fi
+        done
+        echo -e "${GREEN}✅ 所有应用已升级${NC}"
+    else
+        local app_dir="${APPS_DIR}/${app_name}"
+        
+        if [ ! -d "${app_dir}" ]; then
+            echo -e "${RED}应用 ${app_name} 不存在${NC}"
+            return
+        fi
+        
+        cd "${app_dir}"
+        echo -e "${BLUE}📥 拉取最新镜像...${NC}"
+        docker compose pull
+        
+        echo -e "${BLUE}🔄 重启应用...${NC}"
+        docker compose up -d --force-recreate
+        
+        echo -e "${GREEN}✅ 应用 ${app_name} 已升级${NC}"
+    fi
+    
+    echo ""
+    echo -e "${YELLOW}💡 提示: 升级后可能需要等待片刻让服务完全启动${NC}"
+}
+
+# 升级管理脚本
+upgrade_script() {
+    echo -e "${CYAN}═══════════════════════════════════════${NC}"
+    echo -e "${CYAN}⬆️  升级管理脚本${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════${NC}"
+    
+    local GITHUB_REPO="mywltd/vup-next-list"
+    local BRANCH="main"
+    local script_path="${INSTALL_DIR}/manage.sh"
+    local temp_script="/tmp/manage_new.sh"
+    
+    echo -e "${BLUE}📥 下载最新脚本...${NC}"
+    
+    if curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPO}/${BRANCH}/manage.sh" -o "${temp_script}"; then
+        # 备份当前脚本
+        cp "${script_path}" "${script_path}.bak"
+        
+        # 替换脚本
+        mv "${temp_script}" "${script_path}"
+        chmod +x "${script_path}"
+        
+        echo -e "${GREEN}✅ 脚本升级成功${NC}"
+        echo -e "${YELLOW}📝 旧脚本已备份到: ${script_path}.bak${NC}"
+        echo ""
+        echo -e "${YELLOW}⚠️  脚本已更新，建议重新运行以应用更改${NC}"
+        echo -e "${YELLOW}   运行命令: ${script_path}${NC}"
+        echo ""
+        read -p "是否现在重启脚本？(y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            exec "${script_path}"
+        fi
+    else
+        echo -e "${RED}❌ 下载失败，请检查网络连接${NC}"
+        rm -f "${temp_script}"
+    fi
+}
+
 # 显示主菜单
 show_menu() {
     echo ""
@@ -589,6 +674,8 @@ show_menu() {
     echo "8. 查看日志"
     echo "9. 备份应用"
     echo "10. 重启 Caddy"
+    echo "11. 升级应用"
+    echo "12. 升级脚本"
     echo "0. 退出"
     echo -e "${CYAN}═══════════════════════════════════════${NC}"
 }
@@ -619,7 +706,7 @@ main() {
     # 交互式菜单
     while true; do
         show_menu
-        read -p "请选择操作 (0-10): " choice
+        read -p "请选择操作 (0-12): " choice
         
         case $choice in
             1) list_apps ;;
@@ -632,6 +719,8 @@ main() {
             8) view_logs ;;
             9) backup_app ;;
             10) generate_caddyfile && restart_caddy ;;
+            11) upgrade_app ;;
+            12) upgrade_script ;;
             0) 
                 echo -e "${GREEN}👋 再见！${NC}"
                 exit 0

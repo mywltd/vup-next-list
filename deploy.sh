@@ -358,13 +358,44 @@ show_info() {
     echo -e "   查看日志: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} logs -f${NC}"
     echo -e "   停止服务: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} down${NC}"
     echo -e "   重启服务: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} restart${NC}"
-    echo -e "   更新镜像: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} pull && ${COMPOSE_CMD} up -d${NC}"
+    echo ""
+    echo -e "${BLUE}⬆️  升级命令:${NC}"
+    echo -e "   升级应用: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} pull && ${COMPOSE_CMD} up -d --force-recreate${NC}"
+    echo -e "   一键升级: ${YELLOW}curl -fsSL https://raw.githubusercontent.com/mywltd/vup-next-list/main/deploy.sh | bash -s -- --upgrade${NC}"
     echo ""
     echo -e "${BLUE}📁 数据目录:${NC}"
     echo -e "   ${INSTALL_DIR}/data"
     echo ""
     echo -e "${BLUE}📖 更多文档:${NC}"
     echo -e "   https://github.com/mywltd/vup-next-list"
+    echo ""
+}
+
+# 升级函数
+upgrade() {
+    echo -e "${BLUE}⬆️  升级模式${NC}"
+    echo ""
+    
+    # 检查是否已安装
+    if [ ! -d "$INSTALL_DIR" ] || [ ! -f "$INSTALL_DIR/docker-compose.yml" ]; then
+        echo -e "${RED}❌ 未检测到已安装的实例${NC}"
+        echo -e "${YELLOW}请先运行安装脚本${NC}"
+        exit 1
+    fi
+    
+    cd "$INSTALL_DIR"
+    
+    echo -e "${BLUE}📥 拉取最新镜像...${NC}"
+    docker pull ${DOCKER_IMAGE}
+    
+    echo -e "${BLUE}🔄 重启服务...${NC}"
+    $COMPOSE_CMD pull
+    $COMPOSE_CMD up -d --force-recreate
+    
+    echo ""
+    echo -e "${GREEN}✅ 升级完成！${NC}"
+    echo ""
+    echo -e "${BLUE}查看日志: ${YELLOW}cd ${INSTALL_DIR} && ${COMPOSE_CMD} logs -f${NC}"
     echo ""
 }
 
@@ -382,6 +413,13 @@ main() {
     show_info
 }
 
-# 执行主函数
-main
+# 检查参数
+if [ "$1" == "--upgrade" ]; then
+    check_root
+    check_docker
+    upgrade
+else
+    # 执行主函数
+    main
+fi
 

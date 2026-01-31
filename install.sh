@@ -125,6 +125,12 @@ download_manager() {
     mkdir -p "${INSTALL_DIR}"
     cd "${INSTALL_DIR}"
     
+    # 备份旧脚本（如果存在）
+    if [ -f "manage.sh" ]; then
+        cp manage.sh manage.sh.bak
+        echo -e "${YELLOW}📝 已备份旧脚本到 manage.sh.bak${NC}"
+    fi
+    
     # 下载 manage.sh
     curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPO}/${BRANCH}/manage.sh" -o manage.sh
     chmod +x manage.sh
@@ -155,6 +161,11 @@ main() {
     echo -e "  2. 选择 ${YELLOW}2. 添加新应用${NC}"
     echo -e "  3. 输入应用名称和域名"
     echo -e "  4. 等待部署完成"
+    echo ""
+    echo -e "${CYAN}⬆️  升级方法：${NC}"
+    echo -e "  升级应用: ${YELLOW}vupmusic${NC} 后选择 ${YELLOW}11. 升级应用${NC}"
+    echo -e "  升级脚本: ${YELLOW}vupmusic${NC} 后选择 ${YELLOW}12. 升级脚本${NC}"
+    echo -e "  或重新运行: ${YELLOW}curl -fsSL https://raw.githubusercontent.com/${GITHUB_REPO}/${BRANCH}/install.sh | sudo bash${NC}"
     echo ""
     echo -e "${YELLOW}注意事项：${NC}"
     echo -e "  - 确保域名已解析到本服务器 IP"

@@ -76,6 +76,7 @@ function HomePage({ siteConfig }) {
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
   const [firstLetters, setFirstLetters] = useState([]);
+  const [hasXiqu, setHasXiqu] = useState(false); // 是否有戏曲标签
   
   // 提示消息
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -119,8 +120,12 @@ function HomePage({ siteConfig }) {
       try {
         const tagCloud = await playlistAPI.getTagCloud();
         setLanguages(tagCloud.languages || []);
-        setCategories(tagCloud.categories || []);
+        const cats = tagCloud.categories || [];
+        setCategories(cats);
         setFirstLetters(tagCloud.firstLetters || []);
+        
+        // 检查是否有戏曲标签
+        setHasXiqu(cats.includes('戏曲'));
       } catch (error) {
         console.error('加载标签云失败:', error);
       }
@@ -259,6 +264,49 @@ function HomePage({ siteConfig }) {
         </Box>
       </Box>
 
+      {/* 戏曲筛选（如果存在戏曲标签） */}
+      {hasXiqu && (
+        <Box sx={{ mb: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+            <Typography variant="subtitle2" fontWeight={600} sx={{ color: '#d32f2f' }}>
+              戏曲专区
+            </Typography>
+          </Box>
+          <Chip
+            label="🎭 戏曲"
+            size="medium"
+            onClick={() => {
+              if (selectedCategories.includes('戏曲')) {
+                setSelectedCategories(selectedCategories.filter(c => c !== '戏曲'));
+              } else {
+                setSelectedCategories([...selectedCategories, '戏曲']);
+              }
+              setPage(1);
+            }}
+            sx={{
+              cursor: 'pointer',
+              backgroundColor: selectedCategories.includes('戏曲')
+                ? '#d32f2f'
+                : theme.palette.mode === 'dark'
+                  ? 'rgba(211, 47, 47, 0.15)'
+                  : 'rgba(211, 47, 47, 0.12)',
+              color: selectedCategories.includes('戏曲') ? 'white' : '#d32f2f',
+              border: `1px solid ${selectedCategories.includes('戏曲') ? '#d32f2f' : 'rgba(211, 47, 47, 0.3)'}`,
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              height: 32,
+              '&:hover': {
+                backgroundColor: '#d32f2f',
+                color: 'white',
+                transform: 'scale(1.05)',
+                boxShadow: '0 4px 12px rgba(211, 47, 47, 0.3)',
+              },
+              transition: 'all 0.2s ease',
+            }}
+          />
+        </Box>
+      )}
+
       {/* 种类筛选 */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
@@ -267,7 +315,7 @@ function HomePage({ siteConfig }) {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-          {categories.map((cat) => (
+          {categories.filter(cat => cat !== '戏曲').map((cat) => (
             <Chip
               key={cat}
               label={cat}

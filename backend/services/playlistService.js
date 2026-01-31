@@ -32,8 +32,9 @@ export class PlaylistService {
     }
 
     if (category) {
-      query += ' AND category = ?';
-      params.push(category);
+      // 支持多标签筛选：检查 categories_json 中是否包含该分类
+      query += ' AND (category = ? OR categories_json LIKE ?)';
+      params.push(category, `%"${category}"%`);
     }
 
     if (special !== null) {
@@ -125,10 +126,34 @@ export class PlaylistService {
     return stmt.all().map(row => row.firstLetter);
   }
 
-  // 获取所有种类列表
+  // 获取所有种类列表（解析多标签）
   static getCategories() {
-    const stmt = db.prepare('SELECT DISTINCT category FROM playlist ORDER BY category');
-    return stmt.all().map(row => row.category);
+    // 获取所有歌曲的分类数据
+    const stmt = db.prepare('SELECT categories_json, category FROM playlist');
+    const songs = stmt.all();
+    
+    // 使用 Set 去重
+    const categoriesSet = new Set();
+    
+    songs.forEach(song => {
+      if (song.categories_json) {
+        try {
+          const categories = JSON.parse(song.categories_json);
+          categories.forEach(cat => categoriesSet.add(cat));
+        } catch (e) {
+          // 解析失败，回退到主分类
+          if (song.category) {
+            categoriesSet.add(song.category);
+          }
+        }
+      } else if (song.category) {
+        // 没有 categories_json，使用主分类
+        categoriesSet.add(song.category);
+      }
+    });
+    
+    // 转为数组并排序
+    return Array.from(categoriesSet).sort();
   }
 
   // 获取所有标签云数据（一次返回所有筛选选项）

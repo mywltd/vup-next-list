@@ -28,6 +28,8 @@ export class SiteService {
       copyMode: siteConfig.copy_mode || 'normal',
       hcaptchaEnabled: Boolean(siteConfig.hcaptcha_enabled),
       hcaptchaSiteKey: siteConfig.hcaptcha_site_key || '',
+      highlightNewSongs: Boolean(siteConfig.highlight_new_songs),
+      newSongDays: siteConfig.new_song_days || 7,
       streamer: streamer ? {
         name: streamer.name,
         bilibiliUrl: streamer.bilibili_url
@@ -52,7 +54,9 @@ export class SiteService {
       copyMode,
       hcaptchaEnabled,
       hcaptchaSiteKey,
-      hcaptchaSecretKey
+      hcaptchaSecretKey,
+      highlightNewSongs,
+      newSongDays
     } = configData;
 
     const stmt = db.prepare(`
@@ -72,6 +76,8 @@ export class SiteService {
           hcaptcha_enabled = ?,
           hcaptcha_site_key = ?,
           hcaptcha_secret_key = ?,
+          highlight_new_songs = ?,
+          new_song_days = ?,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = 1
     `);
@@ -91,7 +97,9 @@ export class SiteService {
       copyMode || 'normal',
       hcaptchaEnabled ? 1 : 0,
       hcaptchaSiteKey || '',
-      hcaptchaSecretKey || ''
+      hcaptchaSecretKey || '',
+      highlightNewSongs ? 1 : 0,
+      newSongDays || 7
     );
 
     return { success: true, message: '站点配置更新成功' };

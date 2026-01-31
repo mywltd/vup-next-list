@@ -1,4 +1,4 @@
-import { db } from '../db/init.js';
+import { db, getSiteConfig } from '../db/init.js';
 
 export class PlaylistService {
   // 获取歌单列表（支持分页、筛选、搜索）
@@ -12,6 +12,11 @@ export class PlaylistService {
       special = null,
       search = ''
     } = options;
+
+    // 获取站点配置，检查是否启用新歌高亮
+    const siteConfig = getSiteConfig();
+    const highlightNewSongs = siteConfig && Boolean(siteConfig.highlight_new_songs);
+    const newSongDays = siteConfig ? (siteConfig.new_song_days || 7) : 7;
 
     let query = 'SELECT * FROM playlist WHERE 1=1';
     const params = [];
@@ -47,27 +52,53 @@ export class PlaylistService {
     const { count } = countStmt.get(...params);
 
     // 添加排序和分页
-    query += ' ORDER BY firstLetter, songName LIMIT ? OFFSET ?';
+    // 如果启用新歌置顶，则先按是否为新歌排序（新歌在前），再按首字母和歌名排序
+    if (highlightNewSongs) {
+      query += ` ORDER BY 
+        CASE 
+          WHEN datetime(created_at) >= datetime('now', '-${newSongDays} days') THEN 0 
+          ELSE 1 
+        END,
+        created_at DESC,
+        firstLetter, 
+        songName 
+        LIMIT ? OFFSET ?`;
+    } else {
+      query += ' ORDER BY firstLetter, songName LIMIT ? OFFSET ?';
+    }
     params.push(limit, (page - 1) * limit);
 
     const stmt = db.prepare(query);
     const songs = stmt.all(...params);
 
+    // 计算每首歌是否为新歌
+    const now = new Date();
+    const newSongThreshold = new Date(now.getTime() - newSongDays * 24 * 60 * 60 * 1000);
+
     return {
-      songs: songs.map(song => ({
-        id: song.id,
-        songName: song.songName,
-        singer: song.singer,
-        language: song.language,
-        category: song.category,
-        special: Boolean(song.special),
-        firstLetter: song.firstLetter,
-        ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
-      })),
+      songs: songs.map(song => {
+        const createdAt = new Date(song.created_at);
+        const isNewSong = highlightNewSongs && createdAt >= newSongThreshold;
+        
+        return {
+          id: song.id,
+          songName: song.songName,
+          singer: song.singer,
+          language: song.language,
+          category: song.category,
+          special: Boolean(song.special),
+          firstLetter: song.firstLetter,
+          isNewSong: isNewSong,
+          createdAt: song.created_at,
+          ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
+        };
+      }),
       total: count,
       page,
       limit,
-      totalPages: Math.ceil(count / limit)
+      totalPages: Math.ceil(count / limit),
+      highlightNewSongs: highlightNewSongs,
+      newSongDays: newSongDays
     };
   }
 

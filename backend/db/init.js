@@ -120,6 +120,12 @@ export function initDatabase() {
     if (!columns.includes('hcaptcha_secret_key')) {
       db.exec('ALTER TABLE site_config ADD COLUMN hcaptcha_secret_key TEXT');
     }
+    if (!columns.includes('highlight_new_songs')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN highlight_new_songs INTEGER DEFAULT 0');
+    }
+    if (!columns.includes('new_song_days')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN new_song_days INTEGER DEFAULT 7');
+    }
   } catch (error) {
     console.warn('数据库迁移警告:', error.message);
   }

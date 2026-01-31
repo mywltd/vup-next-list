@@ -13,6 +13,8 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Switch,
+  Slider,
 } from '@mui/material';
 import { Save, Upload, Palette } from '@mui/icons-material';
 
@@ -77,6 +79,8 @@ function SiteConfigPanel({ onUpdate }) {
     seoDescription: '',
     hiddenTitle: '',
     copyMode: 'normal',
+    highlightNewSongs: false,
+    newSongDays: 7,
   });
 
   useEffect(() => {
@@ -100,6 +104,8 @@ function SiteConfigPanel({ onUpdate }) {
         seoDescription: data.seoDescription || '',
         hiddenTitle: data.hiddenTitle || '',
         copyMode: data.copyMode || 'normal',
+        highlightNewSongs: data.highlightNewSongs || false,
+        newSongDays: data.newSongDays || 7,
       });
     } catch (error) {
       setMessage({ type: 'error', text: '加载配置失败' });
@@ -410,6 +416,47 @@ function SiteConfigPanel({ onUpdate }) {
           helperText="用户离开页面（切换标签页或最小化窗口）后显示的标题"
           placeholder="例如：快回来看看我~"
         />
+
+        <Box>
+          <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+            新歌展示配置
+          </Typography>
+          <Stack spacing={2}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={config.highlightNewSongs}
+                  onChange={(e) => setConfig({ ...config, highlightNewSongs: e.target.checked })}
+                />
+              }
+              label="启用新歌置顶和高亮显示"
+            />
+            {config.highlightNewSongs && (
+              <Box>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  新歌天数：{config.newSongDays} 天
+                </Typography>
+                <Slider
+                  value={config.newSongDays}
+                  onChange={(e, value) => setConfig({ ...config, newSongDays: value })}
+                  min={1}
+                  max={30}
+                  marks={[
+                    { value: 1, label: '1天' },
+                    { value: 7, label: '7天' },
+                    { value: 15, label: '15天' },
+                    { value: 30, label: '30天' },
+                  ]}
+                  valueLabelDisplay="auto"
+                  sx={{ width: '100%', maxWidth: 400 }}
+                />
+                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                  最近 {config.newSongDays} 天内添加的歌曲将被标记为"新歌"，并置顶展示
+                </Typography>
+              </Box>
+            )}
+          </Stack>
+        </Box>
 
         <Box>
           <Button

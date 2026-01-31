@@ -24,7 +24,7 @@ import {
   Divider,
   Paper,
 } from '@mui/material';
-import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline } from '@mui/icons-material';
+import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline, Brightness7 } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
 import { debounce, copyToClipboard, getLetterColor } from '../utils/helpers';
 import { useSearch } from '../components/AppLayout';
@@ -909,6 +909,7 @@ function SongListItem({
   onFilterByLetter
 }) {
   const isDark = theme?.palette.mode === 'dark';
+  const isNewSong = song.isNewSong || false;
   
   // PC端：横向布局
   if (isDesktop) {
@@ -922,19 +923,34 @@ function SongListItem({
           mx: 1,
           borderRadius: 2,
           backdropFilter: 'blur(10px)',
-          backgroundColor: isDark
-            ? 'rgba(30, 35, 55, 0.5)'
-            : 'rgba(255, 255, 255, 0.5)',
-          border: `1px solid ${theme.palette.divider}`,
+          backgroundColor: isNewSong
+            ? (isDark
+              ? 'rgba(110, 193, 228, 0.15)'
+              : 'rgba(110, 193, 228, 0.08)')
+            : (isDark
+              ? 'rgba(30, 35, 55, 0.5)'
+              : 'rgba(255, 255, 255, 0.5)'),
+          border: isNewSong
+            ? `2px solid ${isDark ? 'rgba(110, 193, 228, 0.5)' : 'rgba(110, 193, 228, 0.4)'}`
+            : `1px solid ${theme.palette.divider}`,
+          boxShadow: isNewSong
+            ? (isDark
+              ? '0 0 20px rgba(110, 193, 228, 0.3)'
+              : '0 0 20px rgba(110, 193, 228, 0.2)')
+            : 'none',
           '&:hover': {
-            backgroundColor: isDark
-              ? 'rgba(40, 45, 65, 0.6)'
-              : 'rgba(255, 255, 255, 0.7)',
+            backgroundColor: isNewSong
+              ? (isDark
+                ? 'rgba(110, 193, 228, 0.25)'
+                : 'rgba(110, 193, 228, 0.15)')
+              : (isDark
+                ? 'rgba(40, 45, 65, 0.6)'
+                : 'rgba(255, 255, 255, 0.7)'),
             '& .copy-icon': {
               opacity: 1,
             },
           },
-          transition: 'background-color 0.2s',
+          transition: 'all 0.3s ease',
         }}
       >
         <Box sx={{ 
@@ -945,14 +961,30 @@ function SongListItem({
         }}>
           {/* 歌曲名称 */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 200, flexShrink: 0 }}>
+            {isNewSong && (
+              <Tooltip title="新歌">
+                <Brightness7 
+                  sx={{ 
+                    fontSize: 20, 
+                    color: 'primary.main',
+                    animation: 'pulse 2s ease-in-out infinite',
+                    '@keyframes pulse': {
+                      '0%, 100%': { opacity: 0.6 },
+                      '50%': { opacity: 1 },
+                    },
+                  }} 
+                />
+              </Tooltip>
+            )}
             <Tooltip title="点击复制歌曲名">
               <Typography
                 variant="body1"
-                fontWeight={600}
+                fontWeight={isNewSong ? 700 : 600}
                 onClick={() => onCopy(song.songName)}
                 sx={{
                   cursor: 'pointer',
                   fontSize: '1rem',
+                  color: isNewSong ? 'primary.main' : 'inherit',
                   '&:hover': {
                     color: 'primary.main',
                   },
@@ -977,6 +1009,27 @@ function SongListItem({
             >
               <ContentCopy fontSize="small" />
             </IconButton>
+            {isNewSong && (
+              <Chip
+                label="NEW"
+                size="small"
+                sx={{
+                  height: 20,
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  animation: 'bounce 2s ease-in-out infinite',
+                  '@keyframes bounce': {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-3px)' },
+                  },
+                  '& .MuiChip-label': {
+                    px: 1,
+                  },
+                }}
+              />
+            )}
           </Box>
 
           {/* 歌手 */}
@@ -1122,21 +1175,39 @@ function SongListItem({
         borderRadius: 3,
         backdropFilter: 'blur(15px) saturate(150%)',
         WebkitBackdropFilter: 'blur(15px) saturate(150%)',
-        backgroundColor: isDark
-          ? 'rgba(30, 35, 55, 0.6)'
-          : 'rgba(255, 255, 255, 0.4)',
-        border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.2)'}`,
-        boxShadow: isDark
-          ? '0 2px 8px rgba(0, 0, 0, 0.2)'
-          : '0 2px 12px rgba(110, 193, 228, 0.12)',
+        backgroundColor: isNewSong
+          ? (isDark
+            ? 'rgba(110, 193, 228, 0.2)'
+            : 'rgba(110, 193, 228, 0.12)')
+          : (isDark
+            ? 'rgba(30, 35, 55, 0.6)'
+            : 'rgba(255, 255, 255, 0.4)'),
+        border: isNewSong
+          ? `2px solid ${isDark ? 'rgba(110, 193, 228, 0.6)' : 'rgba(110, 193, 228, 0.5)'}`
+          : `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.2)'}`,
+        boxShadow: isNewSong
+          ? (isDark
+            ? '0 4px 20px rgba(110, 193, 228, 0.4)'
+            : '0 4px 20px rgba(110, 193, 228, 0.25)')
+          : (isDark
+            ? '0 2px 8px rgba(0, 0, 0, 0.2)'
+            : '0 2px 12px rgba(110, 193, 228, 0.12)'),
         '&:hover': {
-          backgroundColor: isDark
-            ? 'rgba(40, 45, 65, 0.7)'
-            : 'rgba(255, 255, 255, 0.55)',
+          backgroundColor: isNewSong
+            ? (isDark
+              ? 'rgba(110, 193, 228, 0.3)'
+              : 'rgba(110, 193, 228, 0.18)')
+            : (isDark
+              ? 'rgba(40, 45, 65, 0.7)'
+              : 'rgba(255, 255, 255, 0.55)'),
           transform: 'translateY(-2px)',
-          boxShadow: isDark
-            ? '0 4px 16px rgba(0, 0, 0, 0.3)'
-            : '0 4px 20px rgba(110, 193, 228, 0.2)',
+          boxShadow: isNewSong
+            ? (isDark
+              ? '0 6px 28px rgba(110, 193, 228, 0.5)'
+              : '0 6px 28px rgba(110, 193, 228, 0.35)')
+            : (isDark
+              ? '0 4px 16px rgba(0, 0, 0, 0.3)'
+              : '0 4px 20px rgba(110, 193, 228, 0.2)'),
           '& .copy-icon': {
             opacity: 1,
           },
@@ -1146,18 +1217,33 @@ function SongListItem({
     >
         <ListItemText
           primary={
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.25 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.25, flexWrap: 'wrap' }}>
+              {isNewSong && (
+                <Tooltip title="新歌">
+                  <Brightness7 
+                    sx={{ 
+                      fontSize: 18, 
+                      color: 'primary.main',
+                      animation: 'pulse 2s ease-in-out infinite',
+                      '@keyframes pulse': {
+                        '0%, 100%': { opacity: 0.6 },
+                        '50%': { opacity: 1 },
+                      },
+                    }} 
+                  />
+                </Tooltip>
+              )}
               <Tooltip title="点击复制歌曲名">
                 <Typography
                   variant="body1"
-                  fontWeight={700}
+                  fontWeight={isNewSong ? 800 : 700}
                   onClick={() => onCopy(song.songName)}
                   sx={{
                     flexGrow: 1,
                     cursor: 'pointer',
                     fontSize: { xs: '1rem', sm: '1.05rem' },
                     letterSpacing: '0.02em',
-                    color: 'text.primary',
+                    color: isNewSong ? 'primary.main' : 'text.primary',
                     '&:hover': {
                       color: 'primary.main',
                     },
@@ -1167,6 +1253,27 @@ function SongListItem({
                   {song.songName}
                 </Typography>
               </Tooltip>
+              {isNewSong && (
+                <Chip
+                  label="NEW"
+                  size="small"
+                  sx={{
+                    height: 20,
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                    animation: 'bounce 2s ease-in-out infinite',
+                    '@keyframes bounce': {
+                      '0%, 100%': { transform: 'translateY(0)' },
+                      '50%': { transform: 'translateY(-3px)' },
+                    },
+                    '& .MuiChip-label': {
+                      px: 0.75,
+                    },
+                  }}
+                />
+              )}
               <IconButton
                 size="small"
                 className="copy-icon"

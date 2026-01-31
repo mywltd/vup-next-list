@@ -48,13 +48,16 @@ export async function cacheImage(url) {
             data: base64data,
             timestamp: Date.now(),
           }));
+          // 缓存成功，返回 base64
+          resolve(base64data);
         } catch (e) {
-          // 如果存储空间不足，返回原URL
-          console.warn('图片缓存失败，存储空间可能不足:', e);
+          // 如果存储空间不足，返回原URL（不缓存但仍可使用）
+          console.warn('图片缓存失败，存储空间可能不足，将使用原始 URL:', e.message);
+          resolve(url); // 返回原始 URL
         }
-        resolve(base64data);
       };
       reader.onerror = () => {
+        console.warn('图片转换失败，将使用原始 URL');
         resolve(url); // 转换失败，返回原URL
       };
       reader.readAsDataURL(blob);

@@ -107,49 +107,64 @@ function App() {
         
         // 设置favicon（使用头像）
         if (config.avatarUrl) {
-          // 直接使用头像地址，不等待缓存
+          // 直接使用头像地址，立即显示
           setFavicon(config.avatarUrl);
           
-          // 后台尝试缓存
+          // 后台尝试缓存（可选优化，失败不影响显示）
           import('./utils/imageCache.js').then(({ getCachedImage, cacheImage }) => {
             const cached = getCachedImage(config.avatarUrl);
             if (cached) {
+              // 如果已有缓存，使用缓存版本
               setFavicon(cached);
             } else {
-              cacheImage(config.avatarUrl).then(cachedUrl => {
-                if (cachedUrl) {
-                  setFavicon(cachedUrl);
-                }
+              // 尝试缓存，但不管成功失败都不再更新 favicon
+              // 因为原始 URL 已经在显示了
+              cacheImage(config.avatarUrl).catch(err => {
+                // 忽略缓存错误，favicon 已经用原始 URL 显示了
+                console.debug('Favicon 缓存失败，将继续使用原始 URL:', err.message);
               });
             }
+          }).catch(err => {
+            // 图片缓存模块加载失败也不影响 favicon 显示
+            console.debug('图片缓存模块加载失败:', err);
           });
         }
         
-        // 缓存背景图和头像
+        // 设置背景图（先显示，后缓存）
         if (config.backgroundUrl) {
+          setBackgroundUrl(config.backgroundUrl); // 立即显示原始 URL
+          
           import('./utils/imageCache.js').then(({ getCachedImage, cacheImage }) => {
             const cached = getCachedImage(config.backgroundUrl);
             if (cached) {
-              setBackgroundUrl(cached);
+              setBackgroundUrl(cached); // 有缓存就用缓存
             } else {
-              setBackgroundUrl(config.backgroundUrl);
+              // 后台缓存，成功后更新（失败也不影响显示）
               cacheImage(config.backgroundUrl).then(cachedUrl => {
-                if (cachedUrl) {
+                if (cachedUrl && cachedUrl !== config.backgroundUrl) {
+                  // 只有缓存成功且不是原 URL 才更新
                   setBackgroundUrl(cachedUrl);
                 }
+              }).catch(err => {
+                console.debug('背景图缓存失败，继续使用原始 URL:', err.message);
               });
             }
+          }).catch(err => {
+            console.debug('图片缓存模块加载失败:', err);
           });
         } else {
           setBackgroundUrl(null);
         }
         
+        // 预缓存头像（可选优化，不影响显示）
         if (config.avatarUrl) {
           import('./utils/imageCache.js').then(({ getCachedImage, cacheImage }) => {
             if (!getCachedImage(config.avatarUrl)) {
-              cacheImage(config.avatarUrl);
+              cacheImage(config.avatarUrl).catch(err => {
+                console.debug('头像预缓存失败:', err.message);
+              });
             }
-          });
+          }).catch(() => {});
         }
         
         // 监听页面可见性变化，动态改变标题

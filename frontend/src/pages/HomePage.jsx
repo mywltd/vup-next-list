@@ -58,15 +58,20 @@ function HomePage({ siteConfig }) {
   // 加载并缓存头像
   useEffect(() => {
     if (siteConfig?.avatarUrl) {
+      setAvatarUrl(siteConfig.avatarUrl); // 立即显示原始 URL
+      
       const cached = getCachedImage(siteConfig.avatarUrl);
       if (cached) {
-        setAvatarUrl(cached);
+        setAvatarUrl(cached); // 有缓存就用缓存
       } else {
-        setAvatarUrl(siteConfig.avatarUrl);
+        // 后台缓存，成功后更新（失败也不影响显示）
         cacheImage(siteConfig.avatarUrl).then(cachedUrl => {
-          if (cachedUrl) {
+          if (cachedUrl && cachedUrl !== siteConfig.avatarUrl) {
+            // 只有缓存成功且不是原 URL 才更新
             setAvatarUrl(cachedUrl);
           }
+        }).catch(err => {
+          console.debug('头像缓存失败，继续使用原始 URL:', err.message);
         });
       }
     }

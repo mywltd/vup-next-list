@@ -23,10 +23,14 @@ import {
   ListItemText,
   Divider,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
-import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline } from '@mui/icons-material';
+import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline, Warning, OpenInBrowser } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
-import { debounce, copyToClipboard, getLetterColor, isLowPerformanceEnv, getOptimizedBackdropStyle } from '../utils/helpers';
+import { debounce, copyToClipboard, getLetterColor, isLowPerformanceEnv, getOptimizedBackdropStyle, isWeChatBrowser } from '../utils/helpers';
 import { useSearch } from '../components/AppLayout';
 import { getCachedImage, cacheImage } from '../utils/imageCache';
 
@@ -57,6 +61,25 @@ function HomePage({ siteConfig }) {
   const [selectedLanguages, setSelectedLanguages] = useState([]); // 改为数组
   const [selectedCategories, setSelectedCategories] = useState([]); // 新增种类筛选
   const [selectedSpecial, setSelectedSpecial] = useState(null);
+
+  // 微信浏览器提示
+  const isWeChat = React.useMemo(() => isWeChatBrowser(), []);
+  const [showWeChatWarning, setShowWeChatWarning] = useState(false);
+  const [weChatConfirmed, setWeChatConfirmed] = useState(false);
+
+  // 检查是否需要显示微信提示
+  useEffect(() => {
+    if (isWeChat) {
+      // 检查用户是否已经确认过（使用 sessionStorage，当前会话有效）
+      const confirmed = sessionStorage.getItem('wechat-confirmed');
+      if (!confirmed) {
+        setShowWeChatWarning(true);
+        setLoading(false); // 先不加载数据
+      } else {
+        setWeChatConfirmed(true);
+      }
+    }
+  }, [isWeChat]);
 
   // 加载并缓存头像
   useEffect(() => {
@@ -124,6 +147,11 @@ function HomePage({ siteConfig }) {
 
   // 加载筛选选项（标签云）
   useEffect(() => {
+    // 如果是微信浏览器且用户未确认，则不加载
+    if (isWeChat && !weChatConfirmed) {
+      return;
+    }
+    
     const loadFilters = async () => {
       try {
         const tagCloud = await playlistAPI.getTagCloud();
@@ -139,13 +167,18 @@ function HomePage({ siteConfig }) {
       }
     };
     loadFilters();
-  }, []);
+  }, [isWeChat, weChatConfirmed]);
 
   // 加载歌单（带防抖）
   useEffect(() => {
+    // 如果是微信浏览器且用户未确认，则不加载
+    if (isWeChat && !weChatConfirmed) {
+      return;
+    }
+    
     const debouncedLoad = debounce(loadPlaylist, 300);
     debouncedLoad();
-  }, [loadPlaylist]);
+  }, [loadPlaylist, isWeChat, weChatConfirmed]);
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -196,6 +229,25 @@ function HomePage({ siteConfig }) {
   const handleFilterByLetter = useCallback((letter) => {
     setSelectedLetter(letter);
     setPage(1);
+  }, []);
+
+  // 处理微信提示确认
+  const handleWeChatConfirm = useCallback(() => {
+    sessionStorage.setItem('wechat-confirmed', 'true');
+    setWeChatConfirmed(true);
+    setShowWeChatWarning(false);
+    setLoading(true); // 开始加载数据
+  }, []);
+
+  // 复制当前页面链接
+  const handleCopyUrl = useCallback(async () => {
+    const url = window.location.href;
+    const success = await copyToClipboard(url);
+    if (success) {
+      setSnackbar({ open: true, message: '链接已复制，请在浏览器中打开', severity: 'success' });
+    } else {
+      setSnackbar({ open: true, message: '复制失败，请手动复制地址栏链接', severity: 'error' });
+    }
   }, []);
 
 
@@ -427,6 +479,115 @@ function HomePage({ siteConfig }) {
 
   return (
     <Box>
+      {/* 微信浏览器提示对话框 */}
+      <Dialog
+        open={showWeChatWarning}
+        onClose={() => {}} // 禁止点击外部关闭
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            backdropFilter: 'blur(20px)',
+            backgroundColor: theme.palette.mode === 'dark'
+              ? 'rgba(20, 25, 45, 0.95)'
+              : 'rgba(255, 255, 255, 0.95)',
+            border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.2)'}`,
+            boxShadow: theme.palette.mode === 'dark'
+              ? '0 8px 32px rgba(0, 0, 0, 0.5)'
+              : '0 8px 32px rgba(110, 193, 228, 0.2)',
+          },
+        }}
+      >
+        <DialogTitle sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 1.5,
+          pb: 2,
+          color: 'warning.main',
+        }}>
+          <Warning sx={{ fontSize: 32 }} />
+          <Typography variant="h6" fontWeight={700}>
+            温馨提示
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Stack spacing={2.5}>
+            <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
+              检测到您正在<strong>微信内置浏览器</strong>中打开本页面。
+            </Typography>
+            <Box
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                backgroundColor: theme.palette.mode === 'dark'
+                  ? 'rgba(255, 193, 7, 0.1)'
+                  : 'rgba(255, 193, 7, 0.08)',
+                border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 193, 7, 0.3)' : 'rgba(255, 193, 7, 0.2)'}`,
+              }}
+            >
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontWeight: 600 }}>
+                ⚠️ 微信浏览器限制说明：
+              </Typography>
+              <Typography variant="body2" color="text.secondary" component="div" sx={{ lineHeight: 1.8 }}>
+                • 部分视觉效果（玻璃拟态、模糊特效）可能无法正常显示<br />
+                • 页面性能可能受限，滚动可能不够流畅<br />
+                • 某些交互功能可能存在兼容性问题
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                backgroundColor: theme.palette.mode === 'dark'
+                  ? 'rgba(110, 193, 228, 0.1)'
+                  : 'rgba(110, 193, 228, 0.08)',
+                border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(110, 193, 228, 0.3)' : 'rgba(110, 193, 228, 0.2)'}`,
+              }}
+            >
+              <Typography variant="body2" color="primary" sx={{ mb: 1, fontWeight: 600 }}>
+                💡 获得最佳体验：
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8 }}>
+                点击右上角 <strong>「···」</strong> 菜单，选择<strong>「在浏览器中打开」</strong>
+              </Typography>
+            </Box>
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
+          <Button
+            variant="outlined"
+            startIcon={<ContentCopy />}
+            onClick={handleCopyUrl}
+            sx={{
+              borderColor: 'primary.main',
+              color: 'primary.main',
+              '&:hover': {
+                borderColor: 'primary.dark',
+                backgroundColor: 'rgba(110, 193, 228, 0.1)',
+              },
+            }}
+          >
+            复制链接
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<OpenInBrowser />}
+            onClick={handleWeChatConfirm}
+            sx={{
+              flexGrow: 1,
+              fontWeight: 600,
+              boxShadow: '0 4px 12px rgba(110, 193, 228, 0.3)',
+              '&:hover': {
+                boxShadow: '0 6px 16px rgba(110, 193, 228, 0.4)',
+              },
+            }}
+          >
+            我知道了，继续使用
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* 页面标题 */}
       <Box sx={{ mb: 4, textAlign: 'center', position: 'relative', zIndex: 1 }}>
         {/* 头像 - PC端不显示，移动端显示 */}

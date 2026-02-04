@@ -247,7 +247,7 @@ function HomePage({ siteConfig }) {
     if (success) {
       setSnackbar({ open: true, message: '链接已复制到剪贴板', severity: 'success' });
     } else {
-      setSnackbar({ open: true, message: '复制失败，请手动复制地址栏链接', severity: 'error' });
+      setSnackbar({ open: true, message: '复制失败，请点击右上角从浏览器打开', severity: 'error' });
     }
   }, []);
 

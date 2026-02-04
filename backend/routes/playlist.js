@@ -7,12 +7,23 @@ const router = express.Router();
 // 获取歌单列表（公开访问）
 router.get('/', (req, res) => {
   try {
+    // 处理多选参数（支持数组和单个值）
+    const parseMultiValue = (value) => {
+      if (!value) return null;
+      if (Array.isArray(value)) return value;
+      // 如果是逗号分隔的字符串，拆分为数组
+      if (typeof value === 'string' && value.includes(',')) {
+        return value.split(',').map(v => v.trim());
+      }
+      return [value];
+    };
+
     const options = {
       page: parseInt(req.query.page) || 1,
       limit: parseInt(req.query.limit) || 50,
       firstLetter: req.query.firstLetter || null,
-      language: req.query.language || null,
-      category: req.query.category || null,
+      languages: parseMultiValue(req.query.languages || req.query.language), // 支持多选语言
+      categories: parseMultiValue(req.query.categories || req.query.category), // 支持多选种类
       special: req.query.special === 'true' ? true : req.query.special === 'false' ? false : null,
       search: req.query.search || ''
     };

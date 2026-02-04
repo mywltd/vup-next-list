@@ -123,13 +123,13 @@ function HomePage({ siteConfig }) {
       };
       
       if (selectedLetter) params.firstLetter = selectedLetter;
-      // 如果选择了语言，使用第一个（保持向后兼容）
+      // 支持多选语言筛选 - 传递完整数组
       if (selectedLanguages.length > 0) {
-        params.language = selectedLanguages[0];
+        params.languages = selectedLanguages.join(',');
       }
-      // 如果选择了种类，使用第一个
+      // 支持多选种类筛选 - 传递完整数组
       if (selectedCategories.length > 0) {
-        params.category = selectedCategories[0];
+        params.categories = selectedCategories.join(',');
       }
       if (selectedSpecial !== null) params.special = selectedSpecial;
       
@@ -215,14 +215,30 @@ function HomePage({ siteConfig }) {
     setPage(1);
   }, [setSearchText]);
 
-  // 优化筛选回调函数
+  // 优化筛选回调函数 - 支持多选切换
   const handleFilterByLanguage = useCallback((lang) => {
-    setSelectedLanguages([lang]);
+    setSelectedLanguages(prev => {
+      if (prev.includes(lang)) {
+        // 如果已选中，则取消选中
+        return prev.filter(l => l !== lang);
+      } else {
+        // 如果未选中，则添加选中
+        return [...prev, lang];
+      }
+    });
     setPage(1);
   }, []);
 
   const handleFilterByCategory = useCallback((cat) => {
-    setSelectedCategories([cat]);
+    setSelectedCategories(prev => {
+      if (prev.includes(cat)) {
+        // 如果已选中，则取消选中
+        return prev.filter(c => c !== cat);
+      } else {
+        // 如果未选中，则添加选中
+        return [...prev, cat];
+      }
+    });
     setPage(1);
   }, []);
 
@@ -252,8 +268,127 @@ function HomePage({ siteConfig }) {
 
 
   // 筛选器组件 - 标签云形式
-  const FilterPanel = () => (
+  const FilterPanel = () => {
+    // 计算已选标签总数
+    const selectedCount = selectedLanguages.length + selectedCategories.length + (selectedLetter ? 1 : 0) + (selectedSpecial !== null ? 1 : 0);
+    
+    return (
     <Box>
+      {/* 已选标签显示区域 */}
+      {selectedCount > 0 && (
+        <Box sx={{ 
+          mb: 3, 
+          p: 2, 
+          borderRadius: 2,
+          backgroundColor: theme.palette.mode === 'dark'
+            ? 'rgba(110, 193, 228, 0.1)'
+            : 'rgba(110, 193, 228, 0.08)',
+          border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(110, 193, 228, 0.3)' : 'rgba(110, 193, 228, 0.2)'}`,
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+            <Typography variant="subtitle2" fontWeight={600} color="primary">
+              已选筛选条件 ({selectedCount})
+            </Typography>
+            <Button
+              size="small"
+              onClick={clearFilters}
+              sx={{ 
+                minWidth: 'auto',
+                fontSize: '0.75rem',
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              清空全部
+            </Button>
+          </Box>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+            {selectedLetter && (
+              <Chip
+                label={`首字母: ${selectedLetter}`}
+                size="small"
+                onDelete={() => {
+                  setSelectedLetter(null);
+                  setPage(1);
+                }}
+                sx={{
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  fontWeight: 600,
+                  '& .MuiChip-deleteIcon': {
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': {
+                      color: 'white',
+                    },
+                  },
+                }}
+              />
+            )}
+            {selectedLanguages.map((lang) => (
+              <Chip
+                key={lang}
+                label={`语言: ${lang}`}
+                size="small"
+                onDelete={() => handleFilterByLanguage(lang)}
+                sx={{
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  fontWeight: 600,
+                  '& .MuiChip-deleteIcon': {
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': {
+                      color: 'white',
+                    },
+                  },
+                }}
+              />
+            ))}
+            {selectedCategories.map((cat) => (
+              <Chip
+                key={cat}
+                label={`种类: ${cat}`}
+                size="small"
+                onDelete={() => handleFilterByCategory(cat)}
+                sx={{
+                  backgroundColor: 'secondary.main',
+                  color: 'white',
+                  fontWeight: 600,
+                  '& .MuiChip-deleteIcon': {
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': {
+                      color: 'white',
+                    },
+                  },
+                }}
+              />
+            ))}
+            {selectedSpecial !== null && (
+              <Chip
+                label="特殊歌曲"
+                size="small"
+                onDelete={() => {
+                  setSelectedSpecial(null);
+                  setPage(1);
+                }}
+                sx={{
+                  backgroundColor: 'secondary.main',
+                  color: 'white',
+                  fontWeight: 600,
+                  '& .MuiChip-deleteIcon': {
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': {
+                      color: 'white',
+                    },
+                  },
+                }}
+              />
+            )}
+          </Box>
+        </Box>
+      )}
+      
       {/* 首字母筛选 */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
@@ -475,7 +610,8 @@ function HomePage({ siteConfig }) {
         重置筛选
       </Button>
     </Box>
-  );
+    );
+  };
 
   return (
     <Box>

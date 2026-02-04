@@ -8,7 +8,9 @@ export class PlaylistService {
       limit = 50,
       firstLetter = null,
       language = null,
+      languages = null,
       category = null,
+      categories = null,
       special = null,
       search = ''
     } = options;
@@ -26,15 +28,25 @@ export class PlaylistService {
       params.push(firstLetter);
     }
 
-    if (language) {
-      query += ' AND language = ?';
-      params.push(language);
+    // 支持多选语言筛选
+    const languageList = languages || (language ? [language] : null);
+    if (languageList && languageList.length > 0) {
+      const placeholders = languageList.map(() => '?').join(',');
+      query += ` AND language IN (${placeholders})`;
+      params.push(...languageList);
     }
 
-    if (category) {
-      // 支持多标签筛选：检查 categories_json 中是否包含该分类
-      query += ' AND (category = ? OR categories_json LIKE ?)';
-      params.push(category, `%"${category}"%`);
+    // 支持多选种类筛选
+    const categoryList = categories || (category ? [category] : null);
+    if (categoryList && categoryList.length > 0) {
+      // 对于多个分类，需要检查任意一个分类匹配
+      const categoryConditions = categoryList.map(() => 
+        '(category = ? OR categories_json LIKE ?)'
+      ).join(' OR ');
+      query += ` AND (${categoryConditions})`;
+      categoryList.forEach(cat => {
+        params.push(cat, `%"${cat}"%`);
+      });
     }
 
     if (special !== null) {

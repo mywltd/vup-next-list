@@ -31,15 +31,8 @@ import { useSearch } from '../components/AppLayout';
 import { getCachedImage, cacheImage } from '../utils/imageCache';
 
 function HomePage({ siteConfig }) {
-  // ⚠️ 最高优先级：检测微信浏览器
+  // ⚠️ 最高优先级：检测微信浏览器 - 直接禁止访问
   const isWeChat = React.useMemo(() => isWeChatBrowser(), []);
-  const [weChatConfirmed, setWeChatConfirmed] = useState(() => {
-    // 初始化时立即检查 sessionStorage
-    if (isWeChat) {
-      return sessionStorage.getItem('wechat-confirmed') === 'true';
-    }
-    return true; // 非微信浏览器直接通过
-  });
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
@@ -134,8 +127,8 @@ function HomePage({ siteConfig }) {
 
   // 加载筛选选项（标签云）
   useEffect(() => {
-    // 如果是微信浏览器且用户未确认，则不加载
-    if (isWeChat && !weChatConfirmed) {
+    // 微信浏览器直接禁止访问，不加载数据
+    if (isWeChat) {
       return;
     }
     
@@ -154,12 +147,12 @@ function HomePage({ siteConfig }) {
       }
     };
     loadFilters();
-  }, [isWeChat, weChatConfirmed]);
+  }, [isWeChat]);
 
   // 加载歌单（带防抖）
   useEffect(() => {
-    // 如果是微信浏览器且用户未确认，则不加载
-    if (isWeChat && !weChatConfirmed) {
+    // 微信浏览器直接禁止访问，不加载数据
+    if (isWeChat) {
       return;
     }
     
@@ -173,8 +166,7 @@ function HomePage({ siteConfig }) {
     selectedLanguages.join(','), // 转为字符串避免数组引用问题
     selectedCategories.join(','), // 转为字符串避免数组引用问题
     selectedSpecial, 
-    isWeChat, 
-    weChatConfirmed
+    isWeChat
   ]);
 
   const handlePageChange = useCallback((event, value) => {
@@ -242,12 +234,6 @@ function HomePage({ siteConfig }) {
   const handleFilterByLetter = useCallback((letter) => {
     setSelectedLetter(letter);
     setPage(1);
-  }, []);
-
-  // 处理微信提示确认
-  const handleWeChatConfirm = useCallback(() => {
-    sessionStorage.setItem('wechat-confirmed', 'true');
-    setWeChatConfirmed(true);
   }, []);
 
   // 复制当前页面链接
@@ -490,8 +476,8 @@ function HomePage({ siteConfig }) {
     );
   };
 
-  // ⚠️ 微信浏览器提示页面 - 最高优先级渲染
-  if (isWeChat && !weChatConfirmed) {
+  // ⚠️ 微信浏览器提示页面 - 强制在浏览器中打开
+  if (isWeChat) {
     return (
       <Box
         sx={{
@@ -499,13 +485,14 @@ function HomePage({ siteConfig }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          px: 2,
+          px: 3,
           py: 4,
+          backgroundColor: theme.palette.mode === 'dark' ? '#0a0e1a' : '#f5f7fa',
         }}
       >
         <Box
           sx={{
-            maxWidth: 500,
+            maxWidth: 480,
             width: '100%',
             textAlign: 'center',
           }}
@@ -514,115 +501,100 @@ function HomePage({ siteConfig }) {
           <Box
             sx={{
               display: 'inline-flex',
-              p: 3,
+              p: 4,
               borderRadius: '50%',
               backgroundColor: theme.palette.mode === 'dark'
-                ? 'rgba(255, 193, 7, 0.1)'
-                : 'rgba(255, 193, 7, 0.08)',
+                ? 'rgba(239, 83, 80, 0.15)'
+                : 'rgba(239, 83, 80, 0.1)',
               mb: 3,
             }}
           >
             <Warning
               sx={{
-                fontSize: 64,
-                color: 'warning.main',
+                fontSize: 72,
+                color: 'error.main',
               }}
             />
           </Box>
 
           {/* 标题 */}
           <Typography
-            variant="h5"
+            variant="h4"
             fontWeight={700}
             gutterBottom
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, color: 'error.main' }}
           >
-            温馨提示
+            无法访问
           </Typography>
 
           {/* 说明 */}
           <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ mb: 3, lineHeight: 1.8 }}
+            variant="h6"
+            color="text.primary"
+            sx={{ mb: 3, lineHeight: 1.8, fontWeight: 600 }}
           >
-            检测到您正在<strong>微信内置浏览器</strong>中打开本页面
+            请在浏览器中打开本页面
           </Typography>
 
-          {/* 警告信息 */}
-          <Box
-            sx={{
-              p: 2.5,
-              borderRadius: 2,
-              backgroundColor: theme.palette.mode === 'dark'
-                ? 'rgba(255, 193, 7, 0.1)'
-                : 'rgba(255, 193, 7, 0.08)',
-              border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 193, 7, 0.3)' : 'rgba(255, 193, 7, 0.2)'}`,
-              mb: 2.5,
-              textAlign: 'left',
-            }}
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ mb: 4, lineHeight: 1.8 }}
           >
-            <Typography variant="body2" sx={{ mb: 1.5, fontWeight: 600 }}>
-              ⚠️ 微信浏览器限制：
-            </Typography>
-            <Typography variant="body2" color="text.secondary" component="div" sx={{ lineHeight: 1.8, fontSize: '0.875rem' }}>
-              • 视觉效果可能无法正常显示<br />
-              • 页面性能受限，可能卡顿<br />
-              • 部分功能可能不兼容
-            </Typography>
-          </Box>
+            由于微信浏览器的性能限制，本站不支持在微信内访问。
+            <br />
+            请使用 Safari、Chrome 等浏览器打开以获得完整体验。
+          </Typography>
 
-          {/* 建议 */}
+          {/* 操作步骤 */}
           <Box
             sx={{
-              p: 2.5,
-              borderRadius: 2,
+              p: 3,
+              borderRadius: 3,
               backgroundColor: theme.palette.mode === 'dark'
                 ? 'rgba(110, 193, 228, 0.1)'
                 : 'rgba(110, 193, 228, 0.08)',
-              border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(110, 193, 228, 0.3)' : 'rgba(110, 193, 228, 0.2)'}`,
-              mb: 3,
+              border: `2px solid ${theme.palette.mode === 'dark' ? 'rgba(110, 193, 228, 0.3)' : 'rgba(110, 193, 228, 0.2)'}`,
+              mb: 4,
               textAlign: 'left',
             }}
           >
-            <Typography variant="body2" color="primary" sx={{ mb: 1.5, fontWeight: 600 }}>
-              💡 获得最佳体验：
+            <Typography variant="subtitle1" color="primary" sx={{ mb: 2, fontWeight: 700, textAlign: 'center' }}>
+              📱 如何在浏览器中打开？
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8, fontSize: '0.875rem' }}>
-              点击右上角 <strong>「···」</strong> 菜单 →<br />
-              选择<strong>「在浏览器中打开」</strong>
+            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 2, fontSize: '0.95rem' }}>
+              <strong>方法一：</strong><br />
+              点击右上角 <strong style={{ color: theme.palette.primary.main }}>「···」</strong> 菜单<br />
+              → 选择 <strong style={{ color: theme.palette.primary.main }}>「在浏览器中打开」</strong>
+            </Typography>
+            <Box sx={{ my: 2, borderTop: `1px dashed ${theme.palette.divider}` }} />
+            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 2, fontSize: '0.95rem' }}>
+              <strong>方法二：</strong><br />
+              点击下方按钮复制链接<br />
+              → 粘贴到浏览器地址栏打开
             </Typography>
           </Box>
 
-          {/* 操作按钮 */}
-          <Stack spacing={1.5}>
-            <Button
-              variant="contained"
-              size="large"
-              fullWidth
-              onClick={handleWeChatConfirm}
-              sx={{
-                py: 1.5,
-                fontWeight: 600,
-                fontSize: '1rem',
-              }}
-            >
-              我知道了，继续访问
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              fullWidth
-              startIcon={<ContentCopy />}
-              onClick={handleCopyUrl}
-              sx={{
-                py: 1.5,
-                fontWeight: 500,
-              }}
-            >
-              复制链接到浏览器打开
-            </Button>
-          </Stack>
+          {/* 复制按钮 */}
+          <Button
+            variant="contained"
+            size="large"
+            fullWidth
+            startIcon={<ContentCopy />}
+            onClick={handleCopyUrl}
+            sx={{
+              py: 2,
+              fontWeight: 700,
+              fontSize: '1.1rem',
+              borderRadius: 2,
+              boxShadow: '0 4px 14px rgba(110, 193, 228, 0.4)',
+              '&:hover': {
+                boxShadow: '0 6px 20px rgba(110, 193, 228, 0.5)',
+              },
+            }}
+          >
+            复制链接
+          </Button>
 
           {/* Snackbar for copy feedback */}
           <Snackbar
@@ -857,27 +829,18 @@ function HomePage({ siteConfig }) {
                   }}>
                     <List sx={{ py: 0, px: 0 }}>
                       {songs.map((song, index) => (
-                        isWeChat ? (
-                          <WeChatSimpleSongItem
-                            key={song.id}
-                            song={song}
-                            onCopy={handleCopy}
-                            isLast={index === songs.length - 1}
-                          />
-                        ) : (
-                          <SongListItem
-                            key={song.id}
-                            song={song}
-                            onCopy={handleCopy}
-                            isLast={index === songs.length - 1}
-                            onFilterByLanguage={handleFilterByLanguage}
-                            onFilterByCategory={handleFilterByCategory}
-                            onFilterByLetter={handleFilterByLetter}
-                            isDesktop={isDesktop}
-                            isLowPerf={isLowPerf}
-                            {...songListProps}
-                          />
-                        )
+                        <SongListItem
+                          key={song.id}
+                          song={song}
+                          onCopy={handleCopy}
+                          isLast={index === songs.length - 1}
+                          onFilterByLanguage={handleFilterByLanguage}
+                          onFilterByCategory={handleFilterByCategory}
+                          onFilterByLetter={handleFilterByLetter}
+                          isDesktop={isDesktop}
+                          isLowPerf={isLowPerf}
+                          {...songListProps}
+                        />
                       ))}
                     </List>
                   </Box>
@@ -1124,27 +1087,18 @@ function HomePage({ siteConfig }) {
               <>
                 <List sx={{ py: 1.5, px: 1 }}>
                   {songs.map((song, index) => (
-                    isWeChat ? (
-                      <WeChatSimpleSongItem
-                        key={song.id}
-                        song={song}
-                        onCopy={handleCopy}
-                        isLast={index === songs.length - 1}
-                      />
-                    ) : (
-                      <SongListItem
-                        key={song.id}
-                        song={song}
-                        onCopy={handleCopy}
-                        isLast={index === songs.length - 1}
-                        onFilterByLanguage={handleFilterByLanguage}
-                        onFilterByCategory={handleFilterByCategory}
-                        onFilterByLetter={handleFilterByLetter}
-                        isDesktop={isDesktop}
-                        isLowPerf={isLowPerf}
-                        {...songListProps}
-                      />
-                    )
+                    <SongListItem
+                      key={song.id}
+                      song={song}
+                      onCopy={handleCopy}
+                      isLast={index === songs.length - 1}
+                      onFilterByLanguage={handleFilterByLanguage}
+                      onFilterByCategory={handleFilterByCategory}
+                      onFilterByLetter={handleFilterByLetter}
+                      isDesktop={isDesktop}
+                      isLowPerf={isLowPerf}
+                      {...songListProps}
+                    />
                   ))}
                 </List>
 
@@ -1219,57 +1173,6 @@ function HomePage({ siteConfig }) {
     </Box>
   );
 }
-
-// 微信极简版歌曲列表项 - 性能优化
-const WeChatSimpleSongItem = React.memo(function WeChatSimpleSongItem({ song, onCopy, isLast }) {
-  return (
-    <Box
-      sx={{
-        py: 1.5,
-        px: 2,
-        borderBottom: isLast ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
-        '&:active': {
-          backgroundColor: 'rgba(110, 193, 228, 0.08)',
-        },
-      }}
-    >
-      {/* 歌曲名 */}
-      <Typography
-        variant="body1"
-        onClick={() => onCopy(song.songName)}
-        sx={{
-          cursor: 'pointer',
-          fontWeight: 600,
-          mb: 0.5,
-          color: song.isNewSong ? 'primary.main' : 'text.primary',
-        }}
-      >
-        {song.songName}
-      </Typography>
-
-      {/* 歌手 */}
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-        {song.singer}
-      </Typography>
-
-      {/* 标签 */}
-      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-        {song.language && (
-          <Chip label={song.language} size="small" variant="outlined" />
-        )}
-        {(song.categories || []).map((cat, idx) => (
-          <Chip key={idx} label={cat} size="small" variant="outlined" />
-        ))}
-        {song.special && (
-          <Chip label="特殊" size="small" color="secondary" variant="outlined" />
-        )}
-        {song.isNewSong && (
-          <Chip label="NEW" size="small" color="primary" />
-        )}
-      </Box>
-    </Box>
-  );
-});
 
 // 歌曲列表项组件 - 使用 React.memo 优化性能
 const SongListItem = React.memo(function SongListItem({ 

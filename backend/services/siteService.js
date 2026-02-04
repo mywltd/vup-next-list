@@ -30,6 +30,8 @@ export class SiteService {
       hcaptchaSiteKey: siteConfig.hcaptcha_site_key || '',
       highlightNewSongs: Boolean(siteConfig.highlight_new_songs),
       newSongDays: siteConfig.new_song_days || 7,
+      icpNumber: siteConfig.icp_number || '',
+      showIcp: Boolean(siteConfig.show_icp),
       streamer: streamer ? {
         name: streamer.name,
         bilibiliUrl: streamer.bilibili_url
@@ -56,7 +58,9 @@ export class SiteService {
       hcaptchaSiteKey,
       hcaptchaSecretKey,
       highlightNewSongs,
-      newSongDays
+      newSongDays,
+      icpNumber,
+      showIcp
     } = configData;
 
     const stmt = db.prepare(`
@@ -78,6 +82,8 @@ export class SiteService {
           hcaptcha_secret_key = ?,
           highlight_new_songs = ?,
           new_song_days = ?,
+          icp_number = ?,
+          show_icp = ?,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = 1
     `);
@@ -99,7 +105,9 @@ export class SiteService {
       hcaptchaSiteKey || '',
       hcaptchaSecretKey || '',
       highlightNewSongs ? 1 : 0,
-      newSongDays || 7
+      newSongDays || 7,
+      icpNumber || '',
+      showIcp ? 1 : 0
     );
 
     return { success: true, message: '站点配置更新成功' };

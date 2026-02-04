@@ -81,6 +81,8 @@ function SiteConfigPanel({ onUpdate }) {
     copyMode: 'normal',
     highlightNewSongs: false,
     newSongDays: 7,
+    icpNumber: '',
+    showIcp: false,
   });
 
   useEffect(() => {
@@ -106,6 +108,8 @@ function SiteConfigPanel({ onUpdate }) {
         copyMode: data.copyMode || 'normal',
         highlightNewSongs: data.highlightNewSongs || false,
         newSongDays: data.newSongDays || 7,
+        icpNumber: data.icpNumber || '',
+        showIcp: data.showIcp || false,
       });
     } catch (error) {
       setMessage({ type: 'error', text: '加载配置失败' });
@@ -340,6 +344,34 @@ function SiteConfigPanel({ onUpdate }) {
               rows={3}
               helperText="网站描述，用于搜索引擎展示"
             />
+          </Stack>
+        </Box>
+
+        <Box>
+          <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+            ICP 备案配置
+          </Typography>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              label="ICP 备案号"
+              value={config.icpNumber}
+              onChange={handleChange('icpNumber')}
+              helperText="例如：京ICP备12345678号"
+              placeholder="请输入您的 ICP 备案号"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={config.showIcp}
+                  onChange={(e) => setConfig({ ...config, showIcp: e.target.checked })}
+                />
+              }
+              label="在页面底部显示 ICP 备案号"
+            />
+            <Typography variant="caption" color="text.secondary">
+              备案号将显示在页面底部，并自动链接到工信部备案查询网站
+            </Typography>
           </Stack>
         </Box>
 

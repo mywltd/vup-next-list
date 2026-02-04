@@ -26,6 +26,85 @@
       min-height: 100vh;
     }
   </style>
+  <div id="env-guide" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 999999; font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="padding: 20px; text-align: center;">
+        <div style="text-align: right;">
+            <img src="https://img.alicdn.com/tfs/TB1mY69u7T2gK0jSZFkXXcIQFXa-653-381.png" style="width: 70%; max-width: 280px;" alt="请点击右上角">
+        </div>
+
+        <div style="margin-top: 30px;">
+            <h2 style="color: #333; font-size: 20px; margin-bottom: 10px;">请在浏览器中打开</h2>
+            <p style="color: #666; font-size: 15px; line-height: 1.6;">
+                当前环境（微信/QQ）无法获得流畅体验。<br>
+                请点击右上角 <strong style="color: #07C160;">···</strong> 选择 <strong style="color: #07C160;">“在浏览器打开”</strong>
+            </p>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 1px dashed #ddd;">
+            <p style="font-size: 13px; color: #999; margin-bottom: 10px;">或者复制下方链接手动粘贴</p>
+            <div id="current-url" style="word-break: break-all; color: #333; font-weight: 500; font-size: 14px; margin-bottom: 15px; padding: 0 10px;">
+                </div>
+            <button id="copy-btn" style="background: #07C160; color: white; border: none; padding: 10px 25px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(7,193,96,0.2);">
+                一键复制链接
+            </button>
+            <div id="copy-toast" style="display: none; margin-top: 10px; font-size: 12px; color: #07C160; font-weight: bold;">✅ 已复制到剪贴板</div>
+        </div>
+    </div>
+</div>
+<!-- 
+<script>
+    (function() {
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') !== -1;
+        var isQQ = ua.indexOf('mqqbrowser') !== -1 && ua.indexOf('qqtheme') !== -1 || ua.indexOf(' qq/') !== -1;
+
+        if (isWeixin || isQQ) {
+            var guide = document.getElementById('env-guide');
+            var urlDisplay = document.getElementById('current-url');
+            var copyBtn = document.getElementById('copy-btn');
+            var copyToast = document.getElementById('copy-toast');
+
+            // 1. 显示引导层
+            guide.style.display = 'block';
+            
+            // 2. 获取并显示当前完整域名/链接
+            var currentUrl = window.location.href;
+            urlDisplay.innerText = currentUrl;
+
+            // 3. 复制功能逻辑
+            copyBtn.addEventListener('click', function() {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(currentUrl).then(showSuccess);
+                } else {
+                    // 兼容旧版或受限 WebView 的兜底方案
+                    var input = document.createElement('textarea');
+                    input.value = currentUrl;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                    showSuccess();
+                }
+            });
+
+            function showSuccess() {
+                copyBtn.innerText = "复制成功！";
+                copyToast.style.display = "block";
+                setTimeout(function() {
+                    copyBtn.innerText = "一键复制链接";
+                    copyToast.style.display = "none";
+                }, 2000);
+            }
+
+            // 4. 强制停止后续 React/MUI 脚本加载
+            if (window.stop) {
+                window.stop();
+            } else {
+                document.execCommand("Stop");
+            }
+        }
+    })();
+</script> -->
 </head>
 <body>
   <div id="root"></div>

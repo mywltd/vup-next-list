@@ -141,6 +141,12 @@ export function initDatabase() {
     if (!columns.includes('new_song_days')) {
       db.exec('ALTER TABLE site_config ADD COLUMN new_song_days INTEGER DEFAULT 7');
     }
+    if (!columns.includes('icp_number')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN icp_number TEXT');
+    }
+    if (!columns.includes('show_icp')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN show_icp INTEGER DEFAULT 0');
+    }
   } catch (error) {
     console.warn('数据库迁移警告:', error.message);
   }

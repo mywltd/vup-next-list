@@ -277,6 +277,31 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
           © 2026 {siteConfig?.siteName || 'VUP 音乐歌单'} • 
           Powered by FallSakura
         </Typography>
+        {siteConfig?.showIcp && siteConfig?.icpNumber && (
+          <Typography 
+            variant="body2" 
+            color="text.secondary"
+            sx={{ mt: 1 }}
+          >
+            <Box
+              component="a"
+              href="https://beian.miit.gov.cn/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: 'inherit',
+                textDecoration: 'none',
+                '&:hover': {
+                  color: 'primary.main',
+                  textDecoration: 'underline',
+                },
+                transition: 'color 0.2s ease',
+              }}
+            >
+              {siteConfig.icpNumber}
+            </Box>
+          </Typography>
+        )}
       </Box>
       </Box>
     </SearchContext.Provider>

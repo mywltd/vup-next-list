@@ -126,7 +126,7 @@ function HomePage({ siteConfig }) {
       setTotal(data.total);
     } catch (error) {
       console.error('加载歌单失败:', error);
-      showSnackbar('加载歌单失败', 'error');
+      setSnackbar({ open: true, message: '加载歌单失败', severity: 'error' });
     } finally {
       setLoading(false);
     }
@@ -236,8 +236,10 @@ function HomePage({ siteConfig }) {
 
   // 处理微信提示确认
   const handleWeChatConfirm = useCallback(() => {
+    console.log('微信确认：用户点击继续访问');
     sessionStorage.setItem('wechat-confirmed', 'true');
     setWeChatConfirmed(true);
+    console.log('微信确认：状态已更新，weChatConfirmed=true');
   }, []);
 
   // 复制当前页面链接
@@ -482,6 +484,7 @@ function HomePage({ siteConfig }) {
 
   // ⚠️ 微信浏览器提示页面 - 最高优先级渲染
   if (isWeChat && !weChatConfirmed) {
+    console.log('渲染微信提示页面，isWeChat=', isWeChat, 'weChatConfirmed=', weChatConfirmed);
     return (
       <Box
         sx={{
@@ -634,6 +637,11 @@ function HomePage({ siteConfig }) {
     );
   }
 
+  // 调试日志
+  React.useEffect(() => {
+    console.log('HomePage 状态:', { isWeChat, weChatConfirmed, songsCount: songs.length, loading });
+  }, [isWeChat, weChatConfirmed, songs.length, loading]);
+  
   return (
     <Box>
       {/* 页面标题 */}
@@ -648,7 +656,16 @@ function HomePage({ siteConfig }) {
             }}
           >
             <Box
-              sx={{
+              sx={ isWeChat ? {
+                width: { xs: 100, sm: 120 },
+                height: { xs: 100, sm: 120 },
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: `4px solid`,
+                borderColor: 'primary.main',
+                backgroundColor: theme.palette.mode === 'dark' ? '#1a1f37' : '#ffffff',
+                padding: '4px',
+              } : {
                 width: { xs: 100, sm: 120 },
                 height: { xs: 100, sm: 120 },
                 borderRadius: '50%',
@@ -1235,9 +1252,11 @@ const WeChatSimpleSongItem = React.memo(function WeChatSimpleSongItem({ song, on
 
       {/* 标签 */}
       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-        <Chip label={song.language} size="small" variant="outlined" />
-        {song.categories && song.categories.split(',').map((cat, idx) => (
-          <Chip key={idx} label={cat.trim()} size="small" variant="outlined" />
+        {song.language && (
+          <Chip label={song.language} size="small" variant="outlined" />
+        )}
+        {(song.categories || []).map((cat, idx) => (
+          <Chip key={idx} label={cat} size="small" variant="outlined" />
         ))}
         {song.special && (
           <Chip label="特殊" size="small" color="secondary" variant="outlined" />

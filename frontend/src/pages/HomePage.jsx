@@ -26,7 +26,7 @@ import {
 } from '@mui/material';
 import { Search, ContentCopy, MusicNote, FilterList, Language, Category, Star, Refresh, PlayCircleOutline } from '@mui/icons-material';
 import { playlistAPI } from '../services/api';
-import { debounce, copyToClipboard, getLetterColor } from '../utils/helpers';
+import { debounce, copyToClipboard, getLetterColor, isLowPerformanceEnv, getOptimizedBackdropStyle } from '../utils/helpers';
 import { useSearch } from '../components/AppLayout';
 import { getCachedImage, cacheImage } from '../utils/imageCache';
 
@@ -36,6 +36,9 @@ function HomePage({ siteConfig }) {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(siteConfig?.avatarUrl || '');
+  
+  // 检测是否为低性能环境（微信浏览器等）
+  const isLowPerf = React.useMemo(() => isLowPerformanceEnv(), []);
   
   // 从Context获取搜索文本
   const { searchText, setSearchText } = useSearch();
@@ -144,12 +147,12 @@ function HomePage({ siteConfig }) {
     debouncedLoad();
   }, [loadPlaylist]);
 
-  const handlePageChange = (event, value) => {
+  const handlePageChange = useCallback((event, value) => {
     setPage(value);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
-  const handleCopy = async (songName) => {
+  const handleCopy = useCallback(async (songName) => {
     // 根据站点配置的复制模式决定复制内容
     const copyMode = siteConfig?.copyMode || 'normal';
     let textToCopy = songName;
@@ -160,28 +163,40 @@ function HomePage({ siteConfig }) {
     
     const success = await copyToClipboard(textToCopy);
     if (success) {
-      showSnackbar(`已复制: ${songName}`, 'success');
+      setSnackbar({ open: true, message: `已复制: ${songName}`, severity: 'success' });
     } else {
-      showSnackbar('复制失败', 'error');
+      setSnackbar({ open: true, message: '复制失败', severity: 'error' });
     }
-  };
+  }, [siteConfig?.copyMode]);
 
-  const showSnackbar = (message, severity = 'success') => {
-    setSnackbar({ open: true, message, severity });
-  };
+  const handleCloseSnackbar = useCallback(() => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  }, []);
 
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchText('');
     setSelectedLetter(null);
     setSelectedLanguages([]);
     setSelectedCategories([]);
     setSelectedSpecial(null);
     setPage(1);
-  };
+  }, [setSearchText]);
+
+  // 优化筛选回调函数
+  const handleFilterByLanguage = useCallback((lang) => {
+    setSelectedLanguages([lang]);
+    setPage(1);
+  }, []);
+
+  const handleFilterByCategory = useCallback((cat) => {
+    setSelectedCategories([cat]);
+    setPage(1);
+  }, []);
+
+  const handleFilterByLetter = useCallback((letter) => {
+    setSelectedLetter(letter);
+    setPage(1);
+  }, []);
 
 
   // 筛选器组件 - 标签云形式
@@ -452,6 +467,7 @@ function HomePage({ siteConfig }) {
                 component="img"
                 src={avatarUrl}
                 alt="头像"
+                loading="lazy"
                 sx={{
                   width: '100%',
                   height: '100%',
@@ -606,19 +622,11 @@ function HomePage({ siteConfig }) {
                           song={song}
                           onCopy={handleCopy}
                           isLast={index === songs.length - 1}
-                          onFilterByLanguage={(lang) => {
-                            setSelectedLanguages([lang]);
-                            setPage(1);
-                          }}
-                          onFilterByCategory={(cat) => {
-                            setSelectedCategories([cat]);
-                            setPage(1);
-                          }}
-                          onFilterByLetter={(letter) => {
-                            setSelectedLetter(letter);
-                            setPage(1);
-                          }}
+                          onFilterByLanguage={handleFilterByLanguage}
+                          onFilterByCategory={handleFilterByCategory}
+                          onFilterByLetter={handleFilterByLetter}
                           isDesktop={isDesktop}
+                          isLowPerf={isLowPerf}
                           {...songListProps}
                         />
                       ))}
@@ -860,19 +868,11 @@ function HomePage({ siteConfig }) {
                       song={song}
                       onCopy={handleCopy}
                       isLast={index === songs.length - 1}
-                      onFilterByLanguage={(lang) => {
-                        setSelectedLanguages([lang]);
-                        setPage(1);
-                      }}
-                      onFilterByCategory={(cat) => {
-                        setSelectedCategories([cat]);
-                        setPage(1);
-                      }}
-                      onFilterByLetter={(letter) => {
-                        setSelectedLetter(letter);
-                        setPage(1);
-                      }}
+                      onFilterByLanguage={handleFilterByLanguage}
+                      onFilterByCategory={handleFilterByCategory}
+                      onFilterByLetter={handleFilterByLetter}
                       isDesktop={isDesktop}
+                      isLowPerf={isLowPerf}
                       {...songListProps}
                     />
                   ))}
@@ -950,8 +950,8 @@ function HomePage({ siteConfig }) {
   );
 }
 
-// 歌曲列表项组件
-function SongListItem({ 
+// 歌曲列表项组件 - 使用 React.memo 优化性能
+const SongListItem = React.memo(function SongListItem({ 
   song, 
   onCopy, 
   isLast, 
@@ -959,13 +959,28 @@ function SongListItem({
   isDesktop,
   onFilterByLanguage,
   onFilterByCategory,
-  onFilterByLetter
+  onFilterByLetter,
+  isLowPerf
 }) {
   const isDark = theme?.palette.mode === 'dark';
   const isNewSong = song.isNewSong || false;
   
   // PC端：横向布局
   if (isDesktop) {
+    // 根据性能环境优化背景样式
+    const backdropStyle = isLowPerf 
+      ? {
+          backgroundColor: isNewSong
+            ? (isDark ? 'rgba(110, 193, 228, 0.25)' : 'rgba(110, 193, 228, 0.18)')
+            : (isDark ? 'rgba(30, 35, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)'),
+        }
+      : {
+          backdropFilter: 'blur(10px)',
+          backgroundColor: isNewSong
+            ? (isDark ? 'rgba(110, 193, 228, 0.15)' : 'rgba(110, 193, 228, 0.08)')
+            : (isDark ? 'rgba(30, 35, 55, 0.5)' : 'rgba(255, 255, 255, 0.5)'),
+        };
+    
     return (
       <ListItem
         component="div"
@@ -975,14 +990,7 @@ function SongListItem({
           mb: 1,
           mx: 1,
           borderRadius: 2,
-          backdropFilter: 'blur(10px)',
-          backgroundColor: isNewSong
-            ? (isDark
-              ? 'rgba(110, 193, 228, 0.15)'
-              : 'rgba(110, 193, 228, 0.08)')
-            : (isDark
-              ? 'rgba(30, 35, 55, 0.5)'
-              : 'rgba(255, 255, 255, 0.5)'),
+          ...backdropStyle,
           border: isNewSong
             ? `2px solid ${isDark ? 'rgba(110, 193, 228, 0.5)' : 'rgba(110, 193, 228, 0.4)'}`
             : `1px solid ${theme.palette.divider}`,
@@ -1183,6 +1191,21 @@ function SongListItem({
   }
   
   // 移动端：垂直布局
+  // 根据性能环境优化移动端背景样式
+  const mobileBackdropStyle = isLowPerf
+    ? {
+        backgroundColor: isNewSong
+          ? (isDark ? 'rgba(110, 193, 228, 0.3)' : 'rgba(110, 193, 228, 0.22)')
+          : (isDark ? 'rgba(30, 35, 55, 0.95)' : 'rgba(255, 255, 255, 0.9)'),
+      }
+    : {
+        backdropFilter: 'blur(15px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(15px) saturate(150%)',
+        backgroundColor: isNewSong
+          ? (isDark ? 'rgba(110, 193, 228, 0.2)' : 'rgba(110, 193, 228, 0.12)')
+          : (isDark ? 'rgba(30, 35, 55, 0.6)' : 'rgba(255, 255, 255, 0.4)'),
+      };
+  
   return (
     <ListItem
       component="div"
@@ -1192,15 +1215,7 @@ function SongListItem({
         mb: 1.5,
         mx: 0,
         borderRadius: 3,
-        backdropFilter: 'blur(15px) saturate(150%)',
-        WebkitBackdropFilter: 'blur(15px) saturate(150%)',
-        backgroundColor: isNewSong
-          ? (isDark
-            ? 'rgba(110, 193, 228, 0.2)'
-            : 'rgba(110, 193, 228, 0.12)')
-          : (isDark
-            ? 'rgba(30, 35, 55, 0.6)'
-            : 'rgba(255, 255, 255, 0.4)'),
+        ...mobileBackdropStyle,
         border: isNewSong
           ? `2px solid ${isDark ? 'rgba(110, 193, 228, 0.6)' : 'rgba(110, 193, 228, 0.5)'}`
           : `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(110, 193, 228, 0.2)'}`,
@@ -1416,7 +1431,7 @@ function SongListItem({
         />
       </ListItem>
   );
-}
+});
 
 export default HomePage;
 

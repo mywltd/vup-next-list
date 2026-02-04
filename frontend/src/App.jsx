@@ -24,11 +24,11 @@ function setFavicon(url) {
   document.head.appendChild(appleFavicon);
 }
 
-// 页面组件
-import SetupPage from './pages/SetupPage';
-import HomePage from './pages/HomePage';
-import AdminPage from './pages/AdminPage';
-import LoginPage from './pages/LoginPage';
+// 页面组件 - 使用懒加载优化性能
+const SetupPage = React.lazy(() => import('./pages/SetupPage'));
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const AdminPage = React.lazy(() => import('./pages/AdminPage'));
+const LoginPage = React.lazy(() => import('./pages/LoginPage'));
 
 // 布局组件
 import AppLayout from './components/AppLayout';
@@ -263,10 +263,12 @@ function App() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Routes>
-          <Route path="/setup" element={<SetupPage onComplete={handleInstallComplete} />} />
-          <Route path="*" element={<Navigate to="/setup" replace />} />
-        </Routes>
+        <React.Suspense fallback={<LoadingPage />}>
+          <Routes>
+            <Route path="/setup" element={<SetupPage onComplete={handleInstallComplete} />} />
+            <Route path="*" element={<Navigate to="/setup" replace />} />
+          </Routes>
+        </React.Suspense>
       </ThemeProvider>
     );
   }
@@ -312,9 +314,25 @@ function App() {
         }}
       >
         <Box sx={{ position: 'relative', zIndex: 1 }}>
-          <Routes>
+          <React.Suspense fallback={<LoadingPage />}>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <AppLayout
+                    siteConfig={siteConfig}
+                    mode={mode}
+                    onToggleTheme={toggleTheme}
+                    userThemeConfig={userThemeConfig}
+                    onUpdateUserTheme={updateUserTheme}
+                  />
+                }
+              >
+                <Route index element={<HomePage siteConfig={siteConfig} />} />
+                <Route path="admin/login" element={<LoginPage mode={mode} />} />
+              </Route>
             <Route
-              path="/"
+              path="/admin"
               element={
                 <AppLayout
                   siteConfig={siteConfig}
@@ -322,29 +340,15 @@ function App() {
                   onToggleTheme={toggleTheme}
                   userThemeConfig={userThemeConfig}
                   onUpdateUserTheme={updateUserTheme}
+                  isAdmin
                 />
               }
             >
-              <Route index element={<HomePage siteConfig={siteConfig} />} />
-              <Route path="admin/login" element={<LoginPage mode={mode} />} />
+              <Route index element={<AdminPage onConfigUpdate={loadSiteConfig} />} />
             </Route>
-          <Route
-            path="/admin"
-            element={
-              <AppLayout
-                siteConfig={siteConfig}
-                mode={mode}
-                onToggleTheme={toggleTheme}
-                userThemeConfig={userThemeConfig}
-                onUpdateUserTheme={updateUserTheme}
-                isAdmin
-              />
-            }
-          >
-            <Route index element={<AdminPage onConfigUpdate={loadSiteConfig} />} />
-          </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </React.Suspense>
         </Box>
       </Box>
     </ThemeProvider>

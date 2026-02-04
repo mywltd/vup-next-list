@@ -165,7 +165,17 @@ function HomePage({ siteConfig }) {
     
     const debouncedLoad = debounce(loadPlaylist, 300);
     debouncedLoad();
-  }, [loadPlaylist, isWeChat, weChatConfirmed]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    page, 
+    searchText, 
+    selectedLetter, 
+    selectedLanguages.join(','), // 转为字符串避免数组引用问题
+    selectedCategories.join(','), // 转为字符串避免数组引用问题
+    selectedSpecial, 
+    isWeChat, 
+    weChatConfirmed
+  ]);
 
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
@@ -236,10 +246,8 @@ function HomePage({ siteConfig }) {
 
   // 处理微信提示确认
   const handleWeChatConfirm = useCallback(() => {
-    console.log('微信确认：用户点击继续访问');
     sessionStorage.setItem('wechat-confirmed', 'true');
     setWeChatConfirmed(true);
-    console.log('微信确认：状态已更新，weChatConfirmed=true');
   }, []);
 
   // 复制当前页面链接
@@ -484,7 +492,6 @@ function HomePage({ siteConfig }) {
 
   // ⚠️ 微信浏览器提示页面 - 最高优先级渲染
   if (isWeChat && !weChatConfirmed) {
-    console.log('渲染微信提示页面，isWeChat=', isWeChat, 'weChatConfirmed=', weChatConfirmed);
     return (
       <Box
         sx={{
@@ -637,11 +644,6 @@ function HomePage({ siteConfig }) {
     );
   }
 
-  // 调试日志
-  React.useEffect(() => {
-    console.log('HomePage 状态:', { isWeChat, weChatConfirmed, songsCount: songs.length, loading });
-  }, [isWeChat, weChatConfirmed, songs.length, loading]);
-  
   return (
     <Box>
       {/* 页面标题 */}

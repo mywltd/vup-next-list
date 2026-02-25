@@ -4,23 +4,22 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@mui/material": "^7.0.0",
-    "@mui/icons-material": "^7.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@hcaptcha/react-hcaptcha": "^1.9.0",
+    "@mui/icons-material": "^7.0.0",
+    "@mui/material": "^7.0.0",
+    "axios": "^1.6.5",
+    "file-saver": "^2.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.21.1",
-    "axios": "^1.6.5",
-    "lodash": "^4.17.21",
-    "file-saver": "^2.0.5",
-    "@hcaptcha/react-hcaptcha": "^1.9.0"
+    "react-router-dom": "^6.21.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.11",
     "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18"
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.11"
   },
   "scripts": {
     "dev": "vite",
@@ -40,4 +39,3 @@
     ]
   }
 }
-

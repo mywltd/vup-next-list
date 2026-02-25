@@ -127,11 +127,12 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
         styleOverrides: {
           root: {
             backgroundImage: 'none',
-            // 液态玻璃效果
-            backdropFilter: 'blur(20px) saturate(180%)',
+            // 液态玻璃效果（blur 14px 平衡视觉与 GPU 性能）
+            backdropFilter: 'blur(14px) saturate(150%)',
+            WebkitBackdropFilter: 'blur(14px) saturate(150%)',
             backgroundColor: isDark
-              ? 'rgba(20, 25, 45, 0.75)'
-              : 'rgba(255, 255, 255, 0.5)',
+              ? 'rgba(20, 25, 45, 0.78)'
+              : 'rgba(255, 255, 255, 0.55)',
             border: isDark
               ? '1px solid rgba(255, 255, 255, 0.1)'
               : '1px solid rgba(110, 193, 228, 0.15)', // 天空蓝边框
@@ -144,10 +145,11 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
       MuiCard: {
         styleOverrides: {
           root: {
-            backdropFilter: 'blur(20px) saturate(180%)',
+            backdropFilter: 'blur(14px) saturate(150%)',
+            WebkitBackdropFilter: 'blur(14px) saturate(150%)',
             backgroundColor: isDark
-              ? 'rgba(20, 25, 45, 0.75)'
-              : 'rgba(255, 255, 255, 0.5)',
+              ? 'rgba(20, 25, 45, 0.78)'
+              : 'rgba(255, 255, 255, 0.55)',
             border: isDark
               ? '1px solid rgba(255, 255, 255, 0.1)'
               : '1px solid rgba(110, 193, 228, 0.15)', // 天空蓝边框
@@ -164,10 +166,11 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
       MuiAppBar: {
         styleOverrides: {
           root: {
-            backdropFilter: 'blur(20px) saturate(180%)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
             backgroundColor: isDark
-              ? 'rgba(20, 25, 45, 0.85)'
-              : 'rgba(255, 255, 255, 0.85)',
+              ? 'rgba(20, 25, 45, 0.88)'
+              : 'rgba(255, 255, 255, 0.88)',
             boxShadow: isDark
               ? '0 4px 30px rgba(0, 0, 0, 0.5)'
               : '0 4px 30px rgba(123, 104, 238, 0.1)',
@@ -178,15 +181,15 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
         styleOverrides: {
           root: {
             '& .MuiOutlinedInput-root': {
-              backdropFilter: 'blur(10px)',
+              // 去除 blur，输入框数量多且常与滚动内容相邻，纯色背景性能更好
               backgroundColor: isDark
-                ? 'rgba(255, 255, 255, 0.05)'
-                : 'rgba(255, 255, 255, 0.6)',
+                ? 'rgba(255, 255, 255, 0.08)'
+                : 'rgba(255, 255, 255, 0.7)',
               borderRadius: 12,
               '&:hover': {
                 backgroundColor: isDark
-                  ? 'rgba(255, 255, 255, 0.08)'
-                  : 'rgba(255, 255, 255, 0.8)',
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(255, 255, 255, 0.85)',
               },
             },
           },
@@ -195,7 +198,7 @@ export const createAnimeTheme = (mode = 'light', customConfig = {}) => {
       MuiChip: {
         styleOverrides: {
           root: {
-            backdropFilter: 'blur(10px)',
+            // 去除 blur，Chip 数量多（筛选、列表项），纯色性能更好
             fontWeight: 500,
           },
         },

@@ -17,8 +17,8 @@ function LoadingPage() {
         justifyContent: 'center',
         zIndex: 9999,
         // 动态模糊背景
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        backdropFilter: 'blur(12px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(140%)',
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         // 玻璃质感
         border: '1px solid rgba(255, 255, 255, 0.2)',

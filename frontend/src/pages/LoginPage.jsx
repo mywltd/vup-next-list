@@ -129,8 +129,8 @@ function LoginPage({ mode = 'light' }) {
           width: '100%',
           position: 'relative',
           zIndex: 1,
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          backdropFilter: 'blur(14px) saturate(150%)',
+          WebkitBackdropFilter: 'blur(14px) saturate(150%)',
           backgroundColor: isDark
             ? 'rgba(20, 25, 45, 0.8)'
             : 'rgba(255, 255, 255, 0.8)',

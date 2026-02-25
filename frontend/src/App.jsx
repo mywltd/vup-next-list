@@ -295,8 +295,8 @@ function App() {
               left: 0,
               right: 0,
               bottom: 0,
-              backdropFilter: 'blur(8px)', // 只使用轻微模糊
-              WebkitBackdropFilter: 'blur(8px)',
+              backdropFilter: 'blur(6px)', // 轻微模糊，降低 GPU 占用
+              WebkitBackdropFilter: 'blur(6px)',
               backgroundColor: mode === 'dark' 
                 ? 'rgba(13, 15, 28, 0.3)' // 深色模式保留少量遮罩
                 : 'transparent', // 浅色模式完全透明

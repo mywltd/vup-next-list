@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   Button,
   Typography,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 import {
   Settings,
@@ -16,19 +17,20 @@ import {
   LiveTv,
   Logout,
   Upload,
-  Download,
   Code,
   AccountCircle,
   Security,
 } from '@mui/icons-material';
 import { authAPI } from '../services/api';
-import SiteConfigPanel from '../components/admin/SiteConfigPanel';
-import PlaylistManagePanel from '../components/admin/PlaylistManagePanel';
-import StreamerPanel from '../components/admin/StreamerPanel';
-import ImportExportPanel from '../components/admin/ImportExportPanel';
-import CustomConfigPanel from '../components/admin/CustomConfigPanel';
-import HCaptchaPanel from '../components/admin/HCaptchaPanel';
-import AccountSettingsPanel from '../components/admin/AccountSettingsPanel';
+
+// Admin 子面板懒加载 - 仅在切换到对应 Tab 时加载
+const SiteConfigPanel = lazy(() => import('../components/admin/SiteConfigPanel'));
+const PlaylistManagePanel = lazy(() => import('../components/admin/PlaylistManagePanel'));
+const StreamerPanel = lazy(() => import('../components/admin/StreamerPanel'));
+const ImportExportPanel = lazy(() => import('../components/admin/ImportExportPanel'));
+const CustomConfigPanel = lazy(() => import('../components/admin/CustomConfigPanel'));
+const HCaptchaPanel = lazy(() => import('../components/admin/HCaptchaPanel'));
+const AccountSettingsPanel = lazy(() => import('../components/admin/AccountSettingsPanel'));
 
 function AdminPage({ onConfigUpdate }) {
   const navigate = useNavigate();
@@ -138,16 +140,18 @@ function AdminPage({ onConfigUpdate }) {
         </Tabs>
       </Card>
 
-      {/* 标签页内容 */}
+      {/* 标签页内容 - 懒加载，切换 Tab 时才加载对应面板 */}
       <Card>
         <CardContent>
-          {currentTab === 0 && <SiteConfigPanel onUpdate={onConfigUpdate} />}
-          {currentTab === 1 && <PlaylistManagePanel />}
-          {currentTab === 2 && <StreamerPanel onUpdate={onConfigUpdate} />}
-          {currentTab === 3 && <ImportExportPanel />}
-          {currentTab === 4 && <CustomConfigPanel />}
-          {currentTab === 5 && <HCaptchaPanel onUpdate={onConfigUpdate} />}
-          {currentTab === 6 && <AccountSettingsPanel />}
+          <Suspense fallback={<Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}><CircularProgress /></Box>}>
+            {currentTab === 0 && <SiteConfigPanel onUpdate={onConfigUpdate} />}
+            {currentTab === 1 && <PlaylistManagePanel />}
+            {currentTab === 2 && <StreamerPanel onUpdate={onConfigUpdate} />}
+            {currentTab === 3 && <ImportExportPanel />}
+            {currentTab === 4 && <CustomConfigPanel />}
+            {currentTab === 5 && <HCaptchaPanel onUpdate={onConfigUpdate} />}
+            {currentTab === 6 && <AccountSettingsPanel />}
+          </Suspense>
         </CardContent>
       </Card>
     </Box>

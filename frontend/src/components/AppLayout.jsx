@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import {
   AppBar,
@@ -25,7 +25,6 @@ import {
 } from '@mui/icons-material';
 import ThemeCustomizer from './ThemeCustomizer';
 import { authAPI } from '../services/api';
-import { isLowPerformanceEnv } from '../utils/helpers';
 
 // 创建搜索上下文
 const SearchContext = createContext();
@@ -39,9 +38,6 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
   const isDesktop = useMediaQuery(theme.breakpoints.up('md')); // >= 960px
   const [searchText, setSearchText] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
-  // 检测是否为低性能环境
-  const isLowPerf = React.useMemo(() => isLowPerformanceEnv(), []);
 
   // 检查登录状态
   useEffect(() => {
@@ -76,27 +72,24 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
     }
   };
 
+  const searchContextValue = useMemo(
+    () => ({ searchText, setSearchText }),
+    [searchText]
+  );
+
   return (
-    <SearchContext.Provider value={{ searchText, setSearchText }}>
+    <SearchContext.Provider value={searchContextValue}>
       <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <AppBar 
           position="fixed" 
           elevation={0}
           color="default"
           sx={{
-            ...(isLowPerf ? {
-              // 低性能环境：不使用 backdrop-filter
-              backgroundColor: mode === 'dark'
-                ? 'rgba(20, 25, 45, 0.98)'
-                : 'rgba(255, 255, 255, 0.98)',
-            } : {
-              // 高性能环境：使用完整效果
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              backgroundColor: mode === 'dark'
-                ? 'rgba(20, 25, 45, 0.7)'
-                : 'rgba(255, 255, 255, 0.7)',
-            }),
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            backgroundColor: mode === 'dark'
+              ? 'rgba(20, 25, 45, 0.85)'
+              : 'rgba(255, 255, 255, 0.85)',
             borderBottom: `1px solid ${mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
             zIndex: 1100,
           }}
@@ -145,9 +138,8 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       backgroundColor: mode === 'dark'
-                        ? 'rgba(255, 255, 255, 0.1)'
-                        : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : 'rgba(255, 255, 255, 0.95)',
                       '&:hover': {
                         backgroundColor: mode === 'dark'
                           ? 'rgba(255, 255, 255, 0.15)'
@@ -276,7 +268,8 @@ function AppLayout({ siteConfig, mode, onToggleTheme, userThemeConfig, onUpdateU
           px: 2,
           mt: 'auto',
           textAlign: 'center',
-          backdropFilter: 'blur(10px)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
           backgroundColor: mode === 'dark'
             ? 'rgba(20, 25, 45, 0.5)'
             : 'rgba(255, 255, 255, 0.5)',

@@ -2,10 +2,25 @@
 
 const CACHE_PREFIX = 'img_cache_';
 const CACHE_VERSION = '1.0';
-
 // 将图片URL转换为缓存键
 function getCacheKey(url) {
   return `${CACHE_PREFIX}${btoa(url).replace(/[^a-zA-Z0-9]/g, '')}`;
+}
+
+// 配额不足时清除最旧的若干缓存项
+function evictOldestCache() {
+  const keys = Object.keys(localStorage).filter((k) => k.startsWith(CACHE_PREFIX));
+  if (keys.length === 0) return;
+  const entries = keys.map((k) => {
+    try {
+      const data = JSON.parse(localStorage.getItem(k) || '{}');
+      return { key: k, ts: data.timestamp || 0 };
+    } catch {
+      return { key: k, ts: 0 };
+    }
+  });
+  entries.sort((a, b) => a.ts - b.ts);
+  entries.slice(0, Math.min(3, entries.length)).forEach((e) => localStorage.removeItem(e.key));
 }
 
 // 将图片转换为base64并缓存
@@ -48,12 +63,22 @@ export async function cacheImage(url) {
             data: base64data,
             timestamp: Date.now(),
           }));
-          // 缓存成功，返回 base64
           resolve(base64data);
         } catch (e) {
-          // 如果存储空间不足，返回原URL（不缓存但仍可使用）
+          if (e.name === 'QuotaExceededError' && base64data) {
+            evictOldestCache();
+            try {
+              localStorage.setItem(cacheKey, JSON.stringify({
+                version: CACHE_VERSION,
+                data: base64data,
+                timestamp: Date.now(),
+              }));
+              resolve(base64data);
+              return;
+            } catch (_) {}
+          }
           console.warn('图片缓存失败，存储空间可能不足，将使用原始 URL:', e.message);
-          resolve(url); // 返回原始 URL
+          resolve(url);
         }
       };
       reader.onerror = () => {

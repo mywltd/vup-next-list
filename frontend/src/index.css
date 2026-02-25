@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+
+/* HeroUI 插件 - Tailwind v4 CSS-first */
+@plugin './hero.ts';
+
+/* HeroUI 主题源 - 供 Tailwind 扫描组件样式 */
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
+/* 自定义主题变量 - 与原有 anime 风格配色对应 */
+@theme {
+  /* 天空蓝主色 #6EC1E4 */
+  --color-primary: #6ec1e4;
+  --color-primary-foreground: #ffffff;
+  /* 浅粉色辅色 #FFB6C1 */
+  --color-secondary: #ffb6c1;
+  --color-secondary-foreground: #ffffff;
+}

@@ -250,7 +250,8 @@ function SetupPage({ onComplete }) {
         sx={{
           maxWidth: 600,
           width: '100%',
-          backdropFilter: 'blur(20px)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
           backgroundColor: 'rgba(255, 255, 255, 0.95)',
         }}
       >

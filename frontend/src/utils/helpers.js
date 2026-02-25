@@ -119,32 +119,6 @@ export const isWeChatBrowser = () => {
   return /micromessenger/.test(ua);
 };
 
-// 检测是否为低性能环境（微信、QQ等内置浏览器）
-export const isLowPerformanceEnv = () => {
-  const ua = navigator.userAgent.toLowerCase();
-  return /micromessenger|qq\//.test(ua);
-};
-
-// 获取优化的背景样式（根据环境）
-export const getOptimizedBackdropStyle = (isDark, isLowPerf = isLowPerformanceEnv()) => {
-  if (isLowPerf) {
-    // 低性能环境：禁用 backdrop-filter，使用纯色背景
-    return {
-      backgroundColor: isDark
-        ? 'rgba(20, 25, 45, 0.95)' // 提高不透明度
-        : 'rgba(255, 255, 255, 0.95)',
-    };
-  }
-  // 高性能环境：使用完整的玻璃效果
-  return {
-    backdropFilter: 'blur(20px) saturate(180%)',
-    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-    backgroundColor: isDark
-      ? 'rgba(20, 25, 45, 0.7)'
-      : 'rgba(255, 255, 255, 0.7)',
-  };
-};
-
 export default {
   copyToClipboard,
   debounce,
@@ -157,7 +131,5 @@ export default {
   isValidImage,
   formatFileSize,
   isWeChatBrowser,
-  isLowPerformanceEnv,
-  getOptimizedBackdropStyle,
 };
 

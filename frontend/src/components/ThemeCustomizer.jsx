@@ -20,7 +20,7 @@ const PRESET_THEMES = [
   { name: '奶油黄', primary: '#FFE66D', secondary: '#A8DADC', description: '温柔的黄蓝配色，清新明亮' },
 ];
 
-function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
+const ThemeCustomizer = React.memo(function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [primaryColor, setPrimaryColor] = useState(
     userThemeConfig?.primaryColor || '#4FC3F7'
@@ -258,7 +258,7 @@ function ThemeCustomizer({ userThemeConfig, onUpdateUserTheme, mode }) {
       </Popover>
     </>
   );
-}
+});
 
 export default ThemeCustomizer;
 

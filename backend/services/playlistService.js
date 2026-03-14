@@ -14,6 +14,91 @@ export class PlaylistService {
     return Number.isNaN(parsed.getTime()) ? null : parsed;
   }
 
+  static getSongTimestamp(createdAt) {
+    const parsed = this.parseSongCreatedAt(createdAt);
+    return parsed ? parsed.getTime() : 0;
+  }
+
+  static compareSongName(a, b) {
+    return String(a || '').localeCompare(String(b || ''), 'zh-Hans-CN');
+  }
+
+  static compareAlphabeticalSongs(a, b) {
+    return (
+      this.compareSongName(a.firstLetter, b.firstLetter) ||
+      this.compareSongName(a.songName, b.songName) ||
+      this.compareSongName(a.singer, b.singer) ||
+      ((a.id || 0) - (b.id || 0))
+    );
+  }
+
+  static compareNewSongs(a, b) {
+    return (
+      this.getSongTimestamp(b.created_at) - this.getSongTimestamp(a.created_at) ||
+      this.compareAlphabeticalSongs(a, b)
+    );
+  }
+
+  static getDeterministicRandomScore(songId, seed) {
+    const id = Number(songId) || 0;
+    const normalizedSeed = Number(seed) || 0;
+    const value = Math.imul(id ^ normalizedSeed, 2654435761) >>> 0;
+    return value;
+  }
+
+  static sortSongsForDisplay(songs, options) {
+    const {
+      highlightNewSongs,
+      enableRandomRecommendations,
+      newSongThreshold,
+      randomSeed
+    } = options;
+
+    const isNewSong = (song) => {
+      if (!highlightNewSongs) {
+        return false;
+      }
+      return this.getSongTimestamp(song.created_at) >= newSongThreshold.getTime();
+    };
+
+    const alphabeticalSongs = [...songs].sort((a, b) => this.compareAlphabeticalSongs(a, b));
+
+    if (!highlightNewSongs && !enableRandomRecommendations) {
+      return alphabeticalSongs;
+    }
+
+    if (!highlightNewSongs && enableRandomRecommendations) {
+      return [...songs].sort((a, b) => (
+        this.getDeterministicRandomScore(a.id, randomSeed) - this.getDeterministicRandomScore(b.id, randomSeed) ||
+        this.compareAlphabeticalSongs(a, b)
+      ));
+    }
+
+    const newSongs = [];
+    const oldSongs = [];
+
+    songs.forEach((song) => {
+      if (isNewSong(song)) {
+        newSongs.push(song);
+      } else {
+        oldSongs.push(song);
+      }
+    });
+
+    newSongs.sort((a, b) => this.compareNewSongs(a, b));
+
+    if (enableRandomRecommendations) {
+      oldSongs.sort((a, b) => (
+        this.getDeterministicRandomScore(a.id, randomSeed) - this.getDeterministicRandomScore(b.id, randomSeed) ||
+        this.compareAlphabeticalSongs(a, b)
+      ));
+    } else {
+      oldSongs.sort((a, b) => this.compareAlphabeticalSongs(a, b));
+    }
+
+    return [...newSongs, ...oldSongs];
+  }
+
   static buildFilterQuery(options = {}) {
     const {
       firstLetter = null,
@@ -66,9 +151,7 @@ export class PlaylistService {
 
   static normalizeSong(song, highlightNewSongs, newSongThreshold) {
     const createdAt = this.parseSongCreatedAt(song.created_at);
-    const isNewSong = typeof song.is_new_song !== 'undefined'
-      ? Boolean(song.is_new_song)
-      : Boolean(highlightNewSongs && createdAt && createdAt >= newSongThreshold);
+    const isNewSong = Boolean(highlightNewSongs && createdAt && createdAt >= newSongThreshold);
 
     let categories = [song.category];
     if (song.categories_json) {
@@ -112,57 +195,23 @@ export class PlaylistService {
     const effectiveRandomSeed = Number.isFinite(parsedRandomSeed)
       ? Math.abs(parsedRandomSeed)
       : Date.now();
-    const randomOrderMultiplier = (effectiveRandomSeed % 2147483629) + 1;
-    const randomOrderOffset = (effectiveRandomSeed * 48271) % 2147483647;
-    const newSongCondition = `datetime(created_at) >= datetime('now', '-${normalizedNewSongDays} days')`;
 
     const { query: filterQuery, params } = this.buildFilterQuery(options);
-    let query = `SELECT *, CASE WHEN ${newSongCondition} THEN 1 ELSE 0 END AS is_new_song${filterQuery}`;
-
-    // 获取总数
-    const countQuery = `SELECT COUNT(*) as count${filterQuery}`;
-    const countStmt = db.prepare(countQuery);
-    const { count } = countStmt.get(...params);
-
-    // 添加排序和分页
-    // 如果启用新歌置顶，则先保持新歌置顶顺序不变，再决定旧歌部分是否随机推荐
-    if (highlightNewSongs && enableRandomRecommendations) {
-      query += ` ORDER BY 
-        is_new_song DESC,
-        CASE WHEN is_new_song = 1 THEN datetime(created_at) END DESC,
-        CASE WHEN is_new_song = 1 THEN firstLetter END,
-        CASE WHEN is_new_song = 1 THEN songName END,
-        CASE WHEN is_new_song = 0 THEN ABS(((id * ?) + ?) % 2147483647) END,
-        firstLetter,
-        songName
-        LIMIT ? OFFSET ?`;
-      params.push(randomOrderMultiplier, randomOrderOffset, limit, (page - 1) * limit);
-    } else if (highlightNewSongs) {
-      query += ` ORDER BY 
-        is_new_song DESC,
-        created_at DESC,
-        firstLetter, 
-        songName 
-        LIMIT ? OFFSET ?`;
-      params.push(limit, (page - 1) * limit);
-    } else if (enableRandomRecommendations) {
-      query += ` ORDER BY 
-        ABS(((id * ?) + ?) % 2147483647),
-        firstLetter,
-        songName
-        LIMIT ? OFFSET ?`;
-      params.push(randomOrderMultiplier, randomOrderOffset, limit, (page - 1) * limit);
-    } else {
-      query += ' ORDER BY firstLetter, songName LIMIT ? OFFSET ?';
-      params.push(limit, (page - 1) * limit);
-    }
-
-    const stmt = db.prepare(query);
-    const songs = stmt.all(...params);
+    const stmt = db.prepare(`SELECT *${filterQuery}`);
+    const allSongs = stmt.all(...params);
 
     // 计算每首歌是否为新歌
     const now = new Date();
     const newSongThreshold = new Date(now.getTime() - normalizedNewSongDays * 24 * 60 * 60 * 1000);
+    const sortedSongs = this.sortSongsForDisplay(allSongs, {
+      highlightNewSongs,
+      enableRandomRecommendations,
+      newSongThreshold,
+      randomSeed: effectiveRandomSeed
+    });
+    const count = sortedSongs.length;
+    const offset = (page - 1) * limit;
+    const songs = sortedSongs.slice(offset, offset + limit);
 
     return {
       songs: songs.map(song => this.normalizeSong(song, highlightNewSongs, newSongThreshold)),
@@ -183,8 +232,7 @@ export class PlaylistService {
     const newSongDays = siteConfig ? (parseInt(siteConfig.new_song_days, 10) || 7) : 7;
     const normalizedNewSongDays = Math.max(1, newSongDays);
     const { query: filterQuery, params } = this.buildFilterQuery(options);
-    const newSongCondition = `datetime(created_at) >= datetime('now', '-${normalizedNewSongDays} days')`;
-    const query = `SELECT *, CASE WHEN ${newSongCondition} THEN 1 ELSE 0 END AS is_new_song${filterQuery} ORDER BY RANDOM() LIMIT 1`;
+    const query = `SELECT *${filterQuery} ORDER BY RANDOM() LIMIT 1`;
     const stmt = db.prepare(query);
     const song = stmt.get(...params);
 

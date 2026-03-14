@@ -1,6 +1,19 @@
 import { db, getSiteConfig } from '../db/init.js';
 
 export class PlaylistService {
+  static parseSongCreatedAt(createdAt) {
+    if (!createdAt) {
+      return null;
+    }
+
+    const normalized = typeof createdAt === 'string'
+      ? createdAt.replace(' ', 'T') + 'Z'
+      : createdAt;
+
+    const parsed = new Date(normalized);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
   static buildFilterQuery(options = {}) {
     const {
       firstLetter = null,
@@ -52,8 +65,10 @@ export class PlaylistService {
   }
 
   static normalizeSong(song, highlightNewSongs, newSongThreshold) {
-    const createdAt = new Date(song.created_at);
-    const isNewSong = highlightNewSongs && createdAt >= newSongThreshold;
+    const createdAt = this.parseSongCreatedAt(song.created_at);
+    const isNewSong = typeof song.is_new_song !== 'undefined'
+      ? Boolean(song.is_new_song)
+      : Boolean(highlightNewSongs && createdAt && createdAt >= newSongThreshold);
 
     let categories = [song.category];
     if (song.categories_json) {
@@ -102,7 +117,7 @@ export class PlaylistService {
     const newSongCondition = `datetime(created_at) >= datetime('now', '-${normalizedNewSongDays} days')`;
 
     const { query: filterQuery, params } = this.buildFilterQuery(options);
-    let query = `SELECT *${filterQuery}`;
+    let query = `SELECT *, CASE WHEN ${newSongCondition} THEN 1 ELSE 0 END AS is_new_song${filterQuery}`;
 
     // 获取总数
     const countQuery = `SELECT COUNT(*) as count${filterQuery}`;
@@ -113,21 +128,18 @@ export class PlaylistService {
     // 如果启用新歌置顶，则先保持新歌置顶顺序不变，再决定旧歌部分是否随机推荐
     if (highlightNewSongs && enableRandomRecommendations) {
       query += ` ORDER BY 
-        CASE WHEN ${newSongCondition} THEN 0 ELSE 1 END,
-        CASE WHEN ${newSongCondition} THEN datetime(created_at) END DESC,
-        CASE WHEN ${newSongCondition} THEN firstLetter END,
-        CASE WHEN ${newSongCondition} THEN songName END,
-        CASE WHEN ${newSongCondition} THEN 0 ELSE ABS(((id * ?) + ?) % 2147483647) END,
+        is_new_song DESC,
+        CASE WHEN is_new_song = 1 THEN datetime(created_at) END DESC,
+        CASE WHEN is_new_song = 1 THEN firstLetter END,
+        CASE WHEN is_new_song = 1 THEN songName END,
+        CASE WHEN is_new_song = 0 THEN ABS(((id * ?) + ?) % 2147483647) END,
         firstLetter,
         songName
         LIMIT ? OFFSET ?`;
       params.push(randomOrderMultiplier, randomOrderOffset, limit, (page - 1) * limit);
     } else if (highlightNewSongs) {
       query += ` ORDER BY 
-        CASE 
-          WHEN ${newSongCondition} THEN 0 
-          ELSE 1 
-        END,
+        is_new_song DESC,
         created_at DESC,
         firstLetter, 
         songName 
@@ -171,7 +183,8 @@ export class PlaylistService {
     const newSongDays = siteConfig ? (parseInt(siteConfig.new_song_days, 10) || 7) : 7;
     const normalizedNewSongDays = Math.max(1, newSongDays);
     const { query: filterQuery, params } = this.buildFilterQuery(options);
-    const query = `SELECT *${filterQuery} ORDER BY RANDOM() LIMIT 1`;
+    const newSongCondition = `datetime(created_at) >= datetime('now', '-${normalizedNewSongDays} days')`;
+    const query = `SELECT *, CASE WHEN ${newSongCondition} THEN 1 ELSE 0 END AS is_new_song${filterQuery} ORDER BY RANDOM() LIMIT 1`;
     const stmt = db.prepare(query);
     const song = stmt.get(...params);
 

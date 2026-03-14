@@ -124,7 +124,7 @@ function HomePage({ siteConfig }) {
   // 提示消息
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  const buildPlaylistParams = useCallback((includePagination = true) => {
+  const buildPlaylistParams = useCallback((includePagination = true, includeRandomSeed = true) => {
     const randomRecommendationEnabled = Boolean(siteConfig?.enableRandomRecommendations);
     const params = {
       search: searchText,
@@ -135,7 +135,7 @@ function HomePage({ siteConfig }) {
       params.limit = 50;
     }
 
-    if (randomRecommendationEnabled) {
+    if (includeRandomSeed && randomRecommendationEnabled) {
       params.randomSeed = randomSeed;
     }
 
@@ -242,7 +242,10 @@ function HomePage({ siteConfig }) {
 
     setRandomPicking(true);
     try {
-      const { song } = await playlistAPI.getRandomSong(buildPlaylistParams(false));
+      const { song } = await playlistAPI.getRandomSong({
+        ...buildPlaylistParams(false, false),
+        nonce: Date.now(),
+      });
       await copySongName(song.songName, `已随机复制: ${song.songName}`);
     } catch (error) {
       console.error('随机抽歌失败:', error);

@@ -38,6 +38,13 @@ router.get('/', (req, res) => {
 // 获取一首随机歌曲（公开访问）
 router.get('/random', (req, res) => {
   try {
+    res.set({
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      Pragma: 'no-cache',
+      Expires: '0',
+      'Surrogate-Control': 'no-store'
+    });
+
     const options = buildPlaylistQueryOptions(req.query);
     const song = PlaylistService.getRandomSong(options);
 

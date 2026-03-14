@@ -33,6 +33,18 @@ npm run dev
 
 ---
 
+## 前端优化规范
+
+模糊效果与性能相关规范见 **`.cursor/rules/frontend-blur-and-performance.mdc`**，包含：
+
+- backdrop-filter 分层与强度建议
+- 组件拆分与 React.memo 使用
+- 长列表虚拟化与 DOM 嵌套规范
+
+在 Cursor 中编辑 `frontend/**/*.{jsx,tsx,js}` 时，该规则会自动加载供 AI 参考。
+
+---
+
 ## 调试说明
 
 - **后端热重载**：修改 `backend/` 下文件后自动重启

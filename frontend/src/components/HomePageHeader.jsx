@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { MusicNote } from '@mui/icons-material';
+import { Box, Button, Typography } from '@mui/material';
+import { MusicNote, Shuffle } from '@mui/icons-material';
 
 /**
  * 首页标题区：头像（移动端）+ 歌单名 + 歌曲数量
@@ -11,15 +11,22 @@ const HomePageHeader = React.memo(function HomePageHeader({
   isDesktop,
   total,
   theme,
+  onRandomPick,
+  randomPicking,
 }) {
+  const canRandomPick = Boolean(onRandomPick) && !randomPicking && total > 0;
+
   return (
     <Box sx={{ mb: 4, textAlign: 'center', position: 'relative', zIndex: 1 }}>
       {avatarUrl && !isDesktop && (
         <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
           <Box
+            onClick={canRandomPick ? onRandomPick : undefined}
             sx={{
               width: { xs: 100, sm: 120 },
               height: { xs: 100, sm: 120 },
+              cursor: canRandomPick ? 'pointer' : 'default',
+              opacity: total > 0 ? 1 : 0.72,
               borderRadius: '50%',
               overflow: 'hidden',
               border: '4px solid',
@@ -38,6 +45,10 @@ const HomePageHeader = React.memo(function HomePageHeader({
                 '0%, 100%': { transform: 'translateY(0px)' },
                 '50%': { transform: 'translateY(-10px)' },
               },
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              '&:active': canRandomPick ? {
+                transform: 'scale(0.98)',
+              } : undefined,
             }}
           >
             <Box
@@ -49,6 +60,11 @@ const HomePageHeader = React.memo(function HomePageHeader({
             />
           </Box>
         </Box>
+      )}
+      {!isDesktop && avatarUrl && (
+        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+          {randomPicking ? '随机抽歌中...' : '点头像随机复制一首歌'}
+        </Typography>
       )}
       <Typography
         variant={isDesktop ? 'h3' : 'h4'}
@@ -77,6 +93,25 @@ const HomePageHeader = React.memo(function HomePageHeader({
           共收录 {total} 首歌曲
         </Typography>
       </Box>
+      {isDesktop && (
+        <Box sx={{ mt: 1.5 }}>
+          <Button
+            variant="contained"
+            startIcon={<Shuffle />}
+            onClick={onRandomPick}
+            disabled={!canRandomPick}
+            sx={{
+              borderRadius: 999,
+              px: 2.5,
+              boxShadow: theme.palette.mode === 'dark'
+                ? '0 8px 24px rgba(110, 193, 228, 0.25)'
+                : '0 8px 24px rgba(110, 193, 228, 0.18)',
+            }}
+          >
+            {randomPicking ? '随机中...' : '随机一首'}
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 });

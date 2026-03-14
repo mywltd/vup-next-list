@@ -4,32 +4,48 @@ import { requireAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
+const parseMultiValue = (value) => {
+  if (!value) return null;
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string' && value.includes(',')) {
+    return value.split(',').map(v => v.trim());
+  }
+  return [value];
+};
+
+const buildPlaylistQueryOptions = (query) => ({
+  page: parseInt(query.page) || 1,
+  limit: parseInt(query.limit) || 50,
+  firstLetter: query.firstLetter || null,
+  languages: parseMultiValue(query.languages || query.language),
+  categories: parseMultiValue(query.categories || query.category),
+  special: query.special === 'true' ? true : query.special === 'false' ? false : null,
+  search: query.search || '',
+  randomSeed: query.randomSeed || null
+});
+
 // 获取歌单列表（公开访问）
 router.get('/', (req, res) => {
   try {
-    // 处理多选参数（支持数组和单个值）
-    const parseMultiValue = (value) => {
-      if (!value) return null;
-      if (Array.isArray(value)) return value;
-      // 如果是逗号分隔的字符串，拆分为数组
-      if (typeof value === 'string' && value.includes(',')) {
-        return value.split(',').map(v => v.trim());
-      }
-      return [value];
-    };
-
-    const options = {
-      page: parseInt(req.query.page) || 1,
-      limit: parseInt(req.query.limit) || 50,
-      firstLetter: req.query.firstLetter || null,
-      languages: parseMultiValue(req.query.languages || req.query.language), // 支持多选语言
-      categories: parseMultiValue(req.query.categories || req.query.category), // 支持多选种类
-      special: req.query.special === 'true' ? true : req.query.special === 'false' ? false : null,
-      search: req.query.search || ''
-    };
-
+    const options = buildPlaylistQueryOptions(req.query);
     const result = PlaylistService.getPlaylist(options);
     res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 获取一首随机歌曲（公开访问）
+router.get('/random', (req, res) => {
+  try {
+    const options = buildPlaylistQueryOptions(req.query);
+    const song = PlaylistService.getRandomSong(options);
+
+    if (!song) {
+      return res.status(404).json({ error: '当前条件下暂无歌曲' });
+    }
+
+    res.json({ song });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -139,4 +155,3 @@ router.delete('/clear', requireAuth, (req, res) => {
 });
 
 export default router;
-

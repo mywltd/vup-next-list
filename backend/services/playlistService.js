@@ -1,11 +1,8 @@
 import { db, getSiteConfig } from '../db/init.js';
 
 export class PlaylistService {
-  // 获取歌单列表（支持分页、筛选、搜索）
-  static getPlaylist(options = {}) {
+  static buildFilterQuery(options = {}) {
     const {
-      page = 1,
-      limit = 50,
       firstLetter = null,
       language = null,
       languages = null,
@@ -15,12 +12,7 @@ export class PlaylistService {
       search = ''
     } = options;
 
-    // 获取站点配置，检查是否启用新歌高亮
-    const siteConfig = getSiteConfig();
-    const highlightNewSongs = siteConfig && Boolean(siteConfig.highlight_new_songs);
-    const newSongDays = siteConfig ? (siteConfig.new_song_days || 7) : 7;
-
-    let query = 'SELECT * FROM playlist WHERE 1=1';
+    let query = ' FROM playlist WHERE 1=1';
     const params = [];
 
     if (firstLetter) {
@@ -28,7 +20,6 @@ export class PlaylistService {
       params.push(firstLetter);
     }
 
-    // 支持多选语言筛选
     const languageList = languages || (language ? [language] : null);
     if (languageList && languageList.length > 0) {
       const placeholders = languageList.map(() => '?').join(',');
@@ -36,11 +27,9 @@ export class PlaylistService {
       params.push(...languageList);
     }
 
-    // 支持多选种类筛选
     const categoryList = categories || (category ? [category] : null);
     if (categoryList && categoryList.length > 0) {
-      // 对于多个分类，需要检查任意一个分类匹配
-      const categoryConditions = categoryList.map(() => 
+      const categoryConditions = categoryList.map(() =>
         '(category = ? OR categories_json LIKE ?)'
       ).join(' OR ');
       query += ` AND (${categoryConditions})`;
@@ -59,71 +48,141 @@ export class PlaylistService {
       params.push(`%${search}%`, `%${search}%`);
     }
 
+    return { query, params };
+  }
+
+  static normalizeSong(song, highlightNewSongs, newSongThreshold) {
+    const createdAt = new Date(song.created_at);
+    const isNewSong = highlightNewSongs && createdAt >= newSongThreshold;
+
+    let categories = [song.category];
+    if (song.categories_json) {
+      try {
+        categories = JSON.parse(song.categories_json);
+      } catch (e) {
+        categories = [song.category];
+      }
+    }
+
+    return {
+      id: song.id,
+      songName: song.songName,
+      singer: song.singer,
+      language: song.language,
+      category: song.category,
+      categories,
+      special: Boolean(song.special),
+      firstLetter: song.firstLetter,
+      isNewSong,
+      createdAt: song.created_at,
+      ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
+    };
+  }
+
+  // 获取歌单列表（支持分页、筛选、搜索）
+  static getPlaylist(options = {}) {
+    const {
+      page = 1,
+      limit = 50,
+      randomSeed = null
+    } = options;
+
+    // 获取站点配置，检查是否启用新歌高亮
+    const siteConfig = getSiteConfig();
+    const highlightNewSongs = siteConfig && Boolean(siteConfig.highlight_new_songs);
+    const enableRandomRecommendations = siteConfig && Boolean(siteConfig.enable_random_recommendations);
+    const newSongDays = siteConfig ? (parseInt(siteConfig.new_song_days, 10) || 7) : 7;
+    const normalizedNewSongDays = Math.max(1, newSongDays);
+    const parsedRandomSeed = Number.parseInt(randomSeed, 10);
+    const effectiveRandomSeed = Number.isFinite(parsedRandomSeed)
+      ? Math.abs(parsedRandomSeed)
+      : Date.now();
+    const randomOrderMultiplier = (effectiveRandomSeed % 2147483629) + 1;
+    const randomOrderOffset = (effectiveRandomSeed * 48271) % 2147483647;
+    const newSongCondition = `datetime(created_at) >= datetime('now', '-${normalizedNewSongDays} days')`;
+
+    const { query: filterQuery, params } = this.buildFilterQuery(options);
+    let query = `SELECT *${filterQuery}`;
+
     // 获取总数
-    const countQuery = query.replace('SELECT *', 'SELECT COUNT(*) as count');
+    const countQuery = `SELECT COUNT(*) as count${filterQuery}`;
     const countStmt = db.prepare(countQuery);
     const { count } = countStmt.get(...params);
 
     // 添加排序和分页
-    // 如果启用新歌置顶，则先按是否为新歌排序（新歌在前），再按首字母和歌名排序
-    if (highlightNewSongs) {
+    // 如果启用新歌置顶，则先保持新歌置顶顺序不变，再决定旧歌部分是否随机推荐
+    if (highlightNewSongs && enableRandomRecommendations) {
+      query += ` ORDER BY 
+        CASE WHEN ${newSongCondition} THEN 0 ELSE 1 END,
+        CASE WHEN ${newSongCondition} THEN datetime(created_at) END DESC,
+        CASE WHEN ${newSongCondition} THEN firstLetter END,
+        CASE WHEN ${newSongCondition} THEN songName END,
+        CASE WHEN ${newSongCondition} THEN 0 ELSE ABS(((id * ?) + ?) % 2147483647) END,
+        firstLetter,
+        songName
+        LIMIT ? OFFSET ?`;
+      params.push(randomOrderMultiplier, randomOrderOffset, limit, (page - 1) * limit);
+    } else if (highlightNewSongs) {
       query += ` ORDER BY 
         CASE 
-          WHEN datetime(created_at) >= datetime('now', '-${newSongDays} days') THEN 0 
+          WHEN ${newSongCondition} THEN 0 
           ELSE 1 
         END,
         created_at DESC,
         firstLetter, 
         songName 
         LIMIT ? OFFSET ?`;
+      params.push(limit, (page - 1) * limit);
+    } else if (enableRandomRecommendations) {
+      query += ` ORDER BY 
+        ABS(((id * ?) + ?) % 2147483647),
+        firstLetter,
+        songName
+        LIMIT ? OFFSET ?`;
+      params.push(randomOrderMultiplier, randomOrderOffset, limit, (page - 1) * limit);
     } else {
       query += ' ORDER BY firstLetter, songName LIMIT ? OFFSET ?';
+      params.push(limit, (page - 1) * limit);
     }
-    params.push(limit, (page - 1) * limit);
 
     const stmt = db.prepare(query);
     const songs = stmt.all(...params);
 
     // 计算每首歌是否为新歌
     const now = new Date();
-    const newSongThreshold = new Date(now.getTime() - newSongDays * 24 * 60 * 60 * 1000);
+    const newSongThreshold = new Date(now.getTime() - normalizedNewSongDays * 24 * 60 * 60 * 1000);
 
     return {
-      songs: songs.map(song => {
-        const createdAt = new Date(song.created_at);
-        const isNewSong = highlightNewSongs && createdAt >= newSongThreshold;
-        
-        // 解析多标签（优先使用 categories_json，回退到 category）
-        let categories = [song.category];
-        if (song.categories_json) {
-          try {
-            categories = JSON.parse(song.categories_json);
-          } catch (e) {
-            categories = [song.category];
-          }
-        }
-        
-        return {
-          id: song.id,
-          songName: song.songName,
-          singer: song.singer,
-          language: song.language,
-          category: song.category, // 保留主分类（向后兼容）
-          categories: categories, // 新增多标签数组
-          special: Boolean(song.special),
-          firstLetter: song.firstLetter,
-          isNewSong: isNewSong,
-          createdAt: song.created_at,
-          ...(song.bilibili_clip_url && { bilibiliClipUrl: song.bilibili_clip_url })
-        };
-      }),
+      songs: songs.map(song => this.normalizeSong(song, highlightNewSongs, newSongThreshold)),
       total: count,
       page,
       limit,
       totalPages: Math.ceil(count / limit),
       highlightNewSongs: highlightNewSongs,
-      newSongDays: newSongDays
+      newSongDays: normalizedNewSongDays,
+      enableRandomRecommendations
     };
+  }
+
+  // 获取一首随机歌曲（支持筛选、搜索）
+  static getRandomSong(options = {}) {
+    const siteConfig = getSiteConfig();
+    const highlightNewSongs = siteConfig && Boolean(siteConfig.highlight_new_songs);
+    const newSongDays = siteConfig ? (parseInt(siteConfig.new_song_days, 10) || 7) : 7;
+    const normalizedNewSongDays = Math.max(1, newSongDays);
+    const { query: filterQuery, params } = this.buildFilterQuery(options);
+    const query = `SELECT *${filterQuery} ORDER BY RANDOM() LIMIT 1`;
+    const stmt = db.prepare(query);
+    const song = stmt.get(...params);
+
+    if (!song) {
+      return null;
+    }
+
+    const now = new Date();
+    const newSongThreshold = new Date(now.getTime() - normalizedNewSongDays * 24 * 60 * 60 * 1000);
+
+    return this.normalizeSong(song, highlightNewSongs, newSongThreshold);
   }
 
   // 获取所有语种列表
@@ -348,4 +407,3 @@ export class PlaylistService {
     return { success: true, message: '歌单已清空' };
   }
 }
-

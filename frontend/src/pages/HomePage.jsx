@@ -75,6 +75,7 @@ function HomePage({ siteConfig }) {
   );
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(siteConfig?.avatarUrl || '');
+  const [randomSeed] = useState(() => Math.floor(Math.random() * 2147483647));
   
   // 从Context获取搜索文本
   const { searchText, setSearchText } = useSearch();
@@ -84,6 +85,7 @@ function HomePage({ siteConfig }) {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [randomPicking, setRandomPicking] = useState(false);
   
   // 筛选条件 - 改为多选
   const [selectedLetter, setSelectedLetter] = useState(null);
@@ -122,27 +124,47 @@ function HomePage({ siteConfig }) {
   // 提示消息
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
+  const buildPlaylistParams = useCallback((includePagination = true) => {
+    const randomRecommendationEnabled = Boolean(siteConfig?.enableRandomRecommendations);
+    const params = {
+      search: searchText,
+    };
+
+    if (includePagination) {
+      params.page = page;
+      params.limit = 50;
+    }
+
+    if (randomRecommendationEnabled) {
+      params.randomSeed = randomSeed;
+    }
+
+    if (selectedLetter) params.firstLetter = selectedLetter;
+    if (selectedLanguages.length > 0) {
+      params.languages = selectedLanguages.join(',');
+    }
+    if (selectedCategories.length > 0) {
+      params.categories = selectedCategories.join(',');
+    }
+    if (selectedSpecial !== null) params.special = selectedSpecial;
+
+    return params;
+  }, [
+    page,
+    randomSeed,
+    searchText,
+    selectedLetter,
+    selectedLanguages,
+    selectedCategories,
+    selectedSpecial,
+    siteConfig?.enableRandomRecommendations,
+  ]);
+
   // 加载歌单
   const loadPlaylist = useCallback(async () => {
     setLoading(true);
     try {
-      const params = {
-        page,
-        limit: 50,
-        search: searchText,
-      };
-      
-      if (selectedLetter) params.firstLetter = selectedLetter;
-      // 支持多选语言筛选 - 传递完整数组
-      if (selectedLanguages.length > 0) {
-        params.languages = selectedLanguages.join(',');
-      }
-      // 支持多选种类筛选 - 传递完整数组
-      if (selectedCategories.length > 0) {
-        params.categories = selectedCategories.join(',');
-      }
-      if (selectedSpecial !== null) params.special = selectedSpecial;
-      
+      const params = buildPlaylistParams(true);
       const data = await playlistAPI.getPlaylist(params);
       setSongs(data.songs);
       setTotalPages(data.totalPages);
@@ -153,7 +175,21 @@ function HomePage({ siteConfig }) {
     } finally {
       setLoading(false);
     }
-  }, [page, searchText, selectedLetter, selectedLanguages, selectedCategories, selectedSpecial]);
+  }, [buildPlaylistParams]);
+
+  const copySongName = useCallback(async (songName, successMessage = `已复制: ${songName}`) => {
+    const copyMode = siteConfig?.copyMode || 'normal';
+    const textToCopy = copyMode === 'song-request' ? `点歌 ${songName}` : songName;
+    const success = await copyToClipboard(textToCopy);
+
+    if (success) {
+      setSnackbar({ open: true, message: successMessage, severity: 'success' });
+    } else {
+      setSnackbar({ open: true, message: '复制失败', severity: 'error' });
+    }
+
+    return success;
+  }, [siteConfig?.copyMode]);
 
   // 加载筛选选项（标签云）
   useEffect(() => {
@@ -181,11 +217,13 @@ function HomePage({ siteConfig }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     page, 
+    randomSeed,
     searchText, 
     selectedLetter, 
     selectedLanguages.join(','), // 转为字符串避免数组引用问题
     selectedCategories.join(','), // 转为字符串避免数组引用问题
-    selectedSpecial
+    selectedSpecial,
+    siteConfig?.enableRandomRecommendations
   ]);
 
   const handlePageChange = useCallback((event, value) => {
@@ -194,21 +232,25 @@ function HomePage({ siteConfig }) {
   }, []);
 
   const handleCopy = useCallback(async (songName) => {
-    // 根据站点配置的复制模式决定复制内容
-    const copyMode = siteConfig?.copyMode || 'normal';
-    let textToCopy = songName;
-    
-    if (copyMode === 'song-request') {
-      textToCopy = `点歌 ${songName}`;
+    await copySongName(songName);
+  }, [copySongName]);
+
+  const handleRandomPick = useCallback(async () => {
+    if (randomPicking) {
+      return;
     }
-    
-    const success = await copyToClipboard(textToCopy);
-    if (success) {
-      setSnackbar({ open: true, message: `已复制: ${songName}`, severity: 'success' });
-    } else {
-      setSnackbar({ open: true, message: '复制失败', severity: 'error' });
+
+    setRandomPicking(true);
+    try {
+      const { song } = await playlistAPI.getRandomSong(buildPlaylistParams(false));
+      await copySongName(song.songName, `已随机复制: ${song.songName}`);
+    } catch (error) {
+      console.error('随机抽歌失败:', error);
+      setSnackbar({ open: true, message: error.message || '随机抽歌失败', severity: 'error' });
+    } finally {
+      setRandomPicking(false);
     }
-  }, [siteConfig?.copyMode]);
+  }, [buildPlaylistParams, copySongName, randomPicking]);
 
   const handleCloseSnackbar = useCallback(() => {
     setSnackbar(prev => ({ ...prev, open: false }));
@@ -311,6 +353,8 @@ function HomePage({ siteConfig }) {
         isDesktop={isDesktop}
         total={total}
         theme={theme}
+        onRandomPick={handleRandomPick}
+        randomPicking={randomPicking}
       />
 
       {/* PC端布局：左侧筛选器 + 右侧内容 */}
@@ -492,4 +536,3 @@ function HomePage({ siteConfig }) {
 }
 
 export default HomePage;
-

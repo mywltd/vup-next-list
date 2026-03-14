@@ -95,6 +95,7 @@ export function initDatabase() {
       seo_description TEXT,
       custom_css TEXT,
       custom_js TEXT,
+      enable_random_recommendations INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
@@ -147,6 +148,9 @@ export function initDatabase() {
     if (!columns.includes('show_icp')) {
       db.exec('ALTER TABLE site_config ADD COLUMN show_icp INTEGER DEFAULT 0');
     }
+    if (!columns.includes('enable_random_recommendations')) {
+      db.exec('ALTER TABLE site_config ADD COLUMN enable_random_recommendations INTEGER DEFAULT 0');
+    }
   } catch (error) {
     console.warn('数据库迁移警告:', error.message);
   }
@@ -179,4 +183,3 @@ export function getSiteConfig() {
 }
 
 export default db;
-

@@ -101,6 +101,9 @@ export const authAPI = {
 export const playlistAPI = {
   // 获取歌单列表
   getPlaylist: (params) => api.get('/api/playlist', { params }),
+
+  // 随机获取一首歌曲
+  getRandomSong: (params) => api.get('/api/playlist/random', { params }),
   
   // 获取语种列表
   getLanguages: () => api.get('/api/playlist/languages'),
@@ -156,4 +159,3 @@ export const siteAPI = {
 };
 
 export default api;
-

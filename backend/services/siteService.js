@@ -30,6 +30,7 @@ export class SiteService {
       hcaptchaSiteKey: siteConfig.hcaptcha_site_key || '',
       highlightNewSongs: Boolean(siteConfig.highlight_new_songs),
       newSongDays: siteConfig.new_song_days || 7,
+      enableRandomRecommendations: Boolean(siteConfig.enable_random_recommendations),
       icpNumber: siteConfig.icp_number || '',
       showIcp: Boolean(siteConfig.show_icp),
       streamer: streamer ? {
@@ -59,6 +60,7 @@ export class SiteService {
       hcaptchaSecretKey,
       highlightNewSongs,
       newSongDays,
+      enableRandomRecommendations,
       icpNumber,
       showIcp
     } = configData;
@@ -82,6 +84,7 @@ export class SiteService {
           hcaptcha_secret_key = ?,
           highlight_new_songs = ?,
           new_song_days = ?,
+          enable_random_recommendations = ?,
           icp_number = ?,
           show_icp = ?,
           updated_at = CURRENT_TIMESTAMP
@@ -106,6 +109,7 @@ export class SiteService {
       hcaptchaSecretKey || '',
       highlightNewSongs ? 1 : 0,
       newSongDays || 7,
+      enableRandomRecommendations ? 1 : 0,
       icpNumber || '',
       showIcp ? 1 : 0
     );
@@ -138,4 +142,3 @@ export class SiteService {
     return { success: true, message: '主播信息更新成功' };
   }
 }
-

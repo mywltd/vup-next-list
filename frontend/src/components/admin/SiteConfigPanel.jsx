@@ -81,6 +81,7 @@ function SiteConfigPanel({ onUpdate }) {
     copyMode: 'normal',
     highlightNewSongs: false,
     newSongDays: 7,
+    enableRandomRecommendations: false,
     icpNumber: '',
     showIcp: false,
   });
@@ -108,6 +109,7 @@ function SiteConfigPanel({ onUpdate }) {
         copyMode: data.copyMode || 'normal',
         highlightNewSongs: data.highlightNewSongs || false,
         newSongDays: data.newSongDays || 7,
+        enableRandomRecommendations: data.enableRandomRecommendations || false,
         icpNumber: data.icpNumber || '',
         showIcp: data.showIcp || false,
       });
@@ -491,6 +493,26 @@ function SiteConfigPanel({ onUpdate }) {
         </Box>
 
         <Box>
+          <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+            随机推荐配置
+          </Typography>
+          <Stack spacing={2}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={config.enableRandomRecommendations}
+                  onChange={(e) => setConfig({ ...config, enableRandomRecommendations: e.target.checked })}
+                />
+              }
+              label="启用随机推荐排序"
+            />
+            <Typography variant="caption" color="text.secondary">
+              开启后，除置顶新歌外，其余歌曲会在每次刷新页面时重新随机排列一次；同一次打开页面内的翻页顺序保持一致
+            </Typography>
+          </Stack>
+        </Box>
+
+        <Box>
           <Button
             variant="contained"
             startIcon={<Save />}
@@ -507,4 +529,3 @@ function SiteConfigPanel({ onUpdate }) {
 }
 
 export default SiteConfigPanel;
-

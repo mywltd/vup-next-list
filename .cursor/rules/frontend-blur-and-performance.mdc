@@ -1,0 +1,89 @@
+---
+description: 前端模糊效果与性能优化规范（backdrop-filter、组件拆分、渲染优化）
+globs: frontend/**/*.{jsx,tsx,js}
+alwaysApply: false
+---
+
+# 模糊效果与性能优化规范
+
+## 一、backdrop-filter 模糊优化
+
+### 1. 分层原则：模糊层与滚动/动画内容分离
+
+- **问题**：Chrome 中，backdrop-filter 作用在含滚动或动画的子元素上时，每帧重算，造成卡顿。
+- **做法**：将模糊放在独立的静态 overlay 层，与滚动内容为兄弟节点：
+
+```jsx
+// ✅ 推荐：模糊层与内容同级，内容在 z-index 更高层
+<Paper sx={{ position: 'relative', overflow: 'hidden' }}>
+  <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, backdropFilter: 'blur(16px)' }} />
+  <Box sx={{ position: 'relative', zIndex: 1 }}>{/* 滚动内容 */}</Box>
+</Paper>
+```
+
+- **避免**：在列表项、输入框、Chip 等大量或频繁更新的元素上使用 blur。
+
+### 2. 模糊强度与性能
+
+| 场景 | 推荐范围 | 说明 |
+|------|----------|------|
+| 全屏/背景遮罩 | blur(6px) | 轻量，适合整页 overlay |
+| 静态 Card/Paper | blur(12–16px) | 平衡观感与 GPU 占用 |
+| 导航栏/Footer | blur(8px) | 固定区域可略高 |
+| 避免使用 | blur(20px)+ | 高负载，低端设备易卡顿 |
+
+- 同时使用 `saturate(150–165%)` 时，适度降低可减轻开销。
+
+### 3. 全局与局部取舍
+
+- **不推荐在主题中全局加 blur 的组件**：MuiTextField、MuiChip（数量多、常与滚动相邻）。
+- **推荐**：静态容器（Card、Paper、AppBar）可适度使用 blur，并用纯色背景补偿观感。
+
+### 4. Safari 兼容
+
+- 同时写 `backdropFilter` 和 `WebkitBackdropFilter`。
+
+---
+
+## 二、React 渲染性能
+
+### 1. 大页面拆分
+
+- 将 500+ 行页面拆成多个子组件，并用 `React.memo` 包裹。
+- 拆分原则：按 UI 区域（Header、列表、筛选、抽屉等）拆分。
+- 子组件只接收必要 props，减少无关 state 导致的重渲染。
+
+### 2. 稳定 Props
+
+- 回调使用 `useCallback`，对象/数组使用 `useMemo`。
+- FilterPanel、SongListPanel 等接收对象 props 时，用 `useMemo` 聚合并稳定引用。
+- 避免在 render 中创建匿名函数或新对象传给 memo 子组件。
+
+### 3. 列表与长列表
+
+- 长列表（数百项以上）优先使用虚拟化（如 @tanstack/react-virtual）。
+- 列表项用 `React.memo`，避免父组件重渲染时全部项重渲染。
+- 列表项内避免 backdrop-filter，使用纯色或半透明背景 + `contain: layout style paint`。
+
+### 4. DOM 嵌套规范
+
+- `<p>` 不能包含 `<div>`、`<p>` 等块级元素。
+- 使用 `ListItemText` 时，`primary`/`secondary` 若含 Box、Chip 等，需加 `primaryTypographyProps={{ component: 'div' }}`。
+
+---
+
+## 三、快速检查清单
+
+新增或修改模糊效果时：
+
+1. [ ] 模糊层是否与滚动/动画内容分离？
+2. [ ] blur 强度是否 ≤ 16px？
+3. [ ] 是否避免在 Chip、TextField、列表项上使用 blur？
+4. [ ] 是否同时设置了 WebkitBackdropFilter？
+
+新增或修改大组件时：
+
+1. [ ] 是否可拆成 memo 子组件？
+2. [ ] 传给子组件的回调是否用 useCallback？
+3. [ ] 对象 props 是否用 useMemo 稳定？
+4. [ ] 长列表是否做了虚拟化？
